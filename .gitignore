@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/WMS.CrossCuttingConcerns/obj
+/WMS.Infrastructure/obj
+/WorkManagementSystem/obj
+/.vs/ManagerProject/v17
+/.vs
+/WorkManagementSystem/WorkManagementSystem.csproj.user
