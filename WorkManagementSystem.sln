@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkManagementSystem", "Wor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WMS.CrossCuttingConcerns", "WMS.CrossCuttingConcerns\WMS.CrossCuttingConcerns.csproj", "{7303ED50-6C8B-4C4D-8B57-3E8AA736DEE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.Infrastructure", "WMS.Infrastructure\WMS.Infrastructure.csproj", "{2FB2BCE0-BB16-404D-9E0F-C0092B3D906E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{7303ED50-6C8B-4C4D-8B57-3E8AA736DEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7303ED50-6C8B-4C4D-8B57-3E8AA736DEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7303ED50-6C8B-4C4D-8B57-3E8AA736DEE2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FB2BCE0-BB16-404D-9E0F-C0092B3D906E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FB2BCE0-BB16-404D-9E0F-C0092B3D906E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FB2BCE0-BB16-404D-9E0F-C0092B3D906E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FB2BCE0-BB16-404D-9E0F-C0092B3D906E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
