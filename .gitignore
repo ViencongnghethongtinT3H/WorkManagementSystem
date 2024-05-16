@@ -8,3 +8,5 @@
 /.vs/ManagerProject/v17
 /.vs
 /WorkManagementSystem/WorkManagementSystem.csproj.user
+/WMS.CrossCuttingConcerns/bin/Debug/net8.0
+/WorkManagementSystem/bin/Debug/net8.0
