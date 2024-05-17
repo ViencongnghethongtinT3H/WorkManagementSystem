@@ -19,9 +19,9 @@ namespace WorkManagementSystem.Infrastructure.Factory
 
         private DbContextOptionsBuilder<MainDbContext> GetDataContext()
         {
-            ValidateDefaultConnection();
+           // ValidateDefaultConnection();
 
-            var sqlConnectionBuilder = new SqlConnectionStringBuilder(_connectionOptions.Value.DefaultConnection);
+            var sqlConnectionBuilder = new SqlConnectionStringBuilder("Server=103.229.42.125, 1433;Database=NotificationDbNew;User Id=sa;Password=Digins@2022;TrustServerCertificate=true;");
 
             var contextOptionsBuilder = new DbContextOptionsBuilder<MainDbContext>();
 
@@ -30,12 +30,12 @@ namespace WorkManagementSystem.Infrastructure.Factory
             return contextOptionsBuilder;
         }
 
-        private void ValidateDefaultConnection()
-        {
-            if (string.IsNullOrEmpty(_connectionOptions.Value.DefaultConnection))
-            {
-                throw new ArgumentNullException(nameof(_connectionOptions.Value.DefaultConnection));
-            }
-        }
+        //private void ValidateDefaultConnection()
+        //{
+        //    if (string.IsNullOrEmpty(_connectionOptions.Value.DefaultConnection))
+        //    {
+        //        throw new ArgumentNullException(nameof(_connectionOptions.Value.DefaultConnection));
+        //    }
+        //}
     }
 }

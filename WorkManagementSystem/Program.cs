@@ -10,10 +10,25 @@ using WorkManagementSystem.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddFastEndpoints().SwaggerDocument();
+//(o =>
+//{
+//    o.DocumentSettings = s =>
+//    {
+//        s.Title = "WMS API";
+//        s.Description = "SyNV";
+//        s.Version = "1";
+//        s.AddAuth("Bearer", new()
+//        {
+//            Type = OpenApiSecuritySchemeType.Http,
+//            Scheme = JwtBearerDefaults.AuthenticationScheme,
+//            BearerFormat = "JWT",
+//        });
+//    };
+//});
 
 builder.Services.AddDbContext<MainDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"),
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlServerOptionsAction: sqlOptions =>
         {
             sqlOptions.MigrationsAssembly(typeof(MainDbContext).GetTypeInfo().Assembly.GetName().Name);
@@ -21,21 +36,22 @@ builder.Services.AddDbContext<MainDbContext>(options =>
         });
 }, ServiceLifetime.Scoped);
 
-builder.Services.SwaggerDocument(o =>
-{
-    o.DocumentSettings = s =>
-    {
-        s.Title = "WMS API";
-        s.Version = "v1";
-        s.AddAuth("Bearer", new()
-        {
-            Type = OpenApiSecuritySchemeType.Http,
-            Scheme = JwtBearerDefaults.AuthenticationScheme,
-            BearerFormat = "JWT",
-        });
-    };
+//builder.Services.SwaggerDocument(o =>
+//{
+//    o.DocumentSettings = s =>
+//    {
+//        s.Title = "WMS API";
+//       // s.Description = "SyNV";
+//        //s.Version = "v1";
+//        s.AddAuth("Bearer", new()
+//        {
+//            Type = OpenApiSecuritySchemeType.Http,
+//            Scheme = JwtBearerDefaults.AuthenticationScheme,
+//            BearerFormat = "JWT",
+//        });
+//    };
 
-});
+//});
 
 builder.Services.AddInjections();
 
