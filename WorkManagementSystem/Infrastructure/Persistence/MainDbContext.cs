@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WorkManagementSystem.Entities;
-namespace WorkManagementSystem.Infrastructure.DbContext;
+namespace WorkManagementSystem.Infrastructure.Persistence;
 
-public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
+public class MainDbContext : DbContext, IDatabaseContext
 {
+    public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
+    {
+    }
+
     public DbSet<Department> Departments { get; set; }
     public DbSet<FileAttach> FileAttachs { get; set; }
     public DbSet<Implementer> Implementers { get; set; }

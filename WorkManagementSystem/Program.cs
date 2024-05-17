@@ -1,11 +1,15 @@
 using FastEndpoints;
+using FastEndpoints.Swagger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using NSwag;
 using System.Reflection;
-using WorkManagementSystem.Infrastructure.DbContext;
+using WorkManagementSystem;
+using WorkManagementSystem.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddFastEndpoints();
+builder.Services.AddFastEndpoints().SwaggerDocument();
 
 builder.Services.AddDbContext<MainDbContext>(options =>
 {
@@ -17,12 +21,30 @@ builder.Services.AddDbContext<MainDbContext>(options =>
         });
 }, ServiceLifetime.Scoped);
 
+builder.Services.SwaggerDocument(o =>
+{
+    o.DocumentSettings = s =>
+    {
+        s.Title = "WMS API";
+        s.Version = "v1";
+        s.AddAuth("Bearer", new()
+        {
+            Type = OpenApiSecuritySchemeType.Http,
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
+            BearerFormat = "JWT",
+        });
+    };
+
+});
+
+builder.Services.AddInjections();
+
 // Add services to the container.
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseFastEndpoints();
+app.UseFastEndpoints().UseSwaggerGen();
 app.UseHttpsRedirection();
 
 
