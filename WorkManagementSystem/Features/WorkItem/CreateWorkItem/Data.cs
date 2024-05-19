@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkItem;
+﻿namespace WorkManagementSystem.Features.WorkItem.CreateWorkItem;
 
 public class Data
 {

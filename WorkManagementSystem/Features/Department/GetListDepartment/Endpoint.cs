@@ -1,6 +1,8 @@
-﻿namespace WorkManagementSystem.Features.Setting.GetSettingValue;
+﻿using WorkManagementSystem.Features.Setting;
 
-public class Endpoint : Endpoint<Request, List<SettingModel>>
+namespace WorkManagementSystem.Features.Department.GetListDepartment;
+
+public class Endpoint : Endpoint<Request, List<Reponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     public Endpoint(IUnitOfWork unitOfWork)
@@ -10,14 +12,14 @@ public class Endpoint : Endpoint<Request, List<SettingModel>>
     public override void Configure()
     {
         AllowAnonymous();
-        Get("setting/get-setting-by-type/{settingType}");
+        Get("setting/department/get-list-department/{level}");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
         var data = new Data(_unitOfWork);
 
-        var setting = await data.GetSettingByType(r.SettingType);
+        var setting = await data.GetDepartment(r.Level);
 
         if (setting is null)
             await SendNotFoundAsync();

@@ -48,7 +48,7 @@ public class TaskDetailService : ITaskDetailService
                 IssuesId = IssuesId,
                 ProgressValue = ProgressValueEnum.Progress0,
                 IsTaskItem = true,
-                UserId = item.UserId,
+                UserReceiveId = item.UserId,
                 Note = item.Note
 
             });

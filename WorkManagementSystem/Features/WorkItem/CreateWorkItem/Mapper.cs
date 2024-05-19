@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkItem;
+﻿namespace WorkManagementSystem.Features.WorkItem.CreateWorkItem;
 
 public class Mapper : Mapper<Request, Response, Entities.WorkItem>
 {
@@ -9,7 +9,6 @@ public class Mapper : Mapper<Request, Response, Entities.WorkItem>
         DepartmentId = r.DepartmentId,
         ItemId = r.ItemId,
         Notation = r.Notation,
-        DateArrival = r.DateArrival,
         DateIssued = r.DateIssued,
         Subjective = r.Subjective,
         LeadershipDirectId = r.LeadershipDirectId,

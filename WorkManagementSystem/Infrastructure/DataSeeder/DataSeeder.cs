@@ -172,5 +172,5 @@ public class DataSeeder
         };
         await dbContext.Departments.AddRangeAsync(lelver2);
         await dbContext.SaveChangesAsync();
-    }
+    } 
 }

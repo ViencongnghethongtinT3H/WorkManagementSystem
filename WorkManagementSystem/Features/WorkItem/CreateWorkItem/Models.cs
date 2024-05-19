@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using WorkManagementSystem.Features.TaskDetail;
-
-namespace WorkManagementSystem.Features.WorkItem;
+﻿namespace WorkManagementSystem.Features.WorkItem.CreateWorkItem;
 
 public class Request : WorkItemModel
 {
@@ -13,7 +10,7 @@ public class Validator : Validator<Request>
     {
         RuleFor(x => x.Content)
              .NotEmpty().WithMessage("Nội dung trích yếu không được để trống!");
-        RuleFor(x => x.UserId).NotNull().WithMessage("Người phụ trách không được để trống");
+       // RuleFor(x => x.UserId).NotNull().WithMessage("Người phụ trách không được để trống");
     }
 }
 public class Response

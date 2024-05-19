@@ -13,6 +13,7 @@ public class WorkItem : EntityBase
     public DateTime? DateArrival { get; set; }  // thời gian người nhận nhiệm vụ mở công văn này
     public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
     public Guid? DepartmentId { get; set; }  //  cơ quan ban hành
+
     [MaxLength(1000)]
     [Required]
     public string Content { get; set; }   // Trích yếu         
