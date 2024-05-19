@@ -12,7 +12,7 @@ public class Endpoint : Endpoint<Request, Response>
     }
     public override void Configure()
     {
-        Post("api/task/save-task");
+        Post("task/create-task");
         AllowAnonymous();
 
         // Claims(Claim.AuthorID);

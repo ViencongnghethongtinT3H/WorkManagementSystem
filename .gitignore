@@ -10,3 +10,7 @@
 /WorkManagementSystem/WorkManagementSystem.csproj.user
 /WMS.CrossCuttingConcerns/bin/Debug/net8.0
 /WorkManagementSystem/bin/Debug/net8.0
+/WMS.CrossCuttingConcerns/bin
+/WorkManagementSystem/.config
+/WorkManagementSystem/bin
+/WorkManagementSystem/Properties/PublishProfiles
