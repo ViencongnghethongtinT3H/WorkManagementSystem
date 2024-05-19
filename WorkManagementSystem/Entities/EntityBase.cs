@@ -1,6 +1,4 @@
-﻿using WorkManagementSystem.Entities.Enums;
-
-namespace WorkManagementSystem.Entities;
+﻿namespace WorkManagementSystem.Entities;
 
 public abstract class EntityBase
 {

@@ -1,8 +1,7 @@
-﻿namespace WorkManagementSystem.Entities
+﻿namespace WorkManagementSystem.Entities;
+
+public class UserPermission : EntityBase
 {
-    public class UserPermission : EntityBase
-    {
-        public Guid UserId { get; set; }
-        public Guid PermissionId { get; set; }
-    }
+    public Guid UserId { get; set; }
+    public Guid PermissionId { get; set; }
 }

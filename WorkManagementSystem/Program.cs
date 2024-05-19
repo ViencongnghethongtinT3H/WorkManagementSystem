@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using NSwag;
 using System.Reflection;
 using WorkManagementSystem;
+using WorkManagementSystem.Infrastructure.DataSeeder;
 using WorkManagementSystem.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,8 @@ builder.Services.AddDbContext<MainDbContext>(options =>
         });
 }, ServiceLifetime.Scoped);
 
+builder.Services.AddScoped<DataSeeder>();
+
 //builder.Services.SwaggerDocument(o =>
 //{
 //    o.DocumentSettings = s =>
@@ -62,7 +65,33 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseFastEndpoints().UseSwaggerGen();
 app.UseHttpsRedirection();
+try
+{
+    app.Logger.LogInformation("Applying database migration ({ApplicationName})...", "WMS");
+    app.ApplyDatabaseMigration();
+    // HttpContextCustom.SetupHttpContext(app);
+    app.Logger.LogInformation("Applying seed data into database");
+    await SeedData(app);
+    app.Logger.LogInformation("Starting web host (WMS)...");
+}
+catch (Exception ex)
+{
+    app.Logger.LogCritical(ex, "Host terminated unexpectedly (WMS)...");
+}
 
+async Task SeedData(IHost app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+    if (scopedFactory is not null)
+    {
+        using var scope = scopedFactory.CreateScope();
+        var service = scope.ServiceProvider.GetService<DataSeeder>();
+        if (service is not null)
+        {
+            await service.SeedAllAsync();
+        }
+    }
+}
 
 app.Run();
 

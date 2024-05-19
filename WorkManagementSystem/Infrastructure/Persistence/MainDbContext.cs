@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WorkManagementSystem.Entities;
-namespace WorkManagementSystem.Infrastructure.Persistence;
+﻿namespace WorkManagementSystem.Infrastructure.Persistence;
 
 public class MainDbContext : DbContext, IDatabaseContext
 {

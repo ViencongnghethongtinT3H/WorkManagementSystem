@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using WorkManagementSystem.Entities.Enums;
-
-namespace WorkManagementSystem.Entities;
+﻿namespace WorkManagementSystem.Entities;
 
 // Luồng nhiệm vụ (task)
 public class TaskDetail : EntityBase

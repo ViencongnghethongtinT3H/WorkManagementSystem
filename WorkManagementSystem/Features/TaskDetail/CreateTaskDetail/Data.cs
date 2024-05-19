@@ -1,8 +1,4 @@
-﻿using FastEndpoints;
-using WorkManagementSystem.Entities;
-using WorkManagementSystem.Infrastructure.UnitOfWork;
-
-namespace WorkManagementSystem.Features.TaskDetail.CreateTaskDetail;
+﻿namespace WorkManagementSystem.Features.TaskDetail.CreateTaskDetail;
 
 public class Data
 {

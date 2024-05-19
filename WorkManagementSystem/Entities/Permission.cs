@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WorkManagementSystem.Entities;
+﻿namespace WorkManagementSystem.Entities;
 
 public class Permission : EntityBase
 {
