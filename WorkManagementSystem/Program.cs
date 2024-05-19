@@ -10,6 +10,8 @@ using WorkManagementSystem.Infrastructure.DataSeeder;
 using WorkManagementSystem.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.Services.AddAuthorization();
+//builder.Services.AddAuthentication();
 builder.Services.AddFastEndpoints().SwaggerDocument();
 //(o =>
 //{
@@ -65,6 +67,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseFastEndpoints().UseSwaggerGen();
 app.UseHttpsRedirection();
+//app.UseAuthentication();
+//app.UseAuthorization();
 try
 {
     app.Logger.LogInformation("Applying database migration ({ApplicationName})...", "WMS");

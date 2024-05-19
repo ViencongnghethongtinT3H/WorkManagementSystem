@@ -10,8 +10,8 @@ public class Data
 
     public async Task<string> CreateTaskDetail(Entities.TaskDetail taskDetail)
     {
-        var movieRepository = _unitOfWork.GetRepository<Entities.TaskDetail>();
-        movieRepository.Add(taskDetail);
+        var taskRepository = _unitOfWork.GetRepository<Entities.TaskDetail>();
+        taskRepository.Add(taskDetail);
         await _unitOfWork.CommitAsync();
         return taskDetail.Id.ToString();
 

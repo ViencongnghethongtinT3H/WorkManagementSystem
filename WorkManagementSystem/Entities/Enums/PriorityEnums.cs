@@ -6,6 +6,5 @@
         Low = 2,
         Hight = 3,
         Critial = 4
-
     }
 }

@@ -7,6 +7,5 @@
         Monthly = 1,
         Year = 2,
         SixMonths = 3,
-
     }
 }

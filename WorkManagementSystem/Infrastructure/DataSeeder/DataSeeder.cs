@@ -85,7 +85,7 @@ public class DataSeeder
             },
             new Setting
             {
-                Type = Entities.Enums.SettingEnum.DocumentType,
+                Type = Entities.Enums.SettingEnum.Symbol,
                 Key = "Symbol_ct",
                 Value = "CT_BBL"
             }

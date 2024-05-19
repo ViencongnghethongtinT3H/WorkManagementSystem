@@ -8,8 +8,6 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
     {
         _unitOfWork = unitOfWork;
     }
-
-
     public override void Configure()
     {
         Post("api/task/save-task");
