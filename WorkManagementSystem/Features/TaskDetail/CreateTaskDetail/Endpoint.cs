@@ -1,18 +1,20 @@
-﻿namespace WorkManagementSystem.Features.TaskDetail.CreateTaskDetail;
+﻿using WorkManagementSystem.Features.TaskDetail.Services;
 
-public class Endpoint : Endpoint<Request, Response, Mapper>
+namespace WorkManagementSystem.Features.TaskDetail.CreateTaskDetail;
+
+public class Endpoint : Endpoint<Request, Response>
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ITaskDetailService _taskDetailService;
 
-    public Endpoint(IUnitOfWork unitOfWork)
+    public Endpoint(ITaskDetailService taskDetailService)
     {
-        _unitOfWork = unitOfWork;
+        _taskDetailService = taskDetailService;
     }
     public override void Configure()
     {
         Post("api/task/save-task");
         AllowAnonymous();
-       
+
         // Claims(Claim.AuthorID);
         AccessControl(
             keyName: "Article_Save_Own",
@@ -22,14 +24,11 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var data = new Data(_unitOfWork);
-        await data.CreateTaskDetail(await Map.ToEntityAsync(r));
-        var movieRepository = _unitOfWork.GetRepository<Entities.TaskDetail>();
-        //var taskDetail = await movieRepository.
-        Response.ArticleID = "";
+        
+        Response.TaskId = await _taskDetailService.SaveTaskDetail(r);
 
-        if (Response.ArticleID is null)
-            ThrowError("Unable to save the article!");
+        if (string.IsNullOrEmpty(Response.TaskId))
+            ThrowError("Không thể thêm nhiệm vụ");
 
         await SendAsync(Response);
     }

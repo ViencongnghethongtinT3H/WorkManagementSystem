@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
+using WorkManagementSystem.Features.TaskDetail.Services;
 using WorkManagementSystem.Infrastructure.DataSeeder;
 using WorkManagementSystem.Infrastructure.Factory;
 using WorkManagementSystem.Infrastructure.Persistence;
@@ -14,7 +15,7 @@ public static class ProgramExtensions
         services.AddScoped<IDatabaseContext, MainDbContext>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        //services.AddTransient(typeof(IMovieServices), typeof(MovieServices));
+        services.AddScoped(typeof(ITaskDetailService), typeof(TaskDetailService));
         services.AddTransient<IContextFactory, ContextFactory>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
     }

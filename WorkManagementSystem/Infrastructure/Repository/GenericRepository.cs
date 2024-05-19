@@ -1,4 +1,5 @@
-﻿namespace WorkManagementSystem.Infrastructure.Repository;
+﻿
+namespace WorkManagementSystem.Infrastructure.Repository;
 
 public class GenericRepository<T> : IGenericRepository<T>
     where T : class
@@ -87,5 +88,15 @@ public class GenericRepository<T> : IGenericRepository<T>
     public virtual EntityState Update(T entity)
     {
         return dbSet.Update(entity).State;
+    }
+
+    public async Task AddRangeAsync(IEnumerable<T> lst)
+    {
+        await dbSet.AddRangeAsync(lst);
+    }
+
+    public async Task AddAsync(T entity)
+    {
+         await dbSet.AddAsync(entity) ;
     }
 }

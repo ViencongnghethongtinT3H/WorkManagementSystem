@@ -2,6 +2,7 @@
 
 public class Request : TaskDetailModel
 {
+    public List<ImplementerModel> Implementers { get; set; }
 }
 
 public class Validator : Validator<Request>
@@ -9,11 +10,12 @@ public class Validator : Validator<Request>
     public Validator()
     {
         RuleFor(x => x.Content)
-             .NotEmpty().WithMessage("Nội dung trích yếu không được để trống!");          
+             .NotEmpty().WithMessage("Nội dung trích yếu không được để trống!");
+        
     }
 }
 public class Response
 {
-public string Message => "Article saved!";
-public string? ArticleID { get; set; }
+    public string Message => "Task saved!";
+    public string? TaskId { get; set; }
 }

@@ -10,7 +10,7 @@
         public string? Notation { get; set; }  // ký hiệu
         public DateTime DateIssued { get; set; }  // ngày ban hành
         public DateTime DateArrival { get; set; }  // thời gian người nhận nhiệm vụ mở công văn này
-       public Guid DocumentTypeId { get; set; }  //  Loại văn bản link tới bảng chung setting
+       public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
         public Guid DepartmentId { get; set; }  //  cơ quan ban hành
         [MaxLength(1000)]
         [Required]
@@ -32,6 +32,5 @@
 
         #endregion
 
-        public ProcessingStatusEnum ProcessingStatus { get; set; }  // trạng thái của công văn
     }
 }

@@ -18,6 +18,6 @@ public class Validator : Validator<Request>
 }
 public class Response
 {
-    public string Message => "Article saved!";
-    public string? ArticleID { get; set; }
+    public string Message => "Work Item saved!";
+    public string? WorkId { get; set; }
 }

@@ -9,10 +9,10 @@ public class WorkItem : EntityBase
     public string? ItemId { get; set; }  // số
     [MaxLength(100)]
     public string? Notation { get; set; }  // ký hiệu
-    public DateTime DateIssued { get; set; }  // ngày ban hành
-    public DateTime DateArrival { get; set; }  // thời gian người nhận nhiệm vụ mở công văn này
-    //public Guid DocumentTypeId { get; set; }  //  Loại văn bản link tới bảng chung setting
-    public Guid DepartmentId { get; set; }  //  cơ quan ban hành
+    public DateTime? DateIssued { get; set; }  // ngày ban hành
+    public DateTime? DateArrival { get; set; }  // thời gian người nhận nhiệm vụ mở công văn này
+    public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
+    public Guid? DepartmentId { get; set; }  //  cơ quan ban hành
     [MaxLength(1000)]
     [Required]
     public string Content { get; set; }   // Trích yếu         
@@ -26,13 +26,13 @@ public class WorkItem : EntityBase
 
     #region Step 2
 
-    public DateTime Dealine { get; set; }  // Thời hạn xử lý
-    public DateTime EvictionTime { get; set; }  // Thời hạn thu hồi
-    public Guid UserId { get; set; }    // chủ trì công văn này 
-    public Guid CategoryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
+    public DateTime? Dealine { get; set; }  // Thời hạn xử lý
+    public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
+    public Guid? UserId { get; set; }    // chủ trì công văn này 
+    public Guid? CategoryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
 
     #endregion
 
-    public ProcessingStatusEnum ProcessingStatus { get; set; }  // trạng thái của công văn
+    public ProcessingStatusEnum ProcessingStatus { get; set; } = ProcessingStatusEnum.None;  // trạng thái của công văn
     
 }

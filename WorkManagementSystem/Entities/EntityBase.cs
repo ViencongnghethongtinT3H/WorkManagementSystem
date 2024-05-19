@@ -7,5 +7,5 @@ public abstract class EntityBase
     public DateTime? Updated { get; set; }
     public string? UserIdCreated { get; set; }
     public string? UserIdUpdated { get; set; }
-    public StatusEnum Status { get; set; }
+    public StatusEnum Status { get; set; } = StatusEnum.Active;
 }

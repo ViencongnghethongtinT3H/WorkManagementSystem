@@ -4,11 +4,12 @@ public interface IGenericRepository<T>
 {
     /// <returns>The Entity's state</returns>
     EntityState Add(T entity);
+    Task AddAsync(T entity);
     /// <returns>The Entity's state</returns>
     EntityState Update(T entity);
     /// <returns>Entity</returns>
     T Get<TKey>(TKey id);
-
+    Task AddRangeAsync(IEnumerable<T> lst);
     /// <returns>Task Entity</returns>
     Task<T> GetAsync<TKey>(TKey id);
 
