@@ -9,8 +9,19 @@ public class DataSeeder
     }
     public async Task SeedAllAsync()
     {
-        await SeedDataSetting();
-        await SeedDataDepartment();
+        try
+        {
+            await SeedDataSetting();
+            await SeedDataDepartment();
+            await SeedDataPosition();
+            await SeedDataUser();
+        }
+        catch (Exception ex )
+        {
+
+            throw ex;
+        }
+       
     }
 
     private async Task SeedDataSetting()
@@ -172,5 +183,128 @@ public class DataSeeder
         };
         await dbContext.Departments.AddRangeAsync(lelver2);
         await dbContext.SaveChangesAsync();
-    } 
+    }
+
+    private async Task SeedDataPosition()
+    {
+        if (await dbContext.Positions.AnyAsync())
+        {
+            return;
+        }
+        var lst = new List<Position>
+        {
+            new Position
+            {
+                Name = "Trưởng phòng"
+            },
+            new Position
+            {
+                Name = "Chánh văn phòng"
+            },
+            new Position
+            {
+                Name = "Nhân viên"
+            },
+            new Position
+            {
+                Name = "Phó phòng"
+            },
+             new Position
+            {
+                Name = "Thư ký"
+            },
+              new Position
+            {
+                Name = "Kiểm soát viên"
+            }
+        };
+        await dbContext.Positions.AddRangeAsync(lst);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private async Task SeedDataUser()
+    {
+        if (await dbContext.Users.AnyAsync())
+        {
+            return;
+        }
+        var lst = new List<User>
+        {
+            new User
+            {
+                Name = "Lê Trung Đức",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Trưởng phòng").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault().Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Vũ Chu Đức",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Chánh văn phòng").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault(x => x.Name == "UBND tỉnh").Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Nguyễn Lê Thanh",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Nhân viên").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault(x => x.Name == "Tỉnh uỷ").Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Nguyễn Văn Thành",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Nhân viên").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault(x => x.Name == "Sở kế hoạch đầu tư").Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Lê Trung Đức",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Thư ký").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault(x => x.Name == "Sở văn hoá - thể thao - du lịch").Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Hoành Thanh Hải",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Phó phòng").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault(x => x.Name == "Đảng uỷ sở giáo dục").Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Vũ HoàiNam",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Nhân viên").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault().Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            },
+            new User
+            {
+                Name = "Nguyễn Huy Hùng",
+                PositionId = dbContext.Positions.FirstOrDefault(x => x.Name == "Kiểm soát viên").Id,
+                DepartmentId = dbContext.Departments.FirstOrDefault(x => x.Name == "Khối cơ quan cấp bộ").Id,
+                Email= "vansy9x@gmail.com",
+                Phone = "0971489926",
+                PasswordHash = "123456"
+            }
+        };
+
+        await dbContext.Users.AddRangeAsync(lst);       
+        await dbContext.SaveChangesAsync();
+    }
 }

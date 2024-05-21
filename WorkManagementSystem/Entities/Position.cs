@@ -1,13 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace WorkManagementSystem.Entities;
 
-namespace WorkManagementSystem.Entities
+public class Position : EntityBase
 {
-    public class Position : EntityBase
-    {
-        [MaxLength(100)]
-        [Required]
-        public string PositionName { get; set; }
-        public Guid UserId { get; set; }
-        public Guid DepartmentId { get; set; }
-    }
+    [MaxLength(100)]
+    [Required]
+    public string Name { get; set; }
+    
 }

@@ -14,6 +14,6 @@ public class Mapper : Mapper<Request, Response, Entities.WorkItem>
         LeadershipDirectId = r.LeadershipDirectId,
         Priority = r.Priority,
         DocumentTypeKey = r.DocumentTypeKey,
-        Status = StatusEnum.Active,
+        Status = StatusEnum.InActive,
     };
 }
