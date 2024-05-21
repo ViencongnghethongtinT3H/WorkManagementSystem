@@ -4,11 +4,11 @@
 public class WorkItem : EntityBase
 {
     #region Step 1
-
+    public string? WorkItemNumber { get; set; }
     [MaxLength(100)]
     public string? ItemId { get; set; }  // số
     [MaxLength(100)]
-    public string? Notation { get; set; }  // ký hiệu
+    public string? Notation { get; set; }  // ký hiệu link tới bảng setting
     public DateTime? DateIssued { get; set; }  // ngày ban hành
     public DateTime? DateArrival { get; set; }  // thời gian người nhận nhiệm vụ mở công văn này
     public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
@@ -30,7 +30,7 @@ public class WorkItem : EntityBase
     public DateTime? Dealine { get; set; }  // Thời hạn xử lý
     public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
     public Guid? UserId { get; set; }    // chủ trì công văn này 
-    public Guid? CategoryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
+    public Guid? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
 
     #endregion
 

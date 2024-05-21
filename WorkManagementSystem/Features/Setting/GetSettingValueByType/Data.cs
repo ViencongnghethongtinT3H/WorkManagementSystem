@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.Setting.GetSettingValue;
+﻿namespace WorkManagementSystem.Features.Setting.GetSettingValueByType;
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -6,7 +6,7 @@ public class Data
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<List<SettingModel>> GetSettingByType(SettingEnum settingType) 
+    public async Task<List<SettingModel>> GetSettingByType(SettingEnum settingType)
     {
         var setting = _unitOfWork.GetRepository<Entities.Setting>();
         return await setting.FindBy(x => x.Type == settingType).Select(x => new SettingModel
@@ -14,6 +14,6 @@ public class Data
             Key = x.Key,
             Value = x.Value
         }).ToListAsync();
-    
+
     }
 }

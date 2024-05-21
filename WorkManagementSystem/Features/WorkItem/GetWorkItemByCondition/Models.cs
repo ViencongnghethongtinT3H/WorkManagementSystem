@@ -14,7 +14,24 @@ public class InputRequest : IListQuery<Response>
     public bool IsPagingEnabled { get; init; } = false;
 }
 
-public class Response : QueryListResponse<WorkItemModel>
+public class Response : QueryListResponse<WorkItemResponse>
 {
+    
+}
+
+public class WorkItemResponse 
+{
+    public string Notation { get; set; }  // số, ký hiệu
+    public string? DateIssued { get; set; }  // ngày ban hành
+    public string DocumentTypeValue { get; set; }  //  Loại văn bản link tới bảng chung setting
+    public string Content { get; set; }   // Trích yếu         
+    public string LeadershipDirect { get; set; }   // Tên lãnh đạo chỉ đạo      
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
+    public string PriorityValue { get; set; }  // Độ khẩn cấp
+    public string ProcessingStatusValue { get; set; }
+
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public ProcessingStatusEnum ProcessingStatus { get; set; }
 
 }

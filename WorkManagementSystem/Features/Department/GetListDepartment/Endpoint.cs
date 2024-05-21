@@ -1,8 +1,6 @@
-﻿using WorkManagementSystem.Features.Setting;
+﻿namespace WorkManagementSystem.Features.Department.GetListDepartment;
 
-namespace WorkManagementSystem.Features.Department.GetListDepartment;
-
-public class Endpoint : Endpoint<Request, List<Reponse>>
+public class Endpoint : Endpoint<Request, ListResultSelectModel<Reponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     public Endpoint(IUnitOfWork unitOfWork)
@@ -21,9 +19,11 @@ public class Endpoint : Endpoint<Request, List<Reponse>>
 
         var setting = await data.GetDepartment(r.Level);
 
-        if (setting is null)
+        var result =  ListResultSelectModel<Reponse>.Create(setting);
+
+        if (result is null)
             await SendNotFoundAsync();
         else
-            await SendAsync(setting);
+            await SendAsync(result);
     }
 }

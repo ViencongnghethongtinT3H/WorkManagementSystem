@@ -1,6 +1,8 @@
-﻿namespace WorkManagementSystem.Features.Setting.GetSettingValue;
+﻿using WorkManagementSystem.Features.Department.GetListDepartment;
 
-public class Endpoint : Endpoint<Request, List<SettingModel>>
+namespace WorkManagementSystem.Features.Setting.GetSettingValueByType;
+
+public class Endpoint : Endpoint<Request, ListResultSelectModel<SettingModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     public Endpoint(IUnitOfWork unitOfWork)
@@ -19,9 +21,11 @@ public class Endpoint : Endpoint<Request, List<SettingModel>>
 
         var setting = await data.GetSettingByType(r.SettingType);
 
+        var result = ListResultSelectModel<SettingModel>.Create(setting);
+
         if (setting is null)
             await SendNotFoundAsync();
         else
-            await SendAsync(setting);
+            await SendAsync(result);
     }
 }

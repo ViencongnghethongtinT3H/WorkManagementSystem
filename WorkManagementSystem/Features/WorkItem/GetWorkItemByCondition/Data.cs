@@ -7,50 +7,50 @@ public class Data
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<Response> GetWorkItemByCondition(InputRequest input)
+    public async Task<ListResultModel<WorkItemResponse>> GetWorkItemByCondition(InputRequest input)
     {
-        var workItem = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll().Select (x => new WorkItemModel
-        {
-            Content = x.Content,
-            KeyWord = x.KeyWord,
-            Notation = x.Notation,
-            Priority = x.Priority,
-            Subjective = x.Subjective,
-            DateIssued = x.DateIssued,
-            DepartmentId = x.DepartmentId,
-            ProcessingStatus = x.ProcessingStatus,
-            Status = x.Status,
-            CategoryId = x.CategoryId,
-            DocumentTypeKey = x.DocumentTypeKey,    
-            ItemId = x.ItemId,  
+        var work = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
+        var setting = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
+        var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
 
-        });
+        var query = from w in work.AsNoTracking()
+                    join s1 in setting.AsNoTracking() on w.DocumentTypeKey equals s1.Key into cd from b in cd.DefaultIfEmpty()
+                    join s3 in setting.AsNoTracking() on w.Notation equals s3.Key into sd3 from b1 in sd3.DefaultIfEmpty()
+                    join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud from b2 in ud.DefaultIfEmpty()
+                    select new WorkItemResponse
+                    {
+                        Content = w.Content,
+                        Notation = $"{w.ItemId}/{b1.Value}",
+                        ProcessingStatusValue = w.ProcessingStatus.GetDescription(),
+                        ProcessingStatus = w.ProcessingStatus,
+                        DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
+                        Priority = w.Priority,
+                        PriorityValue = w.Priority.GetDescription(),
+                        DocumentTypeValue = b.Value,
+                        LeadershipDirect = b2.Name
+                    };
+
 
         var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");
         if (processingStatus is not null)
         {
-            workItem = workItem.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
-        }
-        var status = input.Filters.GetFilterModel("Status");
-        if (status is not null)
+            query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
+        }       
+        var data =  new Response
         {
-            workItem = workItem.Where(x => (int)x.Status == Convert.ToInt16(status.FieldValue));
-        }
-        var data = await FilterActivitiesRepresentativeDetail(input, workItem);
-        
-        return new Response
-        {
-            Count = await workItem.CountAsync(),
-            Items = await FilterActivitiesRepresentativeDetail(input, workItem)
+            Count = await query.CountAsync(),
+            Items = await FilterActivitiesRepresentativeDetail(input, query)
         };
+         return ListResultModel<WorkItemResponse>.Create(data.Items, data.Count, input.Page, input.PageSize);
 
     }
 
-    private async Task<List<WorkItemModel>> FilterActivitiesRepresentativeDetail(InputRequest r,
-        IQueryable<WorkItemModel> query)
+    private async Task<List<WorkItemResponse>> FilterActivitiesRepresentativeDetail(InputRequest r,
+        IQueryable<WorkItemResponse> query)
     {
-        query = EntityQueryFilterHelper.CreateSort<WorkItemModel>(r.Sorts)(query);
-        query = EntityQueryFilterHelper.Page<WorkItemModel>(r.Page, r.PageSize)(query);
+        query = EntityQueryFilterHelper.CreateSort<WorkItemResponse>(r.Sorts)(query);
+        query = EntityQueryFilterHelper.Page<WorkItemResponse>(r.Page, r.PageSize)(query);
         return await query.ToListAsync();
     }
+
 }

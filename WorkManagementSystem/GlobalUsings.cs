@@ -16,3 +16,4 @@ global using WorkManagementSystem.Shared.Domain;
 global using WorkManagementSystem.Shared.Dtos;
 global using WorkManagementSystem.Shared.Extensions;
 global using WorkManagementSystem.Shared.Helper;
+global using System.ComponentModel;

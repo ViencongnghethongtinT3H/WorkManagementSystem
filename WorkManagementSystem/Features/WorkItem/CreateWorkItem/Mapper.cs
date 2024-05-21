@@ -15,5 +15,6 @@ public class Mapper : Mapper<Request, Response, Entities.WorkItem>
         Priority = r.Priority,
         DocumentTypeKey = r.DocumentTypeKey,
         Status = StatusEnum.InActive,
+        ProcessingStatus = ProcessingStatusEnum.None
     };
 }
