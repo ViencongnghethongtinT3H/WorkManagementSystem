@@ -48,6 +48,7 @@ public interface IGenericRepository<T>
     /// </summary>
     /// <returns>The Entity's state</returns>
     EntityState HardDelete(T entity);
+    void HardDeletes(List<T> entity);
 
     bool Exists(Expression<Func<T, bool>> predicate);
 

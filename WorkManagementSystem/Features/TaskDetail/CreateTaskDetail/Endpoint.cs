@@ -1,8 +1,9 @@
 ﻿using WorkManagementSystem.Features.TaskDetail.Services;
+using WorkManagementSystem.Shared.Dtos;
 
 namespace WorkManagementSystem.Features.TaskDetail.CreateTaskDetail;
 
-public class Endpoint : Endpoint<Request, Response>
+public class Endpoint : Endpoint<Request, ResultModel<Response>>
 {
     private readonly ITaskDetailService _taskDetailService;
 
@@ -14,8 +15,6 @@ public class Endpoint : Endpoint<Request, Response>
     {
         Post("task/create-task");
         AllowAnonymous();
-
-        // Claims(Claim.AuthorID);
         AccessControl(
             keyName: "Article_Save_Own",
             behavior: Apply.ToThisEndpoint,
@@ -24,12 +23,14 @@ public class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        
-        Response.TaskId = await _taskDetailService.SaveTaskDetail(r);
+        var result = ResultModel<Response>.Create(new Response
+        {
+            TaskId = await _taskDetailService.SaveTaskDetail(r)
+        });
 
-        if (string.IsNullOrEmpty(Response.TaskId))
+        if (string.IsNullOrEmpty(result.Data.TaskId))
             ThrowError("Không thể thêm nhiệm vụ");
 
-        await SendAsync(Response);
+        await SendAsync(result);
     }
 }

@@ -21,7 +21,7 @@
         public string? KeyWord { get; set; }   // từ khoá 
         public Guid LeadershipDirectId { get; set; }   // Lãnh đạo chỉ đạo
         public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
-        public Guid? CategoryId { get; set; }    // Lĩnh vực link tới bảng chung setting
+        public Guid? IndustryId { get; set; }    // Lĩnh vực link tới bảng chung setting
         public ProcessingStatusEnum ProcessingStatus { get; set; }
         public StatusEnum Status { get; set; }
 

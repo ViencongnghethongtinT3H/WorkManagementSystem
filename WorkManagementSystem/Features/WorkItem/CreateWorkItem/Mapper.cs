@@ -13,8 +13,8 @@ public class Mapper : Mapper<Request, Response, Entities.WorkItem>
         Subjective = r.Subjective,
         LeadershipDirectId = r.LeadershipDirectId,
         Priority = r.Priority,
-        DocumentTypeKey = r.DocumentTypeKey,
-        Status = StatusEnum.InActive,
-        ProcessingStatus = ProcessingStatusEnum.None
+        DocumentTypeKey = r.DocumentTypeKey,        
+        ProcessingStatus = ProcessingStatusEnum.None,
+        IndustryId = r.IndustryId,
     };
 }

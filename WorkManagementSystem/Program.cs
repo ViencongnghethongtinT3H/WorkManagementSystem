@@ -1,13 +1,7 @@
-using FastEndpoints;
 using FastEndpoints.Swagger;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using NSwag;
 using System.Reflection;
 using WorkManagementSystem;
 using WorkManagementSystem.Infrastructure.DataSeeder;
-using WorkManagementSystem.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddAuthorization();

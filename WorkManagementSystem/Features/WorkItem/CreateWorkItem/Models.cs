@@ -16,5 +16,5 @@ public class Validator : Validator<Request>
 public class Response
 {
     public string Message => "Work Item saved!";
-    public string? WorkId { get; set; }
+    public string? WorkItemId { get; set; }
 }

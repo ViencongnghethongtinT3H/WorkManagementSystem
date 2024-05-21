@@ -1,4 +1,5 @@
 ﻿
+
 namespace WorkManagementSystem.Infrastructure.Repository;
 
 public class GenericRepository<T> : IGenericRepository<T>
@@ -77,7 +78,7 @@ public class GenericRepository<T> : IGenericRepository<T>
 
     public virtual EntityState SoftDelete(T entity)
     {
-        entity.GetType().GetProperty("IsActive")?.SetValue(entity, false);
+        entity.GetType().GetProperty("Status")?.SetValue(entity, StatusEnum.Deleted);
         return dbSet.Update(entity).State;
     }
 
@@ -98,5 +99,10 @@ public class GenericRepository<T> : IGenericRepository<T>
     public async Task AddAsync(T entity)
     {
          await dbSet.AddAsync(entity) ;
+    }
+
+    public async void HardDeletes(List<T> entities)
+    {
+        dbSet.RemoveRange(entities) ;
     }
 }

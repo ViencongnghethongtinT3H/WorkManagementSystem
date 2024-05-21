@@ -16,9 +16,9 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
     {
         var data = new Data(_unitOfWork);
 
-        Response.WorkId = await data.CreateWorkItems(Map.ToEntity(r));
+        Response.WorkItemId = await data.CreateWorkItems(Map.ToEntity(r));
 
-        if (string.IsNullOrEmpty(Response.WorkId))
+        if (string.IsNullOrEmpty(Response.WorkItemId))
             ThrowError("Không thể thêm công văn");
         await SendAsync(Response);
 

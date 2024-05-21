@@ -26,12 +26,12 @@ public class WorkItemResponse
     public string DocumentTypeValue { get; set; }  //  Loại văn bản link tới bảng chung setting
     public string Content { get; set; }   // Trích yếu         
     public string LeadershipDirect { get; set; }   // Tên lãnh đạo chỉ đạo      
-    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    [JsonIgnore]
     public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
     public string PriorityValue { get; set; }  // Độ khẩn cấp
     public string ProcessingStatusValue { get; set; }
-
-    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    
+    [JsonIgnore]
     public ProcessingStatusEnum ProcessingStatus { get; set; }
 
 }
