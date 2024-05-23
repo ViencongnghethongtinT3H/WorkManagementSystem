@@ -10,14 +10,14 @@ public class HistoryCommandHandler : ICommandHandler<HistoryCommand, bool>
 
     public async Task<bool> ExecuteAsync(HistoryCommand command, CancellationToken ct)
     {
-        var history = new History
+        var history = new Entities.History
         {
             actionContent = command.ActionContent,
             UserId = command.UserId,
             IssueId = command.IssueId,
         };
            
-        var repo = _unitOfWork.GetRepository<History>();
+        var repo = _unitOfWork.GetRepository<Entities.History>();
         await repo.AddAsync(history);
         await _unitOfWork.CommitAsync();
         return true;

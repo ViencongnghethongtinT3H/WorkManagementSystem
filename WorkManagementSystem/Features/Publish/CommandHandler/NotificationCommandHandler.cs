@@ -10,10 +10,10 @@ public class NotificationCommandHandler : ICommandHandler<LstNotificationCommand
 
     public async Task<bool> ExecuteAsync(LstNotificationCommand commands, CancellationToken ct)
     {
-        var notis = new List<Notification>();
+        var notis = new List<Entities.Notification>();
         foreach (var notificationCommand in commands.NotificationCommands)
         {
-            var notification = new Notification
+            var notification = new Entities.Notification
             {
                 Content = notificationCommand.Content,
                 UserReceive = notificationCommand.UserReceive,
@@ -24,7 +24,7 @@ public class NotificationCommandHandler : ICommandHandler<LstNotificationCommand
             notis.Add(notification);
         }       
            
-        var repo = _unitOfWork.GetRepository<Notification>();
+        var repo = _unitOfWork.GetRepository<Entities.Notification>();
         await repo.AddRangeAsync(notis);
         await _unitOfWork.CommitAsync();
         return true;
