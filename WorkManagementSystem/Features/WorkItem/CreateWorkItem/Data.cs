@@ -13,7 +13,19 @@ public class Data
         var workItemRepository = _unitOfWork.GetRepository<Entities.WorkItem>();
         workItemRepository.Add(workItem);
         await _unitOfWork.CommitAsync();
+        
         return workItem.Id.ToString();
+
+    }
+
+    public async Task<string> GetUserName(Request r)
+    {
+        var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(r.UserCreateId);
+        if (user is not null)
+        {
+            return user.Name;
+        }
+        return string.Empty;
 
     }
 }

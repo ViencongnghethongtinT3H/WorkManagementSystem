@@ -2,6 +2,7 @@
 
 public class Request : WorkItemModel
 {
+    public Guid UserCreateId { get; set; }
 }
 
 public class Validator : Validator<Request>
@@ -16,5 +17,5 @@ public class Validator : Validator<Request>
 public class Response
 {
     public string Message => "Work Item saved!";
-    public string? WorkItemId { get; set; }
+    public string WorkItemId { get; set; }
 }

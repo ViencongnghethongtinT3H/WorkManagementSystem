@@ -1,6 +1,6 @@
 ﻿namespace WorkManagementSystem.Features.User.GetListUserForSelect;
 
-public class Endpoint : EndpointWithoutRequest<ResultModel<List<UserModel>>>
+public class Endpoint : Endpoint<Request, ResultModel<List<UserModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     public Endpoint(IUnitOfWork unitOfWork)
@@ -13,10 +13,10 @@ public class Endpoint : EndpointWithoutRequest<ResultModel<List<UserModel>>>
         Post("/user/get-users");
     }
 
-    public override async Task HandleAsync(CancellationToken c)
+    public override async Task HandleAsync(Request request, CancellationToken c)
     {
         var data = new Data(_unitOfWork);
-        Response = await data.GetUserInfo();
+        Response = await data.GetUserInfo(request);
         await SendAsync(Response);
     }
 }

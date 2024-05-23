@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Serilog;
-using WorkManagementSystem.Features.TaskDetail.Services;
-using WorkManagementSystem.Infrastructure.DataSeeder;
-using WorkManagementSystem.Infrastructure.Factory;
-using WorkManagementSystem.Infrastructure.Persistence;
-using WorkManagementSystem.Infrastructure.Repository;
-using WorkManagementSystem.Infrastructure.UnitOfWork;
-
-namespace WorkManagementSystem;
+﻿namespace WorkManagementSystem;
 public static class ProgramExtensions
 {
     internal static void AddInjections(this IServiceCollection services)
@@ -16,8 +7,8 @@ public static class ProgramExtensions
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped(typeof(ITaskDetailService), typeof(TaskDetailService));
-        services.AddTransient<IContextFactory, ContextFactory>();
-        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IContextFactory, ContextFactory>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     public static async Task SeedData(IHost app)

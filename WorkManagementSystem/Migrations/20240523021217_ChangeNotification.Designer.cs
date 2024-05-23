@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagementSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using WorkManagementSystem.Infrastructure.Persistence;
 namespace WorkManagementSystem.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523021217_ChangeNotification")]
+    partial class ChangeNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,9 +117,6 @@ namespace WorkManagementSystem.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("IssueId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -209,6 +208,10 @@ namespace WorkManagementSystem.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("PrefixContent")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime?>("ReceivingTime")
                         .HasColumnType("datetime2");
 
@@ -220,10 +223,6 @@ namespace WorkManagementSystem.Migrations
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Url")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserIdCreated")
                         .HasColumnType("nvarchar(max)");

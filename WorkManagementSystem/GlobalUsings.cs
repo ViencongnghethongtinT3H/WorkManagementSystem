@@ -17,3 +17,8 @@ global using WorkManagementSystem.Shared.Dtos;
 global using WorkManagementSystem.Shared.Extensions;
 global using WorkManagementSystem.Shared.Helper;
 global using System.ComponentModel;
+global using WorkManagementSystem.Features.Publish.Command;
+global using WorkManagementSystem.Features.TaskDetail.Services;
+global using WorkManagementSystem.Infrastructure.DataSeeder;
+global using WorkManagementSystem.Infrastructure.Factory;
+global using WorkManagementSystem.Infrastructure.Repository;

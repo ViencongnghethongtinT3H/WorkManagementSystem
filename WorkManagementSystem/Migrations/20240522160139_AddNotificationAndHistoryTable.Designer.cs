@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagementSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using WorkManagementSystem.Infrastructure.Persistence;
 namespace WorkManagementSystem.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240522160139_AddNotificationAndHistoryTable")]
+    partial class AddNotificationAndHistoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,14 +111,16 @@ namespace WorkManagementSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ActionContent")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
                     b.Property<DateTime>("ActionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("IssueId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -132,11 +136,6 @@ namespace WorkManagementSystem.Migrations
 
                     b.Property<string>("UserIdUpdated")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("actionContent")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -209,6 +208,10 @@ namespace WorkManagementSystem.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("PrefixContent")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime?>("ReceivingTime")
                         .HasColumnType("datetime2");
 
@@ -221,23 +224,21 @@ namespace WorkManagementSystem.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Url")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("UserIdCreated")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdUpdated")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserReceive")
+                    b.Property<string>("UserReceive")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("UserSend")
+                    b.Property<string>("UserSend")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

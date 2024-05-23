@@ -21,6 +21,9 @@ public class Response : QueryListResponse<WorkItemResponse>
 
 public class WorkItemResponse 
 {
+    public Guid WorkItemId { get; set; }
+    public Guid? UserId { get; set; }   // người chủ trì công văn
+    public Guid? LeadershipId { get; set; }   // người chủ trì công văn
     public string Notation { get; set; }  // số, ký hiệu
     public string? DateIssued { get; set; }  // ngày ban hành
     public string DocumentTypeValue { get; set; }  //  Loại văn bản link tới bảng chung setting

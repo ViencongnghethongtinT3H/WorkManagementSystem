@@ -16,5 +16,6 @@ public class Mapper : Mapper<Request, Response, Entities.WorkItem>
         DocumentTypeKey = r.DocumentTypeKey,        
         ProcessingStatus = ProcessingStatusEnum.None,
         IndustryId = r.IndustryId,
+        UserIdCreated = r.UserCreateId.ToString(),
     };
 }

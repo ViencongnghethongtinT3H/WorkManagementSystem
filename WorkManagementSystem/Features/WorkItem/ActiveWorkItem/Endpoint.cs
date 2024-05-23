@@ -1,6 +1,4 @@
-﻿using WorkManagementSystem.Shared.Dtos;
-
-namespace WorkManagementSystem.Features.WorkItem.ActiveWorkItem;
+﻿namespace WorkManagementSystem.Features.WorkItem.ActiveWorkItem;
 
 public class Endpoint : Endpoint<Request, ResultModel<Response>>
 {
@@ -17,10 +15,43 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
+        var userNotifications = new List<Guid>();
         var data = new Data(_unitOfWork);
+        string? workItemId;
+        (workItemId, userNotifications) = await data.ActiveWorkItem(r);
+        var lstcmd = new List<NotificationCommandbase>();
+
+        var name = await new GetUserNameCommand
+        {
+            UserId = r.UserCreatedId,
+        }.ExecuteAsync();
+
+        foreach (var notification in userNotifications)
+        {
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = "Một công văn tới mục Văn bản đến của bạn",
+                UserReceive = notification,
+                UserSend = r.UserCreatedId,
+                Url = "",
+            });
+        }
+        await new LstNotificationCommand
+        {
+            NotificationCommands = lstcmd
+        }.ExecuteAsync();
+       
+        await new HistoryCommand
+        {
+            UserId = r.UserCreatedId,
+            IssueId = r.WorkItemId,
+            ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+        }.ExecuteAsync();
+
+
         var result = ResultModel<Response>.Create(new Response
         {
-            WorkItemId = await data.ActiveWorkItem(r)
+            WorkItemId = workItemId,
         });
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))

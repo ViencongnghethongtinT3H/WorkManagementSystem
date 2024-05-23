@@ -23,6 +23,14 @@ builder.Services.AddFastEndpoints().SwaggerDocument();
 //    };
 //});
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("api", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContext<MainDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -61,6 +69,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseFastEndpoints().UseSwaggerGen();
 app.UseHttpsRedirection();
+app.UseCors("api");
 //app.UseAuthentication();
 //app.UseAuthorization();
 try

@@ -7,6 +7,7 @@ public class Request
     public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
     public Guid? UserId { get; set; }    // chủ trì công văn này 
     public List<ImplementerDto> Implementers { get; set; }  
+    public Guid UserCreatedId { get; set; }
 }
 public class ImplementerDto
 {

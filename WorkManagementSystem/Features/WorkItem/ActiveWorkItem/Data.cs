@@ -11,10 +11,10 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<string> ActiveWorkItem(Request r)
+    public async Task<(string, List<Guid> UserReceiveNotification)> ActiveWorkItem(Request r)
     {
+        var userNotifications = new List<Guid>();
         var workItemRepository = _unitOfWork.GetRepository<Entities.WorkItem>();
-
         var workItem = await workItemRepository.GetAsync(r.WorkItemId);
         var implementRepository = _unitOfWork.GetRepository<Implementer>();
         var implementOld = await implementRepository.FindBy(x => x.IssuesId == r.WorkItemId).ToListAsync();
@@ -34,13 +34,16 @@ public class Data
         workItem.Dealine = r.Dealine;
         workItem.EvictionTime = r.EvictionTime;
         workItem.UserId = r.UserId;
+        workItem.UserIdUpdated = r.UserCreatedId.ToString();
+        workItem.UserIdCreated = r.UserCreatedId.ToString();
+
         workItemRepository.Update(workItem);
         implementRepository.HardDeletes(implementOld);
         var implements = ToImplementer(r, r.WorkItemId);
         await implementRepository.AddRangeAsync(implements);
         await _unitOfWork.CommitAsync();
-        return workItem.Id.ToString();
-
+        userNotifications = implements.Select(x => x.UserReceiveId).ToList();
+        return (workItem.Id.ToString(), userNotifications);
     }
 
     private List<Implementer> ToImplementer(Request r, Guid IssuesId)
