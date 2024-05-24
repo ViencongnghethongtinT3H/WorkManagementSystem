@@ -1,6 +1,24 @@
-﻿namespace WorkManagementSystem.Features.Notification
+﻿
+
+namespace WorkManagementSystem.Features.Notification;
+
+public class Endpoint : Endpoint<Request, ResultModel<Response>>
 {
-    public class Endpoind
+    private readonly IUnitOfWork _unitOfWork;
+    public Endpoint(IUnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
+    }
+    public override void Configure()
+    {
+        AllowAnonymous();
+        Get("/notification/get-notifications");
+    }
+
+    public override async Task HandleAsync(Request r, CancellationToken c)
+    {
+        var data = new Data(_unitOfWork);
+        var result = await data.GetNotification(r);
+        await SendAsync(ResultModel<Response>.Create(result));
     }
 }

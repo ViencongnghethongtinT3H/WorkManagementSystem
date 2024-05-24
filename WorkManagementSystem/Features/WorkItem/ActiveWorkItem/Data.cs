@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 
 namespace WorkManagementSystem.Features.WorkItem.ActiveWorkItem;
-
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;

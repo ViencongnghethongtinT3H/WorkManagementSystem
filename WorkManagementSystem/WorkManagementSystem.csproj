@@ -24,8 +24,4 @@
     <ProjectReference Include="..\WMS.CrossCuttingConcerns\WMS.CrossCuttingConcerns.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\TaskDetail\GetTaskDetail\" />
-  </ItemGroup>
-
 </Project>

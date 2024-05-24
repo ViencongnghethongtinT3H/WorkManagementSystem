@@ -13,7 +13,7 @@
         [MaxLength(100)]
         public string? Url { get; set; }
         [MaxLength(100)]
-        public string? NotificationType { get; set; }
+        public NotificationType NotificationType { get; set; }
         public bool IsRead { get; set; } = false;
 
 

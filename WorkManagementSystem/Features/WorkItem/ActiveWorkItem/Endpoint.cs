@@ -34,6 +34,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
                 UserReceive = notification,
                 UserSend = r.UserCreatedId,
                 Url = "",
+                NotificationType = NotificationType.WorkItem
             });
         }
         await new LstNotificationCommand

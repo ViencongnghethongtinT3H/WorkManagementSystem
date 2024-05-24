@@ -17,6 +17,6 @@ public class NotificationCommandbase
     public DateTime? ReceivingTime { get; set; }
     public string Content { get; set; }
     public string? Url { get; set; }
-    public string? NotificationType { get; set; }
+    public NotificationType NotificationType { get; set; }
     public bool IsRead { get; set; } = false;
 }

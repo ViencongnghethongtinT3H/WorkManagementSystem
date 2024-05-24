@@ -14,9 +14,12 @@ public class Data
         var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
 
         var query = from w in work.AsNoTracking()
-                    join s1 in setting.AsNoTracking() on w.DocumentTypeKey equals s1.Key into cd from b in cd.DefaultIfEmpty()
-                    join s3 in setting.AsNoTracking() on w.Notation equals s3.Key into sd3 from b1 in sd3.DefaultIfEmpty()
-                    join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud from b2 in ud.DefaultIfEmpty()
+                    join s1 in setting.AsNoTracking() on w.DocumentTypeKey equals s1.Key into cd
+                    from b in cd.DefaultIfEmpty()
+                    join s3 in setting.AsNoTracking() on w.Notation equals s3.Key into sd3
+                    from b1 in sd3.DefaultIfEmpty()
+                    join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
+                    from b2 in ud.DefaultIfEmpty()
                     select new WorkItemResponse
                     {
                         WorkItemId = w.Id,
@@ -31,8 +34,10 @@ public class Data
                         LeadershipDirect = b2.Name,
                         UserId = w.UserId,
                         LeadershipId = w.LeadershipDirectId,
+                        Subjective = w.Subjective,
+                        DepartmentId = w.DepartmentId
                     };
-        var userId = input.Filters.GetFilterModel("UserId");        
+        var userId = input.Filters.GetFilterModel("UserId");
         if (userId is not null)
         {
             var id = new Guid(userId.FieldValue);
@@ -42,20 +47,37 @@ public class Data
             if (!uid.Contains(id))
             {
                 query = query.Where(x => x.UserId == id || x.LeadershipId == id);
-            }            
+            }
+        }
+        var workId = input.Filters.GetFilterModel("Id");
+        if (workId is not null)
+        {
+            query = query.Where(x => x.WorkItemId == new Guid(workId.FieldValue));
         }
 
         var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");
         if (processingStatus is not null)
         {
             query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
-        }       
-        var data =  new Response
+        }
+        var subjective = input.Filters.GetFilterModel("Subjective");
+        if (subjective is not null)
+        {
+            query = query.Where(x => x.Subjective == subjective.FieldValue);
+        }
+        var departmentId = input.Filters.GetFilterModel("DepartmentId");
+        if (subjective is not null)
+        {
+            query = query.Where(x => x.DepartmentId == new Guid(departmentId.FieldValue));
+        }
+
+
+        var data = new Response
         {
             Count = await query.CountAsync(),
             Items = await FilterActivitiesRepresentativeDetail(input, query)
         };
-         return ListResultModel<WorkItemResponse>.Create(data.Items, data.Count, input.Page, input.PageSize);
+        return ListResultModel<WorkItemResponse>.Create(data.Items, data.Count, input.Page, input.PageSize);
 
     }
 
