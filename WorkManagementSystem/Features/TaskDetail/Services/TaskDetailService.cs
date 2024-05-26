@@ -11,6 +11,7 @@ public class TaskDetailService : ITaskDetailService
     {
         var taskRepository = _unitOfWork.GetRepository<Entities.TaskDetail>();
         var taskDetail = ToEntity(r);
+        taskDetail.DepartmentSentId = r.UserCreateTaskId;
 
         taskRepository.Add(taskDetail);
         var implementRepository = _unitOfWork.GetRepository<Entities.Implementer>();
@@ -31,12 +32,12 @@ public class TaskDetailService : ITaskDetailService
         WorkItemId = r.WorkItemId,
         DealinePeriodical = r.DealinePeriodical,
         IsPeriodical = r.IsPeriodical,
-        DepartmentSentId = r.DepartmentSentId,
         LeadershipDirectId = r.LeadershipDirectId,
         UserCreateTaskId = r.UserCreateTaskId,
         ProcessingStatus = ProcessingStatusEnum.None,
         Dealine = r.Dealine,
         Status = StatusEnum.Active,
+        UserIdCreated = r.UserCreateTaskId.ToString(),
     };
     public List<Entities.Implementer> ToImplementer(CreateTaskDetail.Request r, Guid IssuesId)
     {

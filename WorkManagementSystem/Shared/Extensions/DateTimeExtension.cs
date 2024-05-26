@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Shared.Extensions
+﻿using System.Globalization;
+
+namespace WorkManagementSystem.Shared.Extensions
 {
     public static class DateTimeExtension
     {
@@ -26,6 +28,25 @@
         {
             dt = dt.AddHours(7);
             return dt.ToString(format);
+        }
+
+        public static DateTime ParseDateTimeNotNull(this string s, bool isToDate = false, string format = "dd/MM/yyyy HH:mm", CultureInfo provider = null,
+     DateTimeStyles dateTimeStyles = DateTimeStyles.None)
+        {
+            DateTime result = default(DateTime);
+            provider ??= CultureInfo.InvariantCulture;
+            if (DateTime.TryParseExact(s, format, provider: provider, style: dateTimeStyles, result: out DateTime dateTime))
+            {
+                if (!isToDate)
+                {
+                    result = dateTime;
+                }
+                else
+                {
+                    result = dateTime.AddDays(1).AddTicks(-1);
+                }
+            }
+            return result;
         }
     }
 }

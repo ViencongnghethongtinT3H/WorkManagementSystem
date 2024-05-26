@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkItem.GetWorkItemByCondition;
+﻿namespace WorkManagementSystem.Features.WorkItem.GetWorkItemToByCondition;
 public class Request
 {
     [FromHeader]
@@ -16,10 +16,10 @@ public class InputRequest : IListQuery<Response>
 
 public class Response : QueryListResponse<WorkItemResponse>
 {
-    
+
 }
 
-public class WorkItemResponse 
+public class WorkItemResponse
 {
     public Guid WorkItemId { get; set; }
     public Guid? UserId { get; set; }   // người chủ trì công văn
@@ -35,11 +35,12 @@ public class WorkItemResponse
     public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
     public string PriorityValue { get; set; }  // Độ khẩn cấp
     public string ProcessingStatusValue { get; set; }
-    
+
     [JsonIgnore]
     public ProcessingStatusEnum ProcessingStatus { get; set; }
     public DateTime Created { get; set; }
     public DateTime? Dealine { get; set; }
-    public string UserIdCreated { get; set; }   
+    public string UserIdCreated { get; set; }
+    public string UserInProgress { get; set; }
 
 }

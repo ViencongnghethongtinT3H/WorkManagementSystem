@@ -3,7 +3,6 @@ namespace WorkManagementSystem.Features.WorkItem.GetWorkItemById;
 
 public class Data
 {
-
     private readonly IUnitOfWork _unitOfWork;
     public Data(IUnitOfWork unitOfWork)
     {
@@ -30,8 +29,8 @@ public class Data
                               UserId = w.UserId,
                               Subjective = w.Subjective,
                               DepartmentId = w.DepartmentId,
-                              Dealine = w.Dealine,
-                              EvictionTime = w.EvictionTime,
+                              Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
+                              EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
                               IndustryId = w.IndustryId,
                               LeadershipDirectId = w.LeadershipDirectId
                           }).FirstOrDefaultAsync();
@@ -47,7 +46,7 @@ public class Data
                                    select new HistoryListModel
                                    {
                                        ActionContent = h.actionContent,
-                                       ActionTime = h.ActionTime,
+                                       ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy"),
                                        UserUpdated = u.Name
                                    }).ToListAsync();
 
@@ -59,7 +58,7 @@ public class Data
                                        where i.IssuesId == r.WorkId
                                        select new Implemention
                                        {
-                                           CreatedDate = i.Created,
+                                           CreatedDate = i.Created.ToFormatString("dd/MM/yyyy"),
                                            DepartmentReceiveId = i.DepartmentReceiveId,
                                            DepartmentReceiveName = h.Name,
                                            Note = i.Note,

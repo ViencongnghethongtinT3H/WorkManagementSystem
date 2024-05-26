@@ -13,8 +13,9 @@ public class Response
 }
 public class NotificationModel
 {
-    public string SendingTime { get; set; }
+    public DateTime SendingTime { get; set; }
     public string Content { get; set; }
     public string? Url { get; set; }
+    public NotificationWorkItemType NotificationWorkItemType { get; set; }
 }
 

@@ -22,8 +22,9 @@ public class Data
             NotificationModels = query.Select(x => new NotificationModel
             {
                 Content = x.Content,
-                SendingTime = x.SendingTime.ToFormatString("dd/mm/yyyy"),
+                SendingTime = x.SendingTime,
                 Url = x.Url,
+                NotificationWorkItemType = x.NotificationWorkItemType
             }).ToList()
         };
     }

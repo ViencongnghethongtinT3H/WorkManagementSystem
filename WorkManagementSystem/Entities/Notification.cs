@@ -14,6 +14,7 @@
         public string? Url { get; set; }
         [MaxLength(100)]
         public NotificationType NotificationType { get; set; }
+        public NotificationWorkItemType NotificationWorkItemType { get; set; }
         public bool IsRead { get; set; } = false;
 
 

@@ -11,4 +11,12 @@
         [Description("Email")]
         Email = 4
     }
+
+    public enum NotificationWorkItemType
+    {
+        [Description("Chuyển công văn tới CV đến")]
+        SendWorkItem = 1,
+        [Description("Cập nhật ý kiến xử lý")]
+        UpdateWorkItem = 2,
+    }
 }

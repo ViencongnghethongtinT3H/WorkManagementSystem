@@ -31,15 +31,14 @@ public class Data
                         DepartmentSentId = t.DepartmentSentId,
                         DepartmentReceiveId = t.DepartmentReceiveId,
                         Dealine = t.Dealine.ToFormatString("dd/MM/yyyy"),
-                        UserReceiveId = u.UserReceiveId
+                        UserReceiveId = u.UserReceiveId,
+                        Created = t.Created
                     };
 
         var userId = input.Filters.GetFilterModel("UserId");
         if (userId is not null)
         {
-
             query = query.Where(x => x.UserReceiveId == new Guid(userId.FieldValue));
-
         }
         var workId = input.Filters.GetFilterModel("Id");
         if (workId is not null)
@@ -51,6 +50,15 @@ public class Data
         if (processingStatus is not null)
         {
             query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
+        }
+
+        var fromDate = input.Filters.GetFilterModel("FromDate");
+        var toDate = input.Filters.GetFilterModel("ToDate");
+        if (fromDate is not null && toDate is not null)
+        {
+            var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+            var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+            query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
         }
 
         var data = new Response

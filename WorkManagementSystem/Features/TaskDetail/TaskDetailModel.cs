@@ -3,7 +3,7 @@
 public class TaskDetailModel
 {
     public Guid WorkItemId { get; set; }    // Link tới luồng công văn 
-    public Guid DepartmentSentId { get; set; }    // Đơn vị giao nhiệm vụ
+    //public Guid DepartmentSentId { get; set; }    // Đơn vị giao nhiệm vụ
     public Guid DepartmentReceiveId { get; set; }    // Đơn vị nhận nhiệm vụ
     public string Content { get; set; }   // nội dung công việc    
     [MaxLength(1000)]

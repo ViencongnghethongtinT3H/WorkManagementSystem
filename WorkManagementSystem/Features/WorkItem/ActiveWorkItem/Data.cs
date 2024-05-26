@@ -32,7 +32,7 @@ public class Data
         workItem.Updated = DateTime.Now;    
         workItem.Dealine = r.Dealine;
         workItem.EvictionTime = r.EvictionTime;
-        workItem.UserId = r.UserId;
+        workItem.UserId = r.UserId; // chủ trì cv
         workItem.UserIdUpdated = r.UserCreatedId.ToString();
         workItem.UserIdCreated = r.UserCreatedId.ToString();
 

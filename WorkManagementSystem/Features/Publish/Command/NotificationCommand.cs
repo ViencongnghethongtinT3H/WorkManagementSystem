@@ -18,5 +18,6 @@ public class NotificationCommandbase
     public string Content { get; set; }
     public string? Url { get; set; }
     public NotificationType NotificationType { get; set; }
+    public NotificationWorkItemType NotificationWorkItemType { get; set; }
     public bool IsRead { get; set; } = false;
 }

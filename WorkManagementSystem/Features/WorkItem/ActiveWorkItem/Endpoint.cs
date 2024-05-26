@@ -30,11 +30,12 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
         {
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = "Một công văn tới mục Văn bản đến của bạn",
+                Content = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của bạn",
                 UserReceive = notification,
                 UserSend = r.UserCreatedId,
                 Url = "",
-                NotificationType = NotificationType.WorkItem
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
             });
         }
         await new LstNotificationCommand
@@ -46,7 +47,8 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
         {
             UserId = r.UserCreatedId,
             IssueId = r.WorkItemId,
-            ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+            ActionContent = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của bạn",
+            
         }.ExecuteAsync();
 
 

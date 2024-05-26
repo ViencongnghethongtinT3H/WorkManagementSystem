@@ -20,8 +20,8 @@ public class WorkItemDetailResponse
 
     #region Step 2
 
-    public DateTime? Dealine { get; set; }  // Thời hạn xử lý
-    public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
+    public string? Dealine { get; set; }  // Thời hạn xử lý
+    public string? EvictionTime { get; set; }  // Thời hạn thu hồi
     public Guid? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
 
     #endregion
@@ -37,11 +37,11 @@ public class Implemention
     public Guid? DepartmentReceiveId { get; set; }  //  cơ quan nhận công văn, với trường hợp đây là công văn
     public string DepartmentReceiveName { get; set; }  //  cơ quan nhận công văn, với trường hợp đây là công văn
     public string? Note { get; set; }  // ý kiến xử lý
-    public DateTime CreatedDate { get; set; }  // ý kiến xử lý
+    public string CreatedDate { get; set; }  // ý kiến xử lý
 }
 public class HistoryListModel
 {
-    public DateTime ActionTime { get; set; } = DateTime.Now;
+    public string ActionTime { get; set; }
     public string UserUpdated { get; set; }
     public string ActionContent { get; set; }
 }
