@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.TaskDetail.GetTaskDetailByCondition;
+﻿namespace WorkManagementSystem.Features.TaskDetail.GetTaskInCommingByCondition;
 
 public class Data
 {
@@ -11,11 +11,14 @@ public class Data
     {
         var taskRepo = _unitOfWork.GetRepository<Entities.TaskDetail>().GetAll();
         var workRepo = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
-        var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();       
+        var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
+        var ImplemenRepo = _unitOfWork.GetRepository<Implementer>().GetAll();
+
         var query = from t in taskRepo.AsNoTracking()
                     join w in workRepo.AsNoTracking() on t.WorkItemId equals w.Id
                     join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
-                    from b1 in sd3.DefaultIfEmpty()                    
+                    from b1 in sd3.DefaultIfEmpty()
+                    join u in ImplemenRepo.AsNoTracking() on t.Id equals u.IssuesId
                     select new TaskDetailResponse
                     {
                         Id = t.Id,
@@ -28,7 +31,7 @@ public class Data
                         DepartmentSentId = t.DepartmentSentId,
                         DepartmentReceiveId = t.DepartmentReceiveId,
                         Dealine = t.Dealine.ToFormatString("dd/MM/yyyy"),
-                        UserReceiveId = t.UserCreateTaskId,
+                        UserReceiveId = u.UserReceiveId,
                         Created = t.Created
                     };
 

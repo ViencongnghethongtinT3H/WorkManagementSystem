@@ -18,5 +18,9 @@
         SendWorkItem = 1,
         [Description("Cập nhật ý kiến xử lý")]
         UpdateWorkItem = 2,
+        [Description("Tạo nhiệm vụ")]
+        SendTask = 3,
+        [Description("Cập nhật tiến độ nhiệm vụ")]
+        UpdateProgressTask = 4,
     }
 }

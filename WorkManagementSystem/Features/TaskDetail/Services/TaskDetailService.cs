@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.TaskDetail.Services;
+﻿using WorkManagementSystem.Entities;
+
+namespace WorkManagementSystem.Features.TaskDetail.Services;
 
 public class TaskDetailService : ITaskDetailService
 {
@@ -20,6 +22,39 @@ public class TaskDetailService : ITaskDetailService
         await implementRepository.AddRangeAsync(implements);
         
         await _unitOfWork.CommitAsync();
+
+
+
+        var name = await new GetUserNameCommand
+        {
+            UserId = r.UserCreateTaskId,
+        }.ExecuteAsync();
+        var lstcmd = new List<NotificationCommandbase>();
+        foreach (var notification in implements)
+        {
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {name} đã tạo một nhiệm vụ cho bạn, vui lòng hoàn thành đúng hạn",
+                UserReceive = notification.UserReceiveId,
+                UserSend = r.UserCreateTaskId,
+                Url = taskDetail.Id.ToString(),
+                NotificationType = NotificationType.Task,
+                NotificationWorkItemType = NotificationWorkItemType.SendTask
+            });
+        }
+        await new LstNotificationCommand
+        {
+            NotificationCommands = lstcmd
+        }.ExecuteAsync();
+
+        await new HistoryCommand
+        {
+            UserId = r.UserCreateTaskId,
+            IssueId = taskDetail.Id,
+            ActionContent = $"Tài khoản {name} tạo một nhiệm vụ"
+        }.ExecuteAsync();
+
+
         return taskDetail.Id.ToString();
     }
     public Entities.TaskDetail ToEntity(CreateTaskDetail.Request r) => new()

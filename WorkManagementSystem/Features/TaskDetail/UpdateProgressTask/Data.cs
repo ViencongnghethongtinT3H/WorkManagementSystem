@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.TaskDetail.UpdateProgressTask;
+﻿using WorkManagementSystem.Entities;
+
+namespace WorkManagementSystem.Features.TaskDetail.UpdateProgressTask;
 
 public class Data
 {
@@ -52,7 +54,25 @@ public class Data
             implemenRepo.Update(imple);
             await _unitOfWork.CommitAsync();
 
-            
+           
+            var lstcmd = new List<NotificationCommandbase>();
+
+                lstcmd.Add(new NotificationCommandbase
+                {
+                    Content = $"Tài khoản {name} cập nhật tiến độ công việc {r.ProgressValue}",
+                    UserReceive = imple.UserReceiveId,
+                    UserSend = r.UserId,
+                    Url = task.Id.ToString(),
+                    NotificationType = NotificationType.Task,
+                    NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
+                });
+
+            await new LstNotificationCommand
+            {
+                NotificationCommands = lstcmd
+            }.ExecuteAsync();
+
+
             await new HistoryCommand
             {
                 UserId = r.UserId,

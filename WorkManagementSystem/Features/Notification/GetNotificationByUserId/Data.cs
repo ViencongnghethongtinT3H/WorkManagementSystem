@@ -12,7 +12,7 @@ public class Data
     public async Task<Response> GetNotification(Request r)
     {
         var notificationRepository = _unitOfWork.GetRepository<Entities.Notification>();
-        var query = await notificationRepository.FindBy(x => x.UserReceive == r.UserId && x.IsRead == false)
+        var query = await notificationRepository.FindBy(x => x.UserReceive == r.UserId)
             .OrderByDescending(x => x.Created).ToListAsync();
         return new Response
         {
@@ -25,6 +25,7 @@ public class Data
                 Content = x.Content,
                 SendingTime = x.SendingTime,
                 Url = x.Url,
+                IsRead = x.IsRead,
                 NotificationWorkItemType = x.NotificationWorkItemType
             }).ToList()
         };
