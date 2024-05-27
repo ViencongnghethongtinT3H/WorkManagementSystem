@@ -33,7 +33,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
                 Content = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của bạn",
                 UserReceive = notification,
                 UserSend = r.UserCreatedId,
-                Url = "",
+                Url = workItemId,
                 NotificationType = NotificationType.WorkItem,
                 NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
             });

@@ -20,7 +20,7 @@ public class Data
 
     public async Task<string> GetUserName(Request r)
     {
-        var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(r.UserCreateId);
+        var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(r.UserCreatedId);
         if (user is not null)
         {
             return user.Name;

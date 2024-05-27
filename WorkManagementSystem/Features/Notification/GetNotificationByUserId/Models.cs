@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.Notification;
+﻿namespace WorkManagementSystem.Features.Notification.GetNotificationByUserId;
 
 public class Request
 {
@@ -13,6 +13,7 @@ public class Response
 }
 public class NotificationModel
 {
+    public Guid Id { get; set; }    
     public DateTime SendingTime { get; set; }
     public string Content { get; set; }
     public string? Url { get; set; }

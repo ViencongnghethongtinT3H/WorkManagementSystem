@@ -36,7 +36,7 @@ public class Data
             UserSend = r.UserReceiveId,
             Url = r.WorkItemId.ToString(),
             NotificationType = NotificationType.WorkItem,
-            NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
+            NotificationWorkItemType = NotificationWorkItemType.UpdateWorkItem
         };
         lstcmd.Add(notification);
         await new LstNotificationCommand

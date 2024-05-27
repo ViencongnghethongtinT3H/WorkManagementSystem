@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.Notification;
+﻿namespace WorkManagementSystem.Features.Notification.GetNotificationByUserId;
 
 public class Data
 {
@@ -21,6 +21,7 @@ public class Data
             TotalTaskNotification = query.Count(x => x.NotificationType == NotificationType.Task),
             NotificationModels = query.Select(x => new NotificationModel
             {
+                Id = x.Id,
                 Content = x.Content,
                 SendingTime = x.SendingTime,
                 Url = x.Url,

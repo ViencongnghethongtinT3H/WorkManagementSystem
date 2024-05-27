@@ -2,7 +2,7 @@
 
 public class Request : WorkItemModel
 {
-    public Guid UserCreateId { get; set; }
+    public Guid UserCreatedId { get; set; }
 }
 
 public class Validator : Validator<Request>

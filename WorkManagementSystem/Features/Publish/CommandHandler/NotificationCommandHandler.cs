@@ -20,6 +20,7 @@ public class NotificationCommandHandler : ICommandHandler<LstNotificationCommand
                 UserSend = notificationCommand.UserSend,
                 NotificationType = notificationCommand.NotificationType,
                 Url = notificationCommand.Url,
+                NotificationWorkItemType = notificationCommand.NotificationWorkItemType,
             };
             notis.Add(notification);
         }       
