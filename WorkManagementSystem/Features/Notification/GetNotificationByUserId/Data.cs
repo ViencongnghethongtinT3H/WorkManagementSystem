@@ -2,7 +2,6 @@
 
 public class Data
 {
-
     private readonly IUnitOfWork _unitOfWork;
     public Data(IUnitOfWork unitOfWork)
     {
