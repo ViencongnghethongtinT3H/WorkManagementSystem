@@ -53,7 +53,7 @@ public class Data
             lst.Add(new Implementer
             {
                 IssuesId = IssuesId,
-                ProgressValue = ProgressValueEnum.Progress0,
+                ProgressValue = 0,
                 IsTaskItem = false,
                 UserReceiveId = item.UserReceiveId,
                 Note = item.Note,

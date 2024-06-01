@@ -11,9 +11,7 @@ public class Data
     public async Task<string> CreateTaskDetail(Entities.TaskDetail taskDetail)
     {
         var taskRepository = _unitOfWork.GetRepository<Entities.TaskDetail>();
-        taskRepository.Add(taskDetail);
-        var implement = _unitOfWork.GetRepository<Entities.Implementer>();
-
+        taskRepository.Add(taskDetail);      
         await _unitOfWork.CommitAsync();
         return taskDetail.Id.ToString();
 

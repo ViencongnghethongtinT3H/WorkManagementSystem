@@ -3,6 +3,7 @@
 public class Request : TaskDetailModel
 {
     public List<ImplementerModel> Implementers { get; set; }
+    public List<Guid>? FileAttachIds { get; set; }
 }
 
 public class Validator : Validator<Request>

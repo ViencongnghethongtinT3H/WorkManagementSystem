@@ -6,5 +6,6 @@
         public Guid UserReceiveId {  get; set; }
         public Guid DepartmentReceiveId {  get; set; }
         public string Note { get; set; }
+        public List<Guid>? FileAttachIds { get; set; }
     }
 }

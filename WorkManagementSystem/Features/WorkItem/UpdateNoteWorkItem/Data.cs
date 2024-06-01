@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkItem.UpdateNoteWorkItem;
+﻿using WorkManagementSystem.Entities;
+
+namespace WorkManagementSystem.Features.WorkItem.UpdateNoteWorkItem;
 
 public class Data
 {
@@ -21,6 +23,19 @@ public class Data
             DepartmentReceiveId = r.DepartmentReceiveId    
         };
         await implemenRepo.AddAsync(imple);
+
+        if (r.FileAttachIds.IsAny())
+        {
+            var filesRepo = _unitOfWork.GetRepository<Entities.FileAttach>();
+            var files = await filesRepo.GetAll().Where(x => r.FileAttachIds.Contains(x.Id)).ToListAsync();
+            foreach (var item in files)
+            {
+                item.IssuesId = workItem.Id;
+                item.Updated = DateTime.Now;
+                filesRepo.Update(item);
+            }
+        }
+
         _unitOfWork.Commit();
 
         var name = await new GetUserNameCommand

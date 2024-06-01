@@ -1,6 +1,4 @@
-﻿using WorkManagementSystem.Entities;
-
-namespace WorkManagementSystem.Features.WorkItem.CreateWorkItem;
+﻿namespace WorkManagementSystem.Features.WorkItem.CreateWorkItem;
 public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -19,7 +17,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         var data = new Data(_unitOfWork);
         var result = ResultModel<Response>.Create(new Response
         {
-            WorkItemId = await data.CreateWorkItems(Map.ToEntity(r))
+            WorkItemId = await data.CreateWorkItems(Map.ToEntity(r), r)
         });
         var name = await data.GetUserName(r);
 

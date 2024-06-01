@@ -3,6 +3,7 @@
 public class Request : WorkItemModel
 {
     public Guid UserCreatedId { get; set; }
+    public List<Guid>? FileAttachIds { get; set; }
 }
 
 public class Validator : Validator<Request>

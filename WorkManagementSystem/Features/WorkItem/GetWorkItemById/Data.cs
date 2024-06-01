@@ -12,10 +12,13 @@ public class Data
     {
         var workRepo = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
         var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
+        var depaRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
 
         var work = await (from w in workRepo.AsNoTracking()
                           join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                           from b1 in sd3.DefaultIfEmpty()
+                          join s4 in depaRepo.AsNoTracking() on w.DepartmentId equals s4.Id into sd4
+                          from b2 in sd4.DefaultIfEmpty()
                           where w.Id == r.WorkId
                           select new WorkItemDetailResponse
                           {
@@ -32,7 +35,8 @@ public class Data
                               Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
                               EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
                               IndustryId = w.IndustryId,
-                              LeadershipDirectId = w.LeadershipDirectId
+                              LeadershipDirectId = w.LeadershipDirectId,
+                              DepartmentName = b2.Name,
                           }).FirstOrDefaultAsync();
 
         if (work is not null)
@@ -46,7 +50,7 @@ public class Data
                                    select new HistoryListModel
                                    {
                                        ActionContent = h.actionContent,
-                                       ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy"),
+                                       ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy HH:mm"),
                                        UserUpdated = u.Name
                                    }).ToListAsync();
 
@@ -58,7 +62,7 @@ public class Data
                                        where i.IssuesId == r.WorkId
                                        select new Implemention
                                        {
-                                           CreatedDate = i.Created.ToFormatString("dd/MM/yyyy"),
+                                           CreatedDate = i.Created.ToFormatString("dd/MM/yyyy HH:mm"),
                                            DepartmentReceiveId = i.DepartmentReceiveId,
                                            DepartmentReceiveName = h.Name,
                                            Note = i.Note,

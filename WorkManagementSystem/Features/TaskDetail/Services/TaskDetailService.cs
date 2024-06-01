@@ -1,4 +1,5 @@
-﻿using WorkManagementSystem.Entities;
+﻿using System.Linq;
+using WorkManagementSystem.Entities;
 
 namespace WorkManagementSystem.Features.TaskDetail.Services;
 
@@ -18,9 +19,19 @@ public class TaskDetailService : ITaskDetailService
         taskRepository.Add(taskDetail);
         var implementRepository = _unitOfWork.GetRepository<Entities.Implementer>();
         var implements = ToImplementer(r, taskDetail.Id);
-
         await implementRepository.AddRangeAsync(implements);
         
+        if (r.FileAttachIds.IsAny())
+        {
+            var filesRepo = _unitOfWork.GetRepository<Entities.FileAttach>();
+            var files = await filesRepo.GetAll().Where(x => r.FileAttachIds.Contains(x.Id)).ToListAsync();
+            foreach (var item in files)
+            {
+                item.IssuesId= taskDetail.Id;
+                item.Updated = DateTime.Now;
+                filesRepo.Update(item);
+            }
+        }
         await _unitOfWork.CommitAsync();
 
 
@@ -82,7 +93,7 @@ public class TaskDetailService : ITaskDetailService
             lst.Add(new Implementer
             {
                 IssuesId = IssuesId,
-                ProgressValue = ProgressValueEnum.Progress0,
+                ProgressValue = 0,
                 IsTaskItem = true,
                 UserReceiveId = item.UserReceiveId,
                 Note = item.Note

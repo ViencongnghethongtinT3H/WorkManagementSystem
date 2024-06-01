@@ -15,6 +15,7 @@ public class WorkItemDetailResponse
     public Guid LeadershipDirectId { get; set; }   // Tên lãnh đạo chỉ đạo      
     public string? Subjective { get; set; }   // Chuyên đề  
     public Guid? DepartmentId { get; set; }   // Cơ quan ban hành  
+    public string? DepartmentName { get; set; }   // Cơ quan ban hành  
     public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
     public ProcessingStatusEnum ProcessingStatus { get; set; }
 

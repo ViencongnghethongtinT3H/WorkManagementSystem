@@ -54,7 +54,7 @@ public class Data
         if (fromDate is not null && toDate is not null)
         {
             var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+            var toValue = toDate.FieldValue.ParseDateTimeNotNull(true, "dd/MM/yyyy");
             query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
         }
 

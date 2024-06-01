@@ -42,7 +42,7 @@ public class Data
                                    select new HistoryListModel
                                    {
                                        ActionContent = h.actionContent,
-                                       ActionTime = h.ActionTime.ToFormatString("dd/mm/yyyy"),
+                                       ActionTime = h.ActionTime.ToFormatString("dd/mm/yyyy HH:mm"),
                                        UserUpdated = u.Name
                                    }).ToListAsync();
 
@@ -52,10 +52,11 @@ public class Data
                                        where i.IssuesId == r.TaskId
                                        select new Implemention
                                        {
-                                           CreatedDate = i.Created.ToFormatString("dd/mm/yyyy"),
+                                           CreatedDate = i.Created.ToFormatString("dd/mm/yyyy HH:mm"),
                                            Note = i.Note,
                                            UserReceiveId = i.UserReceiveId,
                                            UserName = u.Name,
+                                          ProgressValue = i.ProgressValue,
                                        }).ToListAsync();
             work.Implementions = implementions;
             work.Histories = histories;

@@ -9,5 +9,6 @@ public class Implementer : EntityBase
     public bool IsTaskItem { get; set; }  // True thì sẽ là task, ngc lại false sẽ là công văn
     [MaxLength(100)]    
     public string? Note { get; set; }  // ý kiến xử lý
-    public ProgressValueEnum ProgressValue { get; set; } = ProgressValueEnum.Progress0;  // tiến độ xử lý
+   //  public ProgressValueEnum ProgressValue { get; set; } = ProgressValueEnum.Progress0;  // tiến độ xử lý
+    public int ProgressValue { get; set; } 
 }

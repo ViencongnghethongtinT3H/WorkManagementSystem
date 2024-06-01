@@ -34,6 +34,7 @@
         public string UserName { get; set; }  // Id của nhân viên thực hiện
         public string? Note { get; set; }  // ý kiến xử lý
         public string CreatedDate { get; set; }  // ý kiến xử lý
+        public int ProgressValue { get; set; }  // ý kiến xử lý
     }
     public class HistoryListModel
     {
