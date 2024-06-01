@@ -11,8 +11,14 @@ public class Data
     public async Task<ResultModel<TaskDetailResponse>> GetTaskItemById(Request r)
     {
         var workRepo = _unitOfWork.GetRepository<Entities.TaskDetail>().GetAll();
+        var departRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
+        var userRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
 
         var work = await (from w in workRepo.AsNoTracking()
+                          join d1 in departRepo.AsNoTracking() on w.DepartmentReceiveId equals d1.Id
+                          join d2 in departRepo.AsNoTracking() on w.DepartmentSentId equals d2.Id
+                          join u1 in userRepo.AsNoTracking() on w.UserCreateTaskId equals u1.Id
+                          join u2 in userRepo.AsNoTracking() on w.LeadershipDirectId equals u2.Id
                           where w.Id == r.TaskId
                           select new TaskDetailResponse
                           {
@@ -27,7 +33,12 @@ public class Data
                               DepartmentSentId = w.DepartmentSentId,
                               IsPeriodical = w.IsPeriodical,
                               Periodical = w.Periodical,
-                              KeyWord= w.KeyWord
+                              KeyWord= w.KeyWord,
+                              UserCreateTaskId = w.UserCreateTaskId,
+                              UserNameCreateTask = u1.Name,
+                              LeadershipDirectName = u2.Name,   
+                              DepartmentReceiveName = d1.Name,
+                              DepartmentSentName = d2.Name
 
                           }).FirstOrDefaultAsync();
 

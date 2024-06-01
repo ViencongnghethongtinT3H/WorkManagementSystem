@@ -91,7 +91,7 @@ public class Data
     {
         query = EntityQueryFilterHelper.CreateSort<WorkItemResponse>(r.Sorts)(query);
         query = EntityQueryFilterHelper.Page<WorkItemResponse>(r.Page, r.PageSize)(query);
-        return await query.ToListAsync();
+        return await query.Distinct().ToListAsync();
     }
 
 }

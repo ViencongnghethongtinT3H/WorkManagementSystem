@@ -10,7 +10,9 @@
     {
         public Guid? WorkItemId { get; set; }    // Link tới luồng công văn 
         public Guid DepartmentSentId { get; set; }    // Đơn vị giao nhiệm vụ
+        public string DepartmentSentName { get; set; }    // tên Đơn vị giao nhiệm vụ
         public Guid DepartmentReceiveId { get; set; }    // Đơn vị nhận nhiệm vụ
+        public string DepartmentReceiveName { get; set; }    // tên Đơn vị nhận nhiệm vụ
         public string Content { get; set; }   // nội dung công việc    
         [MaxLength(1000)]
         public string? KeyWord { get; set; }   // từ khoá 
@@ -21,7 +23,9 @@
         public PeriodicalEnum Periodical { get; set; }  // định kỳ theo tháng, quý, năm
         public string DealinePeriodical { get; set; }  // thời gian kết thúc xử lý định kỳ
         public Guid UserCreateTaskId { get; set; }    // Người nhập văn bản
+        public string UserNameCreateTask { get; set; }    // Người nhập văn bản
         public Guid? LeadershipDirectId { get; set; }   // Lãnh đạo chỉ đạo
+        public string LeadershipDirectName { get; set; }    // tên lãnh đạo chỉ đạo
 
 
         public List<Implemention> Implementions { get; set; }

@@ -26,11 +26,16 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
             UserId = r.UserCreatedId,
         }.ExecuteAsync();
 
+        var receiveName = await new GetUserNameCommand
+        {
+            UserId = r.Implementers.FirstOrDefault().UserReceiveId,
+        }.ExecuteAsync();
+
         foreach (var notification in userNotifications)
         {
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của bạn",
+                Content = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của {receiveName}",
                 UserReceive = notification,
                 UserSend = r.UserCreatedId,
                 Url = workItemId,
@@ -47,7 +52,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
         {
             UserId = r.UserCreatedId,
             IssueId = r.WorkItemId,
-            ActionContent = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của bạn",
+            ActionContent = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của {receiveName}",
             
         }.ExecuteAsync();
 
