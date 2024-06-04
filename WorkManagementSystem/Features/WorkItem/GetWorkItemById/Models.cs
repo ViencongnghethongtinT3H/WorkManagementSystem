@@ -15,6 +15,7 @@ public class WorkItemDetailResponse
     public Guid LeadershipDirectId { get; set; }   // Tên lãnh đạo chỉ đạo      
     public string? Subjective { get; set; }   // Chuyên đề  
     public Guid? DepartmentId { get; set; }   // Cơ quan ban hành  
+    public string UserIdCreated { get; set; }   // người tạo văn bản 
     public string? DepartmentName { get; set; }   // Cơ quan ban hành  
     public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
     public ProcessingStatusEnum ProcessingStatus { get; set; }
@@ -23,7 +24,8 @@ public class WorkItemDetailResponse
 
     public string? Dealine { get; set; }  // Thời hạn xử lý
     public string? EvictionTime { get; set; }  // Thời hạn thu hồi
-    public Guid? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
+    public string? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
+    public string? IndustryName { get; set; }    // Lĩnh vực  link tới bảng chung setting
 
     #endregion
 

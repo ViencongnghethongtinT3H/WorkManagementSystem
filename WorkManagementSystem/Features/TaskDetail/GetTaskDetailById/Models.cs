@@ -8,12 +8,14 @@
 
     public class TaskDetailResponse
     {
-        public Guid? WorkItemId { get; set; }    // Link tới luồng công văn 
-        public Guid DepartmentSentId { get; set; }    // Đơn vị giao nhiệm vụ
-        public string DepartmentSentName { get; set; }    // tên Đơn vị giao nhiệm vụ
+        public Guid Id { get; set; }
+      //  public Guid? WorkItemId { get; set; }    // Link tới luồng công văn 
+        //public Guid DepartmentSentId { get; set; }    // Đơn vị giao nhiệm vụ
+        //public string DepartmentSentName { get; set; }    // tên Đơn vị giao nhiệm vụ
         public Guid DepartmentReceiveId { get; set; }    // Đơn vị nhận nhiệm vụ
         public string DepartmentReceiveName { get; set; }    // tên Đơn vị nhận nhiệm vụ
         public string Content { get; set; }   // nội dung công việc    
+        public string Notation { get; set; }   // nội dung công việc    
         [MaxLength(1000)]
         public string? KeyWord { get; set; }   // từ khoá 
         public string? Dealine { get; set; }  // Thời hạn xử lý       

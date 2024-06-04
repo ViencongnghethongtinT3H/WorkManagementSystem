@@ -19,7 +19,7 @@ public class Data
                     select new TaskDetailResponse
                     {
                         Id = t.Id,
-                        WorkItemId = t.Id,
+                        WorkItemId =w.Id,
                         Content = t.Content,
                         Notation = $"{w.ItemId}/{b1.Value}",
                         ProcessingStatusValue = t.ProcessingStatus.GetDescription(),

@@ -30,7 +30,7 @@ public class WorkItem : EntityBase
     public DateTime? Dealine { get; set; }  // Thời hạn xử lý
     public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
     public Guid? UserId { get; set; }    // chủ trì công văn này 
-    public Guid? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
+    public string? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
 
     #endregion
 

@@ -10,35 +10,40 @@ public class Data
     }
     public async Task<ResultModel<TaskDetailResponse>> GetTaskItemById(Request r)
     {
-        var workRepo = _unitOfWork.GetRepository<Entities.TaskDetail>().GetAll();
+        var taskRepo = _unitOfWork.GetRepository<Entities.TaskDetail>().GetAll();
         var departRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
         var userRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
+        var workRepo = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
+        var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
 
-        var work = await (from w in workRepo.AsNoTracking()
-                          join d1 in departRepo.AsNoTracking() on w.DepartmentReceiveId equals d1.Id
-                          join d2 in departRepo.AsNoTracking() on w.DepartmentSentId equals d2.Id
-                          join u1 in userRepo.AsNoTracking() on w.UserCreateTaskId equals u1.Id
-                          join u2 in userRepo.AsNoTracking() on w.LeadershipDirectId equals u2.Id
-                          where w.Id == r.TaskId
+        var work = await (from t in taskRepo.AsNoTracking()
+                          join d1 in departRepo.AsNoTracking() on t.DepartmentReceiveId equals d1.Id
+                          join w in workRepo.AsNoTracking() on t.WorkItemId equals w.Id
+                          join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
+                          from b1 in sd3.DefaultIfEmpty()
+                          join u1 in userRepo.AsNoTracking() on t.UserCreateTaskId equals u1.Id
+                          join u2 in userRepo.AsNoTracking() on t.LeadershipDirectId equals u2.Id
+                          where t.Id == r.TaskId
                           select new TaskDetailResponse
                           {
-                              WorkItemId = w.Id,
-                              Content = w.Content,
-                              ProcessingStatus = w.ProcessingStatus,
-                              Priority = w.Priority,
-                              Dealine = w.Dealine.ToFormatString("dd/mm/yyyy"),
-                              LeadershipDirectId = w.LeadershipDirectId,
-                              DealinePeriodical = w.DealinePeriodical.ToFormatString("dd/mm/yyyy"),
-                              DepartmentReceiveId = w.DepartmentReceiveId,
-                              DepartmentSentId = w.DepartmentSentId,
-                              IsPeriodical = w.IsPeriodical,
-                              Periodical = w.Periodical,
-                              KeyWord= w.KeyWord,
-                              UserCreateTaskId = w.UserCreateTaskId,
+                              Id = t.Id,
+                              Notation = $"{w.ItemId}/{b1.Value}",
+                              Content = t.Content,
+                              ProcessingStatus = t.ProcessingStatus,
+                              Priority = t.Priority,
+                              Dealine = t.Dealine.ToFormatString("dd/MM/yyyy"),
+                              LeadershipDirectId = t.LeadershipDirectId,
+                              DealinePeriodical = t.DealinePeriodical.ToFormatString("dd/MM/yyyy"),
+                              DepartmentReceiveId = t.DepartmentReceiveId,
+                              // DepartmentSentId = w.DepartmentSentId,
+                              IsPeriodical = t.IsPeriodical,
+                              Periodical = t.Periodical,
+                              KeyWord= t.KeyWord,
+                              UserCreateTaskId = t.UserCreateTaskId,
                               UserNameCreateTask = u1.Name,
                               LeadershipDirectName = u2.Name,   
                               DepartmentReceiveName = d1.Name,
-                              DepartmentSentName = d2.Name
+                             // DepartmentSentName = d2.Name
 
                           }).FirstOrDefaultAsync();
 
@@ -53,7 +58,7 @@ public class Data
                                    select new HistoryListModel
                                    {
                                        ActionContent = h.actionContent,
-                                       ActionTime = h.ActionTime.ToFormatString("dd/mm/yyyy HH:mm"),
+                                       ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy HH:mm"),
                                        UserUpdated = u.Name
                                    }).ToListAsync();
 
@@ -63,7 +68,7 @@ public class Data
                                        where i.IssuesId == r.TaskId
                                        select new Implemention
                                        {
-                                           CreatedDate = i.Created.ToFormatString("dd/mm/yyyy HH:mm"),
+                                           CreatedDate = i.Created.ToFormatString("dd/MM/yyyy HH:mm"),
                                            Note = i.Note,
                                            UserReceiveId = i.UserReceiveId,
                                            UserName = u.Name,

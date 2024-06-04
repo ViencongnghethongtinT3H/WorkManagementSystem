@@ -17,8 +17,11 @@ public class Data
         var work = await (from w in workRepo.AsNoTracking()
                           join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                           from b1 in sd3.DefaultIfEmpty()
+                          join s5 in settingRepo.AsNoTracking() on w.IndustryId equals s5.Key into sd5
+                          from b5 in sd5.DefaultIfEmpty()
                           join s4 in depaRepo.AsNoTracking() on w.DepartmentId equals s4.Id into sd4
                           from b2 in sd4.DefaultIfEmpty()
+
                           where w.Id == r.WorkId
                           select new WorkItemDetailResponse
                           {
@@ -31,12 +34,15 @@ public class Data
                               Priority = w.Priority,
                               UserId = w.UserId,
                               Subjective = w.Subjective,
+                              UserIdCreated = w.UserIdCreated,
                               DepartmentId = w.DepartmentId,
                               Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
                               EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
-                              IndustryId = w.IndustryId,
+                              IndustryId = b5.Value,
+                              IndustryName = b5.Value,
                               LeadershipDirectId = w.LeadershipDirectId,
                               DepartmentName = b2.Name,
+                              
                           }).FirstOrDefaultAsync();
 
         if (work is not null)
