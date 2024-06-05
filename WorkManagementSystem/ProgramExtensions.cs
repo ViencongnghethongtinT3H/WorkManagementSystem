@@ -9,6 +9,7 @@ public static class ProgramExtensions
         services.AddScoped(typeof(ITaskDetailService), typeof(TaskDetailService));
         services.AddScoped<IContextFactory, ContextFactory>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<HttpClient>();
     }
 
     public static async Task SeedData(IHost app)

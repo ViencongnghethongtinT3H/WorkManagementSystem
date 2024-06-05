@@ -3,6 +3,7 @@
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
+    
     public Data(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
@@ -24,6 +25,10 @@ public class Data
         }
         await fileRepo.AddRangeAsync(lst);
         await _unitOfWork.CommitAsync();
+
+
         return lst.Select(x => x.Id).ToList();
     }
+
+   
 }

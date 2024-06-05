@@ -20,6 +20,7 @@ public class MainDbContext : DbContext, IDatabaseContext
     public DbSet<WorkItem> WorkItems { get; set; }
     public DbSet<History> Histories { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Digitization> Digitizations { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

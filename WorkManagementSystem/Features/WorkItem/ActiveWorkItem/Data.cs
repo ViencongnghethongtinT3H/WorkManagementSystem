@@ -26,7 +26,7 @@ public class Data
 
         string code = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
 
-        workItem.ProcessingStatus = ProcessingStatusEnum.Processing;
+        workItem.ProcessingStatus = ProcessingStatusEnum.ReceiveProccess;
         workItem.DateArrival = DateTime.Now;
         workItem.WorkItemNumber = code;
         workItem.Updated = DateTime.Now;    

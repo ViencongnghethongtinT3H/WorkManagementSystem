@@ -1,6 +1,4 @@
-﻿using WorkManagementSystem.Entities;
-
-namespace WorkManagementSystem.Features.WorkItem.UpdateNoteWorkItem;
+﻿namespace WorkManagementSystem.Features.WorkItem.UpdateNoteWorkItem;
 
 public class Data
 {
@@ -20,9 +18,15 @@ public class Data
             IsTaskItem = false,
             UserReceiveId = r.UserReceiveId,
             Note = r.Note,
-            DepartmentReceiveId = r.DepartmentReceiveId    
+            DepartmentReceiveId = r.DepartmentReceiveId
         };
         await implemenRepo.AddAsync(imple);
+        if (workItem.ProcessingStatus == ProcessingStatusEnum.ReceiveProccess)
+        {
+            workItem.ProcessingStatus = ProcessingStatusEnum.Processing;
+            workItem.Updated = DateTime.Now;
+        }
+        workItemRepository.Update(workItem);
 
         if (r.FileAttachIds.IsAny())
         {
