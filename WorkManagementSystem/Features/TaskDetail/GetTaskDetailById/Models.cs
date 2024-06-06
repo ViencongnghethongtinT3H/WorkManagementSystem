@@ -19,7 +19,7 @@
         [MaxLength(1000)]
         public string? KeyWord { get; set; }   // từ khoá 
         public string? Dealine { get; set; }  // Thời hạn xử lý       
-        public ProcessingStatusEnum ProcessingStatus { get; set; }  // trạng thái của nhiệm vụ
+        public string ProcessingStatus { get; set; }  // trạng thái của nhiệm vụ
         public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
         public bool IsPeriodical { get; set; }  // Có định kỳ hay ko
         public PeriodicalEnum Periodical { get; set; }  // định kỳ theo tháng, quý, năm

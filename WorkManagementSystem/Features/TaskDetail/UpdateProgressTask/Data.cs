@@ -13,8 +13,8 @@ public class Data
     public async Task<string> UpdateProgressTask(Request r)
     {
         var task = await _unitOfWork.GetRepository<Entities.TaskDetail>().GetAsync(r.TaskId);
-    
-        
+        var taskRepository = _unitOfWork.GetRepository<Entities.TaskDetail>();
+
         if (task is not null)
         {
             var name = await new GetUserNameCommand
@@ -24,26 +24,35 @@ public class Data
 
             if (task.WorkItemId.HasValue)
             {
-                var workItemRepository = _unitOfWork.GetRepository<Entities.WorkItem>();
-                var workItem = await workItemRepository.GetAsync(task.WorkItemId.Value);
-                if (workItem != null && workItem.ProcessingStatus != ProcessingStatusEnum.Processing)
+                var content = string.Empty;
+                if (task.ProcessingStatus == ProcessingStatusEnum.None)
                 {
-                    workItem.ProcessingStatus = ProcessingStatusEnum.Processing;
-                    workItem.Updated = DateTime.Now;
-                    workItem.DateArrival = DateTime.Now;
-                    workItemRepository.Update(workItem);
-
-                    await new HistoryCommand
-                    {
-                        UserId = r.UserId,
-                        IssueId = r.TaskId,
-                        ActionContent = $"Tài khoản {name} đã bắt đầu xử lý công văn này"
-                    }.ExecuteAsync();
+                    task.ProcessingStatus = ProcessingStatusEnum.Processing;
+                    content = $"Tài khoản {name} đã bắt đầu xử lý công văn này";
                 }
-                
-            }    
+
+                else if (r.ProgressValue == 100)
+                {
+                    task.ProcessingStatus = ProcessingStatusEnum.Completed;
+                    content = $"Tài khoản {name} đã hoàn thành nhiệm vụ này";
+                }
+                else
+                {
+                    content = $"Tài khoản {name} cập nhật tiến độ công việc {r.ProgressValue}%";
+                }
+                task.Updated = DateTime.Now;
+                taskRepository.Update(task);
+
+                await new HistoryCommand
+                {
+                    UserId = r.UserId,
+                    IssueId = r.TaskId,
+                    ActionContent = content
+                }.ExecuteAsync();
+
+            }
             var implemenRepo = _unitOfWork.GetRepository<Implementer>();
-            var imple = await implemenRepo.GetAll().FirstOrDefaultAsync(x => x.IssuesId == task.Id 
+            var imple = await implemenRepo.GetAll().FirstOrDefaultAsync(x => x.IssuesId == task.Id
                 && x.UserReceiveId == r.UserId);
             if (imple is not null)
             {
@@ -54,32 +63,23 @@ public class Data
             implemenRepo.Update(imple);
             await _unitOfWork.CommitAsync();
 
-           
+
             var lstcmd = new List<NotificationCommandbase>();
 
-                lstcmd.Add(new NotificationCommandbase
-                {
-                    Content = $"Tài khoản {name} cập nhật tiến độ công việc {r.ProgressValue}",
-                    UserReceive = imple.UserReceiveId,
-                    UserSend = r.UserId,
-                    Url = task.Id.ToString(),
-                    NotificationType = NotificationType.Task,
-                    NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
-                });
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {name} cập nhật tiến độ công việc {r.ProgressValue}%",
+                UserReceive = task.UserCreateTaskId,
+                UserSend = r.UserId,
+                Url = task.Id.ToString(),
+                NotificationType = NotificationType.Task,
+                NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
+            });
 
             await new LstNotificationCommand
             {
                 NotificationCommands = lstcmd
             }.ExecuteAsync();
-
-
-            await new HistoryCommand
-            {
-                UserId = r.UserId,
-                IssueId = r.TaskId,
-                ActionContent = $"Tài khoản {name} đã cập nhật tiến độ xử lý nhiệm vụ lên {r.ProgressValue.GetDescription()}"
-            }.ExecuteAsync();
-
             return "Đã cập nhật thành công";
         }
         return "Không tìm thấy nhiệm vụ";

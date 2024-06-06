@@ -46,15 +46,18 @@ public class Endpoint : Endpoint<Request, Response>
                 });
             }
             var data = new Data(_unitOfWork);
-            await data.AddFileAttachs(lst);
+           var ids =  await data.AddFileAttachs(lst);
 
             var kq = new Response();
             if (req.OcrType != OcrType.Other)
             {
                 kq.Data = await OcrFile(Files.FirstOrDefault(), req.OcrType); ;
                 kq.FileUrl = $"https://file-manager.digins.vn/Output/2023/file/{lst.FirstOrDefault().FileName}";
-            }            
-
+            }
+            else
+            {
+                kq.ids = ids;
+            }    
             await SendAsync(kq);
 
 

@@ -10,6 +10,8 @@ public class Data
     }
     public async Task<ListResultModel<WorkItemResponse>> GetWorkItemByCondition(InputRequest input)
     {
+        // Tra cứu văn bản đến
+
         var work = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
         var setting = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
         var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
@@ -43,27 +45,24 @@ public class Data
                         Dealine = w.Dealine,
                         UserInProgress = i.UserReceiveId.ToString(),
                     };
+
         var userId = input.Filters.GetFilterModel("UserReceiveId");
         if (userId is not null)
         {
-            // Nếu user là thuky hoặc lãnh đạo thì xem đc toàn bộ CV,
-            // còn nếu ko thì chỉ xem đc công văn assign cho mình, hoặc người chủ trì CV, lãnh đạo chỉ đạo sẽ nhìn thấy CV 
-
             query = query.Where(x => x.UserInProgress == userId.FieldValue);
-
         }
 
-        var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");
+        var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");  // Trạng thái
         if (processingStatus is not null)
         {
             query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
         }
-        var subjective = input.Filters.GetFilterModel("Subjective");
+        var subjective = input.Filters.GetFilterModel("Subjective");  // từ khoá
         if (subjective is not null)
         {
             query = query.Where(x => x.Subjective == subjective.FieldValue);
         }
-        var departmentId = input.Filters.GetFilterModel("DepartmentId");
+        var departmentId = input.Filters.GetFilterModel("DepartmentId");  // phòng ban
         if (departmentId is not null)
         {
             query = query.Where(x => x.DepartmentId == new Guid(departmentId.FieldValue));

@@ -42,33 +42,36 @@ public class Data
                         UserIdCreated = w.UserIdCreated,
                         Dealine = w.Dealine
                     };
-        var userId = input.Filters.GetFilterModel("UserReceiveId");
+        var userId = input.Filters.GetFilterModel("UserId");
+        // Lấy công văn của người tạo ra văn bản
         if (userId is not null)
         {
-            // Nếu user là thuky hoặc lãnh đạo thì xem đc toàn bộ CV,
-            // còn nếu ko thì chỉ xem đc công văn assign cho mình, hoặc người chủ trì CV, lãnh đạo chỉ đạo sẽ nhìn thấy CV 
-
             query = query.Where(x => x.UserIdCreated == userId.FieldValue);
 
         }
-
-        var workId = input.Filters.GetFilterModel("Id");
+        
+        var workId = input.Filters.GetFilterModel("LeadershipDirectId");  // lãnh đạo chỉ đạo
         if (workId is not null)
         {
-            query = query.Where(x => x.WorkItemId == new Guid(workId.FieldValue));
+            query = query.Where(x => x.LeadershipId == new Guid(workId.FieldValue));
         }
 
-        var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");
+        var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");  // trạng thái
         if (processingStatus is not null)
         {
             query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
         }
-        var subjective = input.Filters.GetFilterModel("Subjective");
+        var subjective = input.Filters.GetFilterModel("Subjective");  // chuyên đề
         if (subjective is not null)
         {
             query = query.Where(x => x.Subjective == subjective.FieldValue);
         }
-        var departmentId = input.Filters.GetFilterModel("DepartmentId");
+        var keyWord = input.Filters.GetFilterModel("KeyWord");  // chuyên đề
+        if (keyWord is not null)
+        {
+            query = query.Where(x => x.KeyWord == keyWord.FieldValue);
+        }
+        var departmentId = input.Filters.GetFilterModel("DepartmentId");  // phòng ban ban hành
         if (departmentId is not null)
         {
             query = query.Where(x => x.DepartmentId == new Guid(departmentId.FieldValue));

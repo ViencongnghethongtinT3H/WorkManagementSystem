@@ -13,6 +13,7 @@ public class WorkItemDetailResponse
     public string? DateIssued { get; set; }  // ngày ban hành
     public string Content { get; set; }   // Trích yếu         
     public Guid LeadershipDirectId { get; set; }   // Tên lãnh đạo chỉ đạo      
+    public string leadershipDirectName { get; set; }   // Tên lãnh đạo chỉ đạo      
     public string? Subjective { get; set; }   // Chuyên đề  
     public Guid? DepartmentId { get; set; }   // Cơ quan ban hành  
     public string UserIdCreated { get; set; }   // người tạo văn bản 

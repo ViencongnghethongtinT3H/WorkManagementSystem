@@ -13,6 +13,7 @@ public class Data
         var workRepo = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
         var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
         var depaRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
+        var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
 
         var work = await (from w in workRepo.AsNoTracking()
                           join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
@@ -21,6 +22,8 @@ public class Data
                           from b5 in sd5.DefaultIfEmpty()
                           join s4 in depaRepo.AsNoTracking() on w.DepartmentId equals s4.Id into sd4
                           from b2 in sd4.DefaultIfEmpty()
+                          join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
+                          from b3 in ud.DefaultIfEmpty()
 
                           where w.Id == r.WorkId
                           select new WorkItemDetailResponse
@@ -42,6 +45,7 @@ public class Data
                               IndustryName = b5.Value,
                               LeadershipDirectId = w.LeadershipDirectId,
                               DepartmentName = b2.Name,
+                              leadershipDirectName = b3.Name,
                               
                           }).FirstOrDefaultAsync();
 

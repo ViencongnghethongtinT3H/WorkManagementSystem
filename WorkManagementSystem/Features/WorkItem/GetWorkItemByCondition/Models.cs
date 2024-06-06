@@ -41,5 +41,6 @@ public class WorkItemResponse
     public DateTime Created { get; set; }
     public DateTime? Dealine { get; set; }
     public string UserIdCreated { get; set; }   
+    public string KeyWord { get; set; }   
 
 }

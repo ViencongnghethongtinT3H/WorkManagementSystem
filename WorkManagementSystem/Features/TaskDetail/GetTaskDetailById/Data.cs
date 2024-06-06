@@ -29,7 +29,7 @@ public class Data
                               Id = t.Id,
                               Notation = $"{w.ItemId}/{b1.Value}",
                               Content = t.Content,
-                              ProcessingStatus = t.ProcessingStatus,
+                              ProcessingStatus = t.ProcessingStatus.GetDescription(),
                               Priority = t.Priority,
                               Dealine = t.Dealine.ToFormatString("dd/MM/yyyy"),
                               LeadershipDirectId = t.LeadershipDirectId,
@@ -38,12 +38,12 @@ public class Data
                               // DepartmentSentId = w.DepartmentSentId,
                               IsPeriodical = t.IsPeriodical,
                               Periodical = t.Periodical,
-                              KeyWord= t.KeyWord,
+                              KeyWord = t.KeyWord,
                               UserCreateTaskId = t.UserCreateTaskId,
                               UserNameCreateTask = u1.Name,
-                              LeadershipDirectName = u2.Name,   
+                              LeadershipDirectName = u2.Name,
                               DepartmentReceiveName = d1.Name,
-                             // DepartmentSentName = d2.Name
+                              // DepartmentSentName = d2.Name
 
                           }).FirstOrDefaultAsync();
 

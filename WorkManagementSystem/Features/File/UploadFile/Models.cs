@@ -26,5 +26,6 @@
     {
         public string Data { get; set; }
         public string FileUrl { get; set; }
+        public List<Guid> ids { get; set; }
     }
 }
