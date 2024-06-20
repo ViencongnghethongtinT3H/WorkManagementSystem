@@ -15,4 +15,5 @@ public class UserModel
     //public string Email { get; set; }
     //public string? Phone { get; set; }
     public string NameAndPosition { get; set; }
+    public string DeparmentName { get; set; }
 }

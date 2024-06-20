@@ -1,6 +1,4 @@
-﻿
-
-namespace WorkManagementSystem.Features.Notification;
+﻿namespace WorkManagementSystem.Features.Notification.UpdateStatusReadNotification;
 
 public class Endpoint : Endpoint<Request, ResultModel<bool>>
 {

@@ -21,6 +21,11 @@ public class MainDbContext : DbContext, IDatabaseContext
     public DbSet<History> Histories { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Digitization> Digitizations { get; set; }
+    public DbSet<WorkDispatch> WorkDispatchs { get; set; }
+    public DbSet<WorkArrived> WorkArrived { get; set; }
+    public DbSet<WorkflowStep> WorkflowSteps { get; set; }
+    public DbSet<UserWorkflow> UserWorkflows { get; set; }
+    public DbSet<ReceiveCompany> ReceiveCompanys { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

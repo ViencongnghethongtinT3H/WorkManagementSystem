@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.Notification;
+﻿namespace WorkManagementSystem.Features.Notification.UpdateStatusReadNotification;
 
 public class Data
 {

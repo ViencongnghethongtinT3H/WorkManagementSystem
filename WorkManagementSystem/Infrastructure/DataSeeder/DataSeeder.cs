@@ -15,6 +15,7 @@ public class DataSeeder
             await SeedDataDepartment();
             await SeedDataPosition();
             await SeedDataUser();
+            await SeedReceiveCompany();
         }
         catch (Exception ex )
         {
@@ -305,6 +306,42 @@ public class DataSeeder
         };
 
         await dbContext.Users.AddRangeAsync(lst);       
+        await dbContext.SaveChangesAsync();
+    }
+
+    private async Task SeedReceiveCompany()
+    {
+        if (await dbContext.ReceiveCompanys.AnyAsync())
+        {
+            return;
+        }
+        var lst = new List<ReceiveCompany>
+        {
+            new ReceiveCompany
+            {
+                Name = "Bộ giáo dục",
+                Email = "vansy9x@gmail.com",
+                Address = "126 Giang Văn Minh - Ba Đình - Hà Nội",
+                Fax = "0923234323"
+            },
+            new ReceiveCompany
+            {
+                Name = "Bộ Giao Thông Vận Tải",
+                Email = "tuphucdung09@gmail.com",
+                Address = "126 Hồ Tùng Mậu - Nam Từ Liêm - Hà Nội",
+                Fax = "0923234323"
+            },
+            new ReceiveCompany
+            {
+                Name = "Bộ Quốc Phòng",
+                Email = "vansy9x@gmail.com",
+                Address = "Số 7 Nguyễn Tri Phương, Ba Đình, Hà Nội",
+                Fax = "0923234323"
+            },
+
+        };
+
+        await dbContext.ReceiveCompanys.AddRangeAsync(lst);
         await dbContext.SaveChangesAsync();
     }
 }

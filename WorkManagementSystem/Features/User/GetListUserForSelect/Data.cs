@@ -14,10 +14,12 @@ public class Data
     {
         var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
         var position = _unitOfWork.GetRepository<Position>().GetAll();
+        var department = _unitOfWork.GetRepository<Entities.Department>().GetAll();
+
         var data = await (from u in user.AsNoTracking()
                       join p in position.AsNoTracking() on u.PositionId equals p.Id
-                      where u.Status == StatusEnum.Active && (r.DepartmentId == null 
-                      || u.DepartmentId == r.DepartmentId.Value)
+                      join d in department.AsNoTracking() on u.DepartmentId equals d.Id
+                          where u.Status == StatusEnum.Active && (r.DepartmentId == null || u.DepartmentId == r.DepartmentId.Value)
                       orderby u.Name descending
                       select new UserModel
                       {
@@ -25,7 +27,9 @@ public class Data
                           PositionName = p.Name,
                           Name = u.Name,
                           Id = u.Id,
-                          NameAndPosition = $"{u.Name} - {p.Name}"
+                          NameAndPosition = $"{u.Name} - {p.Name}",
+                          DeparmentName = u.Name,
+                         
                       }).ToListAsync();
         return ResultModel<List<UserModel>>.Create(data);
     }
