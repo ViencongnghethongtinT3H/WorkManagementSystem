@@ -26,6 +26,7 @@ public class MainDbContext : DbContext, IDatabaseContext
     public DbSet<WorkflowStep> WorkflowSteps { get; set; }
     public DbSet<UserWorkflow> UserWorkflows { get; set; }
     public DbSet<ReceiveCompany> ReceiveCompanys { get; set; }
+    public DbSet<DispatchReceiveCompany> DispatchReceiveCompanies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
