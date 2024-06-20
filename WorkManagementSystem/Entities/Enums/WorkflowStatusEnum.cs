@@ -8,7 +8,13 @@
         Release = 2,
         [Description("Đã huỷ")]
         Cancel = 3,
-        [Description("Return")]
+        [Description("Trả về")]
         ReceiveProccess = 4,
+
+        [Description("Trình duyệt")]
+        Submit = 5,
+
+        [Description("Trình ký")]
+        Signarture = 6,
     }
 }
