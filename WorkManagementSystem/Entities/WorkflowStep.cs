@@ -1,5 +1,6 @@
 ﻿namespace WorkManagementSystem.Entities;
 
+// lưu các bước của văn bản đến
 public class WorkflowStep : EntityBase
 {
     public StepEnum Step { get; set; }
