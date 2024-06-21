@@ -59,7 +59,7 @@
                 {
                     Data = true,
                     Status = 200,
-                    ErrorMessage = "Gửi văn bản thành công!",
+                    ErrorMessage = "Gửi công văn thành công!",
                     IsError = false,
                 };
             }
