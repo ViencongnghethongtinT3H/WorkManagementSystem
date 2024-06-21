@@ -38,5 +38,7 @@ public class WorkDispatch : EntityBase
     #endregion
 
     public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
+
+    // Thêm phần người theo dõi khi tạo mới văn bản đi
     
 }
