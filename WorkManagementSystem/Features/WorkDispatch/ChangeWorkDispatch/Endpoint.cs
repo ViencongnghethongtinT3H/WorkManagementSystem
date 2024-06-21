@@ -10,13 +10,13 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/workDispatch/ApproveWorkDispatch");
+            Post("/workDispatch/change-work-dispatch");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)
         {
             var data = new Data(_unitOfWork);
-            var result = await data.ApproveWorkDispatch(r);
+            var result = await data.ChangeApproveWorkDispatch(r);
             await SendAsync(result);
         }
     }
