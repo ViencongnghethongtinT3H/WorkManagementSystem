@@ -11,7 +11,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/workDispatch/AddUserFollow");
+        Post("/workDispatch/add-user-follow");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)

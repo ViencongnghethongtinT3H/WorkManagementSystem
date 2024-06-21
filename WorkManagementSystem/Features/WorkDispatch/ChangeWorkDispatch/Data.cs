@@ -7,7 +7,7 @@
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ResultModel<bool>> ApproveWorkDispatch(Request r)
+        public async Task<ResultModel<bool>> ChangeApproveWorkDispatch(Request r)
         {
             var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
