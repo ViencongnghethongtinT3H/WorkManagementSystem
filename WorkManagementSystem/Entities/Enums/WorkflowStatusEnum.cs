@@ -14,5 +14,9 @@
         Submit = 5,
         [Description("Trình ký")]
         Signarture = 6,
+        [Description("Đã duyệt")]
+        Submited = 7,
+        [Description("Đã ký")]
+        Signartured = 8,
     }
 }

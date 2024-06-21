@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Get("/workDispatch/get-work-dispatch-by-id");
+            Get("/workDispatch/get-by-id");
         }
 
         public override async Task HandleAsync(Request query, CancellationToken c)

@@ -11,14 +11,25 @@
         {
             var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
             var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
-            var userWorkFlow = new UserWorkflow() 
-            {
-                WorkflowId = r.WorkDispatchId,
-                UserId = r.UserId,
-            };
-
+            var userRepo = _unitOfWork.GetRepository<Entities.User>();
             try
             {
+                var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.UserId);
+                if (user is null)
+                {
+                    return new ResultModel<bool>(false)
+                    {
+                        Data = false,
+                        Status = 200,
+                        ErrorMessage = "Không tìm thông tin người dùng!",
+                        IsError = true,
+                    };
+                }
+                var userWorkFlow = new UserWorkflow()
+                {
+                    WorkflowId = r.WorkDispatchId,
+                    UserId = r.UserId,
+                };
                 var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkDispatchId);
                 if (workDispatch is null)
                 {
@@ -30,6 +41,7 @@
                         IsError = true,
                     };
                 }
+
                 if (r.IsSubmit)
                 {
                     userWorkFlow.UserWorkflowType = UserWorkflowType.Submit;
@@ -45,10 +57,10 @@
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)
                 {
-                    Data = false,
+                    Data = true,
                     Status = 200,
-                    ErrorMessage = "Gửi văn bản thành công!",
-                    IsError = true,
+                    ErrorMessage = "Gửi công văn thành công!",
+                    IsError = false,
                 };
             }
             catch (Exception e)

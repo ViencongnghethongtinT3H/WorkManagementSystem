@@ -2,7 +2,9 @@
 
 public class Request
 {
-    public Guid UserId { get; set; }
+    public List<Guid> UserIds { get; set; }
+    public Guid WorkflowId { get; set; }
+
     public FollowUserType FollowUserType { get; set; }
 }
 public enum FollowUserType
