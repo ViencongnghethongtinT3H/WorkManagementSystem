@@ -32,7 +32,7 @@ public class MainDbContext : DbContext, IDatabaseContext
     {
 
         // var connectionString = ConnectionHelper.SqlServerConn;
-        var connectionString = "Server=103.229.42.125, 1433;Database=NotificationDbNew;User Id=sa;Password=Digins@2022;TrustServerCertificate=true;";
+        var connectionString = "Server=103.216.117.53, 1433;Database=NotificationDbNew;User Id=sa;Password=Digins@2022;TrustServerCertificate=true;";
         optionsBuilder.UseSqlServer(connectionString);
         optionsBuilder.LogTo(Console.WriteLine, LogLevel.Debug);
         optionsBuilder.EnableSensitiveDataLogging(true);

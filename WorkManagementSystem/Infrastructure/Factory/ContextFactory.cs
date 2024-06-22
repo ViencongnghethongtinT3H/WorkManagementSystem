@@ -15,7 +15,7 @@ public class ContextFactory : IContextFactory
     {
        // ValidateDefaultConnection();
 
-        var sqlConnectionBuilder = new SqlConnectionStringBuilder("Server=103.229.42.125, 1433;Database=NotificationDbNew;User Id=sa;Password=Digins@2022;TrustServerCertificate=true;");
+        var sqlConnectionBuilder = new SqlConnectionStringBuilder("Server=103.216.117.53, 1433;Database=NotificationDbNew;User Id=sa;Password=Digins@2022;TrustServerCertificate=true;");
 
         var contextOptionsBuilder = new DbContextOptionsBuilder<MainDbContext>();
 

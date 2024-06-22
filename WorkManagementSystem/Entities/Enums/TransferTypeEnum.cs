@@ -3,7 +3,7 @@
 public enum TransferTypeEnum
 {
     [Description("Email")]
-    Email = 1,    // 
+    Email = 1,    
     [Description("Chuyển phát nhanh")]
     ExpressDelivery = 2,
     [Description("Bản cứng")]
