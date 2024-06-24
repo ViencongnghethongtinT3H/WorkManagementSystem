@@ -16,6 +16,7 @@
         public override async Task HandleAsync(Request query, CancellationToken c)
         {
             var data = new Data(_unitOfWork);
+
             await SendAsync(await data.GetWorkItemById(query));
         }
     }
