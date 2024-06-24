@@ -18,5 +18,7 @@
         Submited = 7,
         [Description("Đã ký")]
         Signartured = 8,
+        [Description("Chờ vào sổ văn bản đến")]
+        WaittingWorkArrived = 9,
     }
 }

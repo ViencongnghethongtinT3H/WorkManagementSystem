@@ -47,7 +47,7 @@ public class Data
                 lst.Add(new DispatchReceiveCompany
                 {
                     WorkDispatchId = workItem.Id,
-                    ReceiveCompanyId = item
+                    AccountReceiveId = item
                 });
             }
             await company.AddRangeAsync(lst);

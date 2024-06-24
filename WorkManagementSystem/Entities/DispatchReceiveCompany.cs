@@ -3,6 +3,6 @@
     public class DispatchReceiveCompany : EntityBase
     {
         public Guid WorkDispatchId { get; set; }
-        public Guid ReceiveCompanyId { get; set; }  // nơi nhận công văn
+        public Guid AccountReceiveId { get; set; }  // UserId của văn thư đơn vị nhận
     }
 }
