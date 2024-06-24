@@ -52,7 +52,7 @@
             {
                 var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
                 var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
-                                       join d in dispatchReceiveCompanyRepo on re.Id equals d.ReceiveCompanyId
+                                       join d in dispatchReceiveCompanyRepo on re.Id equals d.AccountReceiveId
                                        where d.WorkDispatchId == r.WorkDispatchId
                                        orderby re.Created descending
                                        select new ReceiveCompanyModel
