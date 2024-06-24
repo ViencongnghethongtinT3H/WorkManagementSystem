@@ -2,8 +2,9 @@
 
 public enum StepEnum
 {
-    Implementer = 1,   // Ngưới thực hiện
-    Forward = 2,   // chuyển tiếp cho người khác
-    Followers = 3,  // Người theo dõi
-    Combination = 4,   // người phối hợp
+    ManagerApprove = 1,  // lãnh đạo phê duyệt
+    TranferProccesing = 2,  // chuyển xử lý
+    SavedFile = 3,          // lưu hồ sơ
+    Done = 4,              // Hoàn thành
+
 }
