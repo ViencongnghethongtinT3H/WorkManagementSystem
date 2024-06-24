@@ -3,8 +3,9 @@
 // lưu các bước của văn bản đến
 public class WorkflowStep : EntityBase
 {
+    public Guid WorkflowId { get; set; }
     public StepEnum Step { get; set; }
-    public Guid UserConfirm { get; set; } // người duyệt
+    public Guid UserConfirm { get; set; } // người xử lý của bước đấy
     public string? Note { get; set; }
-    public string? FormInput { get; set; }   // 1 thông tin các trường đơn giản của form, dạng key-value // cái này có thể dùng cho Văn Bản đi
+    
 }

@@ -8,11 +8,13 @@ public class Request
 
 public class Response
 {
+    public Guid WorkDispatchId { get; set; }
     public string Content { get; set; }  // Trích yếu
     public string? WorkflowDispatchNumber { get; set; }   // số văn bản
     public string? Notation { get; set; }  // Số Kí hiệu
-    public string Dealine { get; set; }  // Số Kí hiệu
+    public string Dealine { get; set; }  // hết hạn
     public string LeadershipName { get; set; }   // Tên lãnh đạo chỉ đạo   
+    public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
 }
 
 

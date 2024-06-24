@@ -1,23 +1,21 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetWorkDispatchById
+﻿namespace WorkManagementSystem.Features.WorkDispatch.GetWorkDispatchById;
+
+public class Endpoint : Endpoint<Request, ResultModel<WorkDispatchDetailResponse>>
 {
-    public class Endpoint : Endpoint<Request, ResultModel<WorkDispatchDetailResponse>>
+    private readonly IUnitOfWork _unitOfWork;
+    public Endpoint(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public Endpoint(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-        public override void Configure()
-        {
-            AllowAnonymous();
-            Get("/workDispatch/get-by-id");
-        }
+        _unitOfWork = unitOfWork;
+    }
+    public override void Configure()
+    {
+        AllowAnonymous();
+        Get("/workDispatch/get-by-id");
+    }
 
-        public override async Task HandleAsync(Request query, CancellationToken c)
-        {
-            var data = new Data(_unitOfWork);
-
-            await SendAsync(await data.GetWorkItemById(query));
-        }
+    public override async Task HandleAsync(Request query, CancellationToken c)
+    {
+        var data = new Data(_unitOfWork);
+        await SendAsync(await data.GetWorkItemById(query));
     }
 }

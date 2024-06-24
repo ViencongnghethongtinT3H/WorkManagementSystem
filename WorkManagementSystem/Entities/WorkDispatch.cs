@@ -4,6 +4,7 @@
 public class WorkDispatch : EntityBase
 {
     #region Step 1
+
     public string? WorkItemNumber { get; set; }
     [MaxLength(100)]
     public string? ItemId { get; set; }  // số
@@ -32,11 +33,13 @@ public class WorkDispatch : EntityBase
     public Guid? UserSign { get; set; }    // Người ký 
     public Guid? UserCompile { get; set; }    // Người biên soạn
     public Guid? DepartmentCompile { get; set; }  //  đơn vị soạn thảo
-    public string? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
+    public string? IndustryId { get; set; }    // Lĩnh vực link tới bảng chung setting
     public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
 
     #endregion
 
     public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
+
+    // Thêm phần người theo dõi khi tạo mới văn bản đi
     
 }

@@ -24,4 +24,9 @@
     <ProjectReference Include="..\WMS.CrossCuttingConcerns\WMS.CrossCuttingConcerns.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\SendEmail\" />
+    <Folder Include="Features\Publish\SignatureWorkflow\" />
+  </ItemGroup>
+
 </Project>

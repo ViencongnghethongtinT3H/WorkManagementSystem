@@ -28,7 +28,7 @@ public class Data
                           Name = u.Name,
                           Id = u.Id,
                           NameAndPosition = $"{u.Name} - {p.Name}",
-                          DeparmentName = u.Name,
+                          DeparmentName = d.Name,
                          
                       }).ToListAsync();
         return ResultModel<List<UserModel>>.Create(data);
