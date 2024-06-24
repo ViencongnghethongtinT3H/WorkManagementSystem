@@ -77,7 +77,7 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserFollow
             }
             catch (Exception ex)
             {
-                throw ;
+               throw new Exception(ex.Message);
             }
 
 

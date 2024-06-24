@@ -63,9 +63,9 @@
                     IsError = false,
                 };
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
 
 

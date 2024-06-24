@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.ApproveWorkDispatch
+﻿namespace WorkManagementSystem.Features.WorkStep
 {
     public class Data
     {
@@ -7,24 +7,15 @@
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ResultModel<bool>> ChangeApproveWorkDispatch(Request r)
-        {
+        public async Task<ResultModel<bool>> CreateWorkStep(WorkflowStep model, Request r)
+        {   
+            var workStepRepo = _unitOfWork.GetRepository<WorkflowStep>();
             var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
+
             try
             {
-                var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.UserId);
-                if (user is null)
-                {
-                    return new ResultModel<bool>(false)
-                    {
-                        Data = false,
-                        Status = 200,
-                        ErrorMessage = "Không tìm thông tin người dùng!",
-                        IsError = true,
-                    };
-                }
-                var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkFlowId);
+                var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
                 if (workDispatch is null)
                 {
                     return new ResultModel<bool>(false)
@@ -35,31 +26,33 @@
                         IsError = true,
                     };
                 }
-
-                if (r.WorkflowStatus == WorkflowStatusEnum.Submited)
+                var user = await userRepo.GetAll().FirstOrDefaultAsync(p => p.Id == r.UserConfirm);
+                if (user is null)
                 {
-                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Submited;
+                    return new ResultModel<bool>(false)
+                    {
+                        Data = false,
+                        Status = 200,
+                        ErrorMessage = "Người dùng không tồn tại!",
+                        IsError = true,
+                    };
                 }
-                else
-                {
-                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Signartured;
-                }
-                workDispatchRepo.Update(workDispatch);
+                model.Step = StepEnum.ManagerApprove;
+                workStepRepo.Add(model);
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)
                 {
                     Data = true,
                     Status = 200,
-                    ErrorMessage = "Duyệt công văn thành công!",
+                    ErrorMessage = "",
                     IsError = false,
                 };
             }
             catch (Exception ex)
             {
+
                 throw new Exception(ex.Message);
             }
-
-
         }
     }
 }
