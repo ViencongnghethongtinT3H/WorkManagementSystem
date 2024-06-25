@@ -5,26 +5,33 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
 {
     public class SendMailHandler : ICommandHandler<SendEmailCommand, bool>
     {
+        private readonly IConfiguration _config;
+
+        public SendMailHandler(IConfiguration config)
+        {
+            _config = config;
+        }
+
         public async Task<bool> ExecuteAsync(SendEmailCommand command, CancellationToken ct)
         {
-            string smtpServer = "smtp.gmail.com";
-            int smtpPort = 587; // Cổng SMTP thường là 587 hoặc 25
-            string smtpUser = "hoangpham19112002@gmail.com";
-            string smtpPass = "jdsgjorovsxmjjro";
+            string smtpServer = _config.GetValue("EmailSettings:SmtpServer", "");
+            var smtpPort = Int32.Parse(_config.GetValue("EmailSettings:SmtpPort", "")); // Cổng SMTP thường là 587 hoặc 25
+            string smtpUser = _config.GetValue("EmailSettings:SmtpUser", "");
+            string smtpPass = _config.GetValue("EmailSettings:SmtpPass", ""); 
             try
             {
                 MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress("your mail@gmail.com");
-                mail.To.Add("to_mail@gmail.com");
-                mail.Subject = "Test Mail - 1";
-                mail.Body = "mail with attachment";
+                SmtpClient SmtpServer = new SmtpClient(smtpServer);
+                mail.From = new MailAddress(smtpUser);
+                mail.To.Add(command.toEmail);
+                mail.Subject = command.subject;
+                mail.Body = command.body;
 
                 if (command.Files.Count > 0)
                 {
                     var lst = new List<FileInfo>();
 
-                    var dirUpload = @"C:\Project\FileManagerService\Output\2023\file";
+                    var dirUpload = _config.GetValue("DirUpload", "");
                     foreach (var item in command.Files)
                     {
                         if (!Directory.Exists(dirUpload))
@@ -32,10 +39,6 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
                             Directory.CreateDirectory(dirUpload);
                         }
                         var filePath = dirUpload + "\\" + item.FileName;
-                        using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await item.CopyToAsync(fileStream);
-                        }
                         System.Net.Mail.Attachment attachment;
                         attachment = new System.Net.Mail.Attachment(filePath);
                         mail.Attachments.Add(attachment);
@@ -52,8 +55,7 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to send email. Error: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
