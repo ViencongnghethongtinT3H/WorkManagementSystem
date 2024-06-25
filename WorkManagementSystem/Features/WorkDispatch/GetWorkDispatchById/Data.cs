@@ -26,7 +26,7 @@
                               from b3 in ud.DefaultIfEmpty()
                               join d in dispatchReceiveCompanyRepo.AsNoTracking() on w.Id equals d.WorkDispatchId into dw
                               from b4 in dw.DefaultIfEmpty()
-                              where w.Id == r.WorkDispatchId
+                              where w.Id == r.WorkDispatchId && (r.WorkflowStatus == 0 || w.WorkflowStatus == r.WorkflowStatus)
                               select new WorkDispatchDetailResponse
                               {
                                   UserSign = w.UserSign,
@@ -57,6 +57,7 @@
                                        orderby re.Created descending
                                        select new ReceiveCompanyModel
                                        {
+                                         AccountReceiveId = re.AccountReceiveId.Value,
                                          Name = re.Name,
                                          Address = re.Address,
                                          Email = re.Email,
@@ -64,6 +65,7 @@
                                        }).ToListAsync();
                 work.ReceiveCompanys = receiveCompanys;
             }
+
             return ResultModel<WorkDispatchDetailResponse>.Create(work);
         }
     }
