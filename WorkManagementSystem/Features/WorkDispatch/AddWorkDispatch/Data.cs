@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
-using WorkManagementSystem.Entities;
 
 namespace WorkManagementSystem.Features.WorkDispatch.AddWorkDispatch;
 
@@ -52,7 +51,6 @@ public class Data
             }
             await company.AddRangeAsync(lst);
         }
-
       //  var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
 
         //var use = new UserWorkflow
@@ -61,11 +59,8 @@ public class Data
         //    UserId = workItem.Id,
         //    UserWorkflowType = UserWorkflowType.Implementer
         //};
-
-
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();
-
     }
 
     public async Task<string> GetUserName(Request r)

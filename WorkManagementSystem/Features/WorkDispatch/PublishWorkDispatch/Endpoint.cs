@@ -10,7 +10,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/WorkDispatch/create");
+        Post("/WorkDispatch/publish-work-dispatch");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
@@ -28,6 +28,8 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             IssueId = new Guid(result.Data.WorkItemId),
             ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
         }.ExecuteAsync();
+
+        
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))
             ThrowError("Không thể thêm công văn");

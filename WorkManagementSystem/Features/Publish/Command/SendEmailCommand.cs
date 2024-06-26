@@ -5,7 +5,7 @@ namespace WorkManagementSystem.Features.Publish.Command
         public string toEmail { get; set; }
         public string subject { get; set; }
         public string body { get; set; }
-        public List<IFormFile> Files { get; set; }
+        public List<string> FileNames { get; set; }
 
     }
 }

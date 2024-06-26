@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.ApproveWorkDispatch
+﻿namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus
 {
     public class Request
     {

@@ -17,7 +17,7 @@ public class Data
 
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
-        workItem.WorkflowStatus = WorkflowStatusEnum.Release;
+        workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
         workDispatchRepository.Add(workItem);
 
         if (r.FileAttachIds.IsAny())
@@ -33,6 +33,14 @@ public class Data
         }
         var company = _unitOfWork.GetRepository<DispatchReceiveCompany>();
         var lst = new List<DispatchReceiveCompany>();
+
+        // lấy ra tên file
+        var fileRepo = _unitOfWork.GetRepository<Entities.FileAttach>().GetAll();
+        var fileName = fileRepo.Where(x => x.IssuesId == workItem.Id).Select (x => x.FileName).ToList();
+
+        // Lấy ra email đơn vị nhận
+        var receiveRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
+
         if (r.ReceiveCompanyIds.IsAny())
         {
             foreach (var item in r.ReceiveCompanyIds)
@@ -42,9 +50,23 @@ public class Data
                     WorkDispatchId = workItem.Id,
                     AccountReceiveId = item
                 });
+
+                var acc = await receiveRepo.FirstOrDefaultAsync(x => x.Id == item);
+
+                await new SendEmailCommand
+                {
+                    toEmail = r.Content,
+                    FileNames = fileName,
+                    body = "232",
+                    subject = "1111"
+                }.ExecuteAsync();
             }
             await company.AddRangeAsync(lst);
+
+
         }
+
+
 
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();

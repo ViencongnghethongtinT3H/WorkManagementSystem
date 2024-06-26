@@ -27,18 +27,18 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
                 mail.Subject = command.subject;
                 mail.Body = command.body;
 
-                if (command.Files.Count > 0)
+                if (command.FileNames.Count > 0)
                 {
                     var lst = new List<FileInfo>();
 
                     var dirUpload = _config.GetValue("DirUpload", "");
-                    foreach (var item in command.Files)
+                    foreach (var item in command.FileNames)
                     {
                         if (!Directory.Exists(dirUpload))
                         {
                             Directory.CreateDirectory(dirUpload);
                         }
-                        var filePath = dirUpload + "\\" + item.FileName;
+                        var filePath = dirUpload + "\\" + item;
                         System.Net.Mail.Attachment attachment;
                         attachment = new System.Net.Mail.Attachment(filePath);
                         mail.Attachments.Add(attachment);

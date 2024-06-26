@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.ApproveWorkDispatch;
+﻿namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
 // Thay đổi trạng thái của công văn đi (luồng trình/duyệt)
 public class Data
 {
