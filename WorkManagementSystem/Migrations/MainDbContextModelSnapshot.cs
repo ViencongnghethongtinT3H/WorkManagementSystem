@@ -56,7 +56,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Digitization", b =>
@@ -93,7 +93,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Digitizations");
+                    b.ToTable("Digitizations", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.DispatchReceiveCompany", b =>
@@ -125,7 +125,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DispatchReceiveCompanies");
+                    b.ToTable("DispatchReceiveCompanies", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.FileAttach", b =>
@@ -171,7 +171,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileAttachs");
+                    b.ToTable("FileAttachs", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.FileManagement", b =>
@@ -211,7 +211,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileManagements");
+                    b.ToTable("FileManagements", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.History", b =>
@@ -251,7 +251,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Histories");
+                    b.ToTable("Histories", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Implementer", b =>
@@ -296,7 +296,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Implementers");
+                    b.ToTable("Implementers", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Notification", b =>
@@ -355,7 +355,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Permission", b =>
@@ -386,7 +386,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permissions", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Position", b =>
@@ -420,7 +420,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Positions", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.ReceiveCompany", b =>
@@ -463,7 +463,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReceiveCompanys");
+                    b.ToTable("ReceiveCompanys", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Role", b =>
@@ -494,7 +494,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Setting", b =>
@@ -532,7 +532,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Settings");
+                    b.ToTable("Settings", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.TaskDetail", b =>
@@ -599,7 +599,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskDetails");
+                    b.ToTable("TaskDetails", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.User", b =>
@@ -649,7 +649,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.UserPermission", b =>
@@ -681,7 +681,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserPermissions");
+                    b.ToTable("UserPermissions", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.UserRole", b =>
@@ -713,7 +713,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.UserWorkflow", b =>
@@ -748,7 +748,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserWorkflows");
+                    b.ToTable("UserWorkflows", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.WorkArrived", b =>
@@ -815,7 +815,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkArrived");
+                    b.ToTable("WorkArrived", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.WorkDispatch", b =>
@@ -908,7 +908,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkDispatchs");
+                    b.ToTable("WorkDispatchs", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.WorkflowStep", b =>
@@ -946,7 +946,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkflowSteps");
+                    b.ToTable("WorkflowSteps", (string)null);
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.WorkItem", b =>
@@ -1032,7 +1032,7 @@ namespace WorkManagementSystem.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("WorkItems");
+                    b.ToTable("WorkItems", (string)null);
                 });
 #pragma warning restore 612, 618
         }
