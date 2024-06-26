@@ -12,7 +12,7 @@
 
         [MaxLength(500)]
         public string Name { get; set; }
-        public long ParentId { get; set; }
+        public Guid? ParentId { get; set; }
         public FileManagementType FileManagementType { get; set; }
     }
 }

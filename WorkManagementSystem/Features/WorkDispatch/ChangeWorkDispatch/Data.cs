@@ -36,28 +36,28 @@ public class Data
                 };
             }
 
-            if (r.WorkflowStatus == WorkflowStatusEnum.Submited)
-            {
-                workDispatch.WorkflowStatus = WorkflowStatusEnum.Submited;
+                if (r.WorkflowStatus == WorkflowStatusEnum.Submited)
+                {
+                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Submited;
+                }
+                else
+                {
+                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Signartured;
+                }
+                workDispatchRepo.Update(workDispatch);
+                await _unitOfWork.CommitAsync();
+                return new ResultModel<bool>(true)
+                {
+                    Data = true,
+                    Status = 200,
+                    ErrorMessage = "Duyệt công văn thành công!",
+                    IsError = false,
+                };
             }
-            else
+            catch (Exception ex)
             {
-                workDispatch.WorkflowStatus = WorkflowStatusEnum.Signartured;
+                throw new Exception(ex.Message);
             }
-            workDispatchRepo.Update(workDispatch);
-            await _unitOfWork.CommitAsync();
-            return new ResultModel<bool>(true)
-            {
-                Data = true,
-                Status = 200,
-                ErrorMessage = "Duyệt công văn thành công!",
-                IsError = false,
-            };
-        }
-        catch (Exception e)
-        {
-            throw;
-        }
 
 
     }

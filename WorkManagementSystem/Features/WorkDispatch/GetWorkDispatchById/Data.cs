@@ -57,6 +57,7 @@
                                        orderby re.Created descending
                                        select new ReceiveCompanyModel
                                        {
+                                         AccountReceiveId = re.AccountReceiveId.Value,
                                          Name = re.Name,
                                          Address = re.Address,
                                          Email = re.Email,
@@ -64,6 +65,7 @@
                                        }).ToListAsync();
                 work.ReceiveCompanys = receiveCompanys;
             }
+
             return ResultModel<WorkDispatchDetailResponse>.Create(work);
         }
     }
