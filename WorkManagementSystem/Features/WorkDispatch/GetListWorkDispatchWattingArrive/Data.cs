@@ -54,27 +54,6 @@
                             DepartmentName = de.Name,
                             LeadershipDirectName = u.Name,
                         };
-            var workId = request.Filters.GetFilterModel("LeadershipDirectId");  // lãnh đạo chỉ đạo
-            if (workId is not null)
-            {
-                query = query.Where(x => x.LeadershipDirectId == new Guid(workId.FieldValue));
-            }
-
-            var subjective = request.Filters.GetFilterModel("Subjective");  // chuyên đề
-            if (subjective is not null)
-            {
-                query = query.Where(x => x.Subjective == subjective.FieldValue);
-            }
-            var keyWord = request.Filters.GetFilterModel("KeyWord");  // chuyên đề
-            if (keyWord is not null)
-            {
-                query = query.Where(x => x.KeyWord == keyWord.FieldValue);
-            }
-            var departmentId = request.Filters.GetFilterModel("DepartmentId");  // phòng ban ban hành
-            if (departmentId is not null)
-            {
-                query = query.Where(x => x.DepartmentId == new Guid(departmentId.FieldValue));
-            }
             var fromDate = request.Filters.GetFilterModel("FromDate");
             var toDate = request.Filters.GetFilterModel("ToDate");
             if (fromDate is not null && toDate is not null)
