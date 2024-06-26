@@ -8,5 +8,6 @@
         Combination = 4,   // người phối hợp
         Submit = 5,    // nguoi duyet
         Signarture = 6, // nguoi ky
+        Presented = 7 // nguoi trinh
     }
 }
