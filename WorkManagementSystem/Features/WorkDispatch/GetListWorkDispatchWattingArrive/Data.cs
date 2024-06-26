@@ -1,6 +1,4 @@
-﻿using WorkManagementSystem.Entities;
-
-namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingWork
+﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingWork
 {
     public class Data
     {
