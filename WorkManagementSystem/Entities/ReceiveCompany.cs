@@ -7,6 +7,6 @@
         public string Email { get; set; }
         public string? Fax { get; set; }
         public string? Address { get; set; }
-        public string? AccountReceiveId { get; set; }   // Id của văn thư đơn vị nhận
+        public Guid? AccountReceiveId { get; set; }   // Id của văn thư đơn vị nhận
     }
 }
