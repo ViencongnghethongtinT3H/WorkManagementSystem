@@ -58,7 +58,7 @@
                 {
                     Data = true,
                     Status = 200,
-                    ErrorMessage = "Thêm người theo dõi thành công!",
+                    ErrorMessage = "Thêm thành công!",
                     IsError = false,
                 };
             }
