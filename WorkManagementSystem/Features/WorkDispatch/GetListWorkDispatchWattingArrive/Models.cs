@@ -13,6 +13,7 @@
         public int Page { get; init; } = 1;
         public int PageSize { get; init; } = 20;
         public bool IsPagingEnabled { get; init; } = false;
+        public Guid UserId { get; set; }
     }
 
     public class Response : QueryListResponse<WorkDispatchResponse>

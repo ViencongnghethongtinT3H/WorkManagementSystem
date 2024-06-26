@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingWork
+﻿using WorkManagementSystem.Entities;
+
+namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingWork
 {
     public class Data
     {
@@ -17,8 +19,7 @@
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
 
             // Truy vấn để lấy danh sách DispatchIds
-            var dispatchIds = from d in dispatchReceiveCompanyRepo.GetAll().AsNoTracking()
-                              join re in receiveCompanyRepo.GetAll().AsNoTracking() on d.AccountReceiveId equals re.AccountReceiveId
+            var dispatchIds = from d in dispatchReceiveCompanyRepo.GetAll().AsNoTracking().Where(x => x.AccountReceiveId == request.UserId)
                               select d.WorkDispatchId;
 
             // Truy vấn WorkDispatchs dựa trên danh sách DispatchIds
