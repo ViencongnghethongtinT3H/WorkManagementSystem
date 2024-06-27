@@ -1,5 +1,4 @@
 using System.Net.Mail;
-using System.Net;
 
 namespace WorkManagementSystem.Features.Publish.CommandHandler
 {
@@ -17,31 +16,43 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
             string smtpServer = _config.GetValue("EmailSettings:SmtpServer", "");
             var smtpPort = Int32.Parse(_config.GetValue("EmailSettings:SmtpPort", "")); // Cổng SMTP thường là 587 hoặc 25
             string smtpUser = _config.GetValue("EmailSettings:SmtpUser", "");
-            string smtpPass = _config.GetValue("EmailSettings:SmtpPass", ""); 
-            try
+            string smtpPass = _config.GetValue("EmailSettings:SmtpPass", "");
+
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient(smtpServer);
+            mail.From = new MailAddress(smtpUser);
+            mail.To.Add(command.toEmail);
+            mail.Subject = command.subject;
+            mail.Body = command.body;
+
+            if (command.FileNames.Count > 0)
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient(smtpServer);
-                mail.From = new MailAddress(smtpUser);
-                mail.To.Add(command.toEmail);
-                mail.Subject = command.subject;
-                mail.Body = command.body;
+                var lst = new List<FileInfo>();
 
-                if (command.FileNames.Count > 0)
+                var dirUpload = _config.GetValue("DirUpload", "");
+                foreach (var item in command.FileNames)
                 {
-                    var lst = new List<FileInfo>();
-
-                    var dirUpload = _config.GetValue("DirUpload", "");
-                    foreach (var item in command.FileNames)
+                    if (!Directory.Exists(dirUpload))
                     {
-                        if (!Directory.Exists(dirUpload))
-                        {
-                            Directory.CreateDirectory(dirUpload);
-                        }
+                        Directory.CreateDirectory(dirUpload);
+                    }
+                    try
+                    {
                         var filePath = dirUpload + "\\" + item;
-                        System.Net.Mail.Attachment attachment;
-                        attachment = new System.Net.Mail.Attachment(filePath);
-                        mail.Attachments.Add(attachment);
+                        if (System.IO.File.Exists(filePath))
+                        {
+
+                            Attachment attachment = new Attachment(filePath);
+                            mail.Attachments.Add(attachment);
+                        }
+                        else
+                        {
+                            throw new Exception("File không tồn tại: " + filePath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
                     }
                 }
 
@@ -53,16 +64,8 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
                 SmtpServer.Send(mail);
                 return true;
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return false;
         }
-
-
-
     }
-
-
 
 }
