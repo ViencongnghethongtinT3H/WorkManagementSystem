@@ -35,8 +35,7 @@ public class Data
         var lst = new List<DispatchReceiveCompany>();
 
         // lấy ra tên file
-        var fileRepo = _unitOfWork.GetRepository<Entities.FileAttach>().GetAll();
-        var fileName = fileRepo.Where(x => x.IssuesId == workItem.Id).Select (x => x.FileName).ToList();
+      
 
         // Lấy ra email đơn vị nhận
         var receiveRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
@@ -55,10 +54,10 @@ public class Data
 
                 await new SendEmailCommand
                 {
-                    toEmail = r.Content,
+                    toEmail = acc.Email,
                     FileNames = fileName,
                     body = "232",
-                    subject = "1111"
+                    subject = "Thông báo về công văn đến"
                 }.ExecuteAsync();
             }
             await company.AddRangeAsync(lst);
