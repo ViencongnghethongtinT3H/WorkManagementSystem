@@ -42,7 +42,7 @@
                 {
                     Data = true,
                     Status = 200,
-                    ErrorMessage = "Duyệt công văn thành công!",
+                    ErrorMessage = "Thay đổi trạng thái công văn thành công!",
                     IsError = false,
                 };
             }
