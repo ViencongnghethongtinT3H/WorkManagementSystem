@@ -1,3 +1,4 @@
+
 namespace WorkManagementSystem.Features.File.GetFolders;
 
 public class Data
@@ -9,16 +10,32 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<List<Response>> GetList(Request r)
-        {
-            var fileManagement = await _unitOfWork.GetRepository<Entities.FileManagement>().GetAll().Where(x => x.ParentId == r.ParentId).ToListAsync();
-            return fileManagement.Select(fm => new Response
-            {
-                Id = fm.Id,
-                Name = fm.Name,
-                ParentId = fm.ParentId,
-                FileManagementType = fm.FileManagementType,
-            }).ToList();
+    public async Task<List<Response>> GetFolder(Request r)
+    {
+        var fileManagement = _unitOfWork.GetRepository<FileManagement>().GetAll();
+        var fileAttach = _unitOfWork.GetRepository<FileAttach>().GetAll();
 
+        var folders = await fileManagement.Where(x => x.ParentId == r.ParentId && x.UserId == r.UserId).Select(fm => new FolderModel
+        {
+            Id = fm.Id,
+            Name = fm.Name,
+            UserId =fm.UserId,
+            ParentId = fm.ParentId,
+            FileManagementType = fm.FileManagementType,
+        }).ToListAsync();
+
+        var result = new List<Response>();
+
+        foreach (var folder in folders)
+        {
+            var fileAttaches = await fileAttach.Where(x => x.RefId == folder.Id).ToListAsync();
+            var folderDto = new Response
+            {
+                Folders = folder,
+                Files = fileAttaches
+            };
+            result.Add(folderDto);
         }
+        return result;
+    }
 }

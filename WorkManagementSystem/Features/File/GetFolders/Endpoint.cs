@@ -18,7 +18,7 @@ namespace WorkManagementSystem.Features.File.GetFolders
        public override async Task HandleAsync(Request r, CancellationToken ct)
         {
               var data = new Data(_unitOfWork);
-              var result = await data.GetList(r);
+              var result = await data.GetFolder(r);
               await SendAsync(ResultModel<List<Response>>.Create(result));       
         }
 

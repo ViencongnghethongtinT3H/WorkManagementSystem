@@ -8,11 +8,18 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-   public async Task<string> CreateFolders(FileManagement fileManagement, Request r)
+    public async Task<ResultModel<bool>> CreateFolders(FileManagement fileManagement, Request r)
     {
         var fileManagementRepository = _unitOfWork.GetRepository<FileManagement>();
-        fileManagementRepository.Add(fileManagement);      
+        fileManagementRepository.Add(fileManagement);
         await _unitOfWork.CommitAsync();
-        return fileManagement.Id.ToString();
+
+        return new ResultModel<bool>(true)
+        {
+            Data = true,
+            Status = 200,
+            ErrorMessage = "Tạo mới folder thành công",
+            IsError = false,
+        };
     }
 }
