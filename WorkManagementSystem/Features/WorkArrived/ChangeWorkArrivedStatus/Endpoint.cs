@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/workArrived/change-work-arrived");
+            Post("/workArrived/change-work-arrived-status");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)
