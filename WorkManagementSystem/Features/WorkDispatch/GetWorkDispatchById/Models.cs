@@ -3,7 +3,6 @@
     public class Request
     {
         public Guid WorkDispatchId { get; set; }
-        public WorkflowStatusEnum? WorkflowStatus { get; set; }
     }
     public class WorkDispatchDetailResponse 
     {
