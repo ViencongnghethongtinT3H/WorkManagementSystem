@@ -1,5 +1,4 @@
 using System.Net.Mail;
-using System.Net;
 
 namespace WorkManagementSystem.Features.Publish.CommandHandler
 {
@@ -38,10 +37,18 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
                         {
                             Directory.CreateDirectory(dirUpload);
                         }
+
                         var filePath = dirUpload + "\\" + item;
-                        System.Net.Mail.Attachment attachment;
-                        attachment = new System.Net.Mail.Attachment(filePath);
-                        mail.Attachments.Add(attachment);
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            
+                            Attachment attachment = new Attachment(filePath);
+                            mail.Attachments.Add(attachment);
+                        }
+                        else
+                        {
+                            throw new Exception("File không tồn tại: " + filePath);
+                        }
                     }
                 }
 
