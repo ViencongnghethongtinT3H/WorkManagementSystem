@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.ForwardWorkDispatch
+﻿namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
 {
     public class Endpoint : Endpoint<Request, ResultModel<bool>>
     {
@@ -10,13 +10,13 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/workDispatch/forward-work-dispatch");
+            Post("/workArrived/change-work-arrived-status");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)
         {
             var data = new Data(_unitOfWork);
-            var result = await data.ForwardWorkDispatch(r);
+            var result = await data.ChangeWorkArrivedStatus(r);
             await SendAsync(result);
         }
     }

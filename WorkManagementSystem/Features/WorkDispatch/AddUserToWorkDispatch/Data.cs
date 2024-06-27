@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.ForwardWorkDispatch
+﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
 {
     public class Data
     {
@@ -7,27 +7,37 @@
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ResultModel<bool>> ForwardWorkDispatch(Request r)
+        public async Task<ResultModel<bool>> AddUserToWorkDispatch(Request r)
         {
-            var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
-            var userRepo = _unitOfWork.GetRepository<Entities.User>();
             var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
+            var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
+            var listUserFlow = new List<UserWorkflow>();
+            var userRepo = _unitOfWork.GetRepository<Entities.User>();
 
-            try
+            foreach (var item in r.UserIds)
             {
-
-                var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.UserId);
+                var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == item);
                 if (user is null)
                 {
                     return new ResultModel<bool>(false)
                     {
                         Data = false,
                         Status = 200,
-                        ErrorMessage = "Không tìm thông tin người dùng!",
+                        ErrorMessage = $"Không tìm thông tin người dùng theo Id = ${item}!",
                         IsError = true,
                     };
                 }
-                var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkDispatchId);
+                var userWorkFlow = new UserWorkflow();
+                userWorkFlow.UserId = item;
+                userWorkFlow.WorkflowId = r.WorkflowId;
+                userWorkFlow.UserWorkflowType = r.UserWorkflowType;
+                listUserFlow.Add(userWorkFlow);
+            }
+          
+
+            try
+            {
+                var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
                 if (workDispatch is null)
                 {
                     return new ResultModel<bool>(false)
@@ -38,19 +48,17 @@
                         IsError = true,
                     };
                 }
-                var userWorkf = new UserWorkflow();
-                userWorkf.WorkflowId = workDispatch.Id;
-                userWorkf.UserId = r.UserId;    
-                userWorkf.UserWorkflowType = UserWorkflowType.Forward;
-                await userWorkflowRepo.AddAsync(userWorkf);
+               
+                if(listUserFlow is not null)
+                {
+                   await userWorkflowRepo.AddRangeAsync(listUserFlow);
+                }
                 await _unitOfWork.CommitAsync();
-
-
                 return new ResultModel<bool>(true)
                 {
                     Data = true,
                     Status = 200,
-                    ErrorMessage = "Chuyển công văn thành công!",
+                    ErrorMessage = "Thêm thành công!",
                     IsError = false,
                 };
             }
