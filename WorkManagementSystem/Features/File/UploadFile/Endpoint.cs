@@ -27,7 +27,7 @@ public class Endpoint : Endpoint<Request, Response>
         {
             var lst = new List<FileInfo>();
 
-            var dirUpload = @"C:\Project\FileManagerService\Output\2023\file";
+            var dirUpload = _config.GetValue("DirUpload", "");
             foreach (var item in Files)
             {
                 if (!Directory.Exists(dirUpload))
@@ -46,8 +46,7 @@ public class Endpoint : Endpoint<Request, Response>
                 });
             }
             var data = new Data(_unitOfWork);
-           var ids =  await data.AddFileAttachs(lst);
-
+            var ids = await data.AddFileAttachs(lst);
             var kq = new Response();
             if (req.OcrType != OcrType.Other)
             {
@@ -57,7 +56,7 @@ public class Endpoint : Endpoint<Request, Response>
             else
             {
                 kq.ids = ids;
-            }    
+            }
             await SendAsync(kq);
 
 
