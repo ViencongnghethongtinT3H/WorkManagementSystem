@@ -9,7 +9,6 @@
          * - Nhiệm vụ
         */
         public Guid UserId { get; set; }
-
         [MaxLength(500)]
         public string Name { get; set; }
         public Guid? ParentId { get; set; }
