@@ -19,7 +19,7 @@ public class Data
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
         workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
         workDispatchRepository.Add(workItem);
-
+        List<string> FileNames = new List<string>();
         if (r.FileAttachIds.IsAny())
         {
             var filesRepo = _unitOfWork.GetRepository<FileAttach>();
@@ -29,6 +29,7 @@ public class Data
                 item.IssuesId = workItem.Id;
                 item.Updated = DateTime.Now;
                 filesRepo.Update(item);
+                FileNames.Add(item.FileName);
             }
         }
         var company = _unitOfWork.GetRepository<DispatchReceiveCompany>();
@@ -51,22 +52,20 @@ public class Data
                 });
 
                 var acc = await receiveRepo.FirstOrDefaultAsync(x => x.Id == item);
-
-                await new SendEmailCommand
+                if(acc is not null)
                 {
-                    toEmail = acc.Email,
-                    //FileNames = fileName,
-                    body = "232",
-                    subject = "Thông báo về công văn đến"
-                }.ExecuteAsync();
+                    await new SendEmailCommand
+                    {
+                        toEmail = acc.Email,
+                        FileNames = FileNames,
+                        body = "232",
+                        subject = "Thông báo về công văn đến"
+                    }.ExecuteAsync();
+                }
+                
             }
             await company.AddRangeAsync(lst);
-
-
         }
-
-
-
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();
     }
