@@ -44,6 +44,12 @@
         #endregion
 
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
+
+        //setting
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public SettingEnum Type { get; set; }
+
         public List<ReceiveCompanyModel> ReceiveCompanys { get; set; }
         public List <Notes> Notes { get; set; }   // Ý kiến xử lý
         public List<HistoryListModel> Histories { get; set; }  // lịch sử

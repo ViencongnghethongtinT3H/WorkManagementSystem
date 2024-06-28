@@ -29,6 +29,17 @@
                               where w.Id == r.WorkDispatchId
                               select new WorkDispatchDetailResponse
                               {
+                                  SignDay = w.SignDay.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  DepartmentCompile = w.DepartmentId,
+                                  DocumentTypeKey = w.DocumentTypeKey,
+                                  WorkflowStatus = w.WorkflowStatus,
+                                  Key = b1.Key,
+                                  ItemId = w.ItemId,
+                                  TransferType = w.TransferType,
+                                  Type = b1.Type,
+                                  Value = b1.Value,
+                                  UserCompile = w.UserCompile,
+                                  KeyWord = w.KeyWord,
                                   UserSign = w.UserSign,
                                   WorkDispatchId = w.Id,
                                   WorkItemNumber = w.WorkItemNumber,
@@ -64,12 +75,39 @@
                                          Fax = re.Fax
                                        }).ToListAsync();
 
-                var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
-                //var historys = 
-                //work.ReceiveCompanys = historys;
+                var historys = _unitOfWork.GetRepository<Entities.History>().GetAll().AsNoTracking()
+                    .Where(p=>p.IssueId == r.WorkDispatchId).Select(p=> new HistoryListModel
+                    {
+                        ActionContent = p.actionContent,
+                        ActionTime = p.actionContent,
+                        UserUpdated = p.UserIdUpdated
+                    });
+                work.Histories = historys.ToList();
+
+                var nameUser = await GetUserName(work.UserCompile.Value);
+
+                var notes = _unitOfWork.GetRepository<UserWorkflow>().GetAll().AsNoTracking()
+                    .Where(p => p.WorkflowId == r.WorkDispatchId).Select(p => new Notes
+                    {
+                        DateNote = p.Created.ToFormatString("dd/MM/yyyy HH:mm"),
+                        UserName = nameUser,
+                        DeparmentName = work.DepartmentName,
+                        Note = p.Note
+                    });
+                work.Notes = notes.ToList();
             }
 
             return ResultModel<WorkDispatchDetailResponse>.Create(work);
+        }
+        public async Task<string> GetUserName(Guid id)
+        {
+            var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(id);
+            if (user is not null)
+            {
+                return user.Name;
+            }
+            return string.Empty;
+
         }
     }
 }
