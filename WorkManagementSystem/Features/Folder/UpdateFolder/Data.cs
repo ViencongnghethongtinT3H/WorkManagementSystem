@@ -24,8 +24,8 @@ public class Data
                 IsError = true,
             };
         }
-        var existingFolder = await fileManagementRepository.GetAll().CountAsync(x => x.ParentId == folder.ParentId && x.Name == r.Name);
-        if (existingFolder > 0)
+        var existingFolder = await fileManagementRepository.GetAll().AnyAsync(x => x.ParentId == folder.ParentId && x.Name == r.Name);
+        if (existingFolder)
         {
             return new ResultModel<bool>(false)
             {

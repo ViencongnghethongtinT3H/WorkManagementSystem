@@ -11,8 +11,8 @@ public class Data
     public async Task<ResultModel<bool>> CreateFolders(FileManagement fileManagement, Request r)
     {
         var fileManagementRepository = _unitOfWork.GetRepository<FileManagement>();
-        var existingFolder = await fileManagementRepository.GetAll().CountAsync(x => x.ParentId == r.ParentId && x.Name == r.Name);
-        if (existingFolder > 0)
+        var existingFolder = await fileManagementRepository.GetAll().AnyAsync(x => x.ParentId == r.ParentId && x.Name == r.Name);
+        if (existingFolder)
         {
             return new ResultModel<bool>(false)
             {
