@@ -5,6 +5,8 @@
     {
         public Guid WorkflowId { get; set; }
         public Guid UserId { get; set; }
+        [StringLength(500)]
+        public string? Note { get; set; }
         public UserWorkflowType UserWorkflowType { get; set; }
 
     }

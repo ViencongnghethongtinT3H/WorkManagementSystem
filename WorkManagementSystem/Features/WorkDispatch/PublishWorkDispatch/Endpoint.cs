@@ -29,7 +29,10 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
         }.ExecuteAsync();
 
-        
+
+        // Thêm phần lịch sử
+
+        // Thêm phần notification
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))
             ThrowError("Không thể thêm công văn");

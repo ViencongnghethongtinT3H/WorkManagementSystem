@@ -1,5 +1,6 @@
 ﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
 {
+    // Chuyển người xử lý bước tiếp theo  => thêm phần note
     public class Data
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -13,6 +14,19 @@
             var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
             var listUserFlow = new List<UserWorkflow>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
+            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
+
+            if (workDispatch is null)
+            {
+                return new ResultModel<bool>(false)
+                {
+                    Data = false,
+                    Status = 200,
+                    ErrorMessage = "Không tìm thấy công văn!",
+                    IsError = true,
+                };
+            }
+
 
             foreach (var item in r.UserIds)
             {
@@ -33,41 +47,21 @@
                 userWorkFlow.UserWorkflowType = r.UserWorkflowType;
                 listUserFlow.Add(userWorkFlow);
             }
-          
-
-            try
+            if (listUserFlow is not null)
             {
-                var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
-                if (workDispatch is null)
-                {
-                    return new ResultModel<bool>(false)
-                    {
-                        Data = false,
-                        Status = 200,
-                        ErrorMessage = "Không tìm thấy công văn!",
-                        IsError = true,
-                    };
-                }
-               
-                if(listUserFlow is not null)
-                {
-                   await userWorkflowRepo.AddRangeAsync(listUserFlow);
-                }
-                await _unitOfWork.CommitAsync();
-                return new ResultModel<bool>(true)
-                {
-                    Data = true,
-                    Status = 200,
-                    ErrorMessage = "Thêm thành công!",
-                    IsError = false,
-                };
+                await userWorkflowRepo.AddRangeAsync(listUserFlow);
             }
-            catch (Exception ex)
+            await _unitOfWork.CommitAsync();
+            return new ResultModel<bool>(true)
             {
-               throw new Exception(ex.Message);
-            }
-
-
+                Data = true,
+                Status = 200,
+                ErrorMessage = "Thêm thành công!",
+                IsError = false,
+            };
         }
+
+
     }
 }
+

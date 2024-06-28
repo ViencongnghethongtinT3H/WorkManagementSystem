@@ -18,6 +18,11 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
     {
         var data = new Data(_unitOfWork);
         var result = await data.AddUserToWorkDispatch(r);
+
+        // Thêm phần lịch sử
+
+        // Thêm phần notification
+
         await SendAsync(result);
     }
 }
