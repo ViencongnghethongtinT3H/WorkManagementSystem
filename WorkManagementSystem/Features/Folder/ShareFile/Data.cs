@@ -1,5 +1,5 @@
 
-namespace WorkManagementSystem.Features.File.ShareFile;
+namespace WorkManagementSystem.Features.Folder.ShareFile;
 
 public class Data
 {

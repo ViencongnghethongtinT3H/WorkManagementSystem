@@ -1,4 +1,4 @@
-namespace WorkManagementSystem.Features.File.CreateFolder;
+namespace WorkManagementSystem.Features.Folder.CreateFolder;
 
 public class Data
 {
@@ -11,6 +11,18 @@ public class Data
     public async Task<ResultModel<bool>> CreateFolders(FileManagement fileManagement, Request r)
     {
         var fileManagementRepository = _unitOfWork.GetRepository<FileManagement>();
+        var existingFolder = await fileManagementRepository.GetAll().CountAsync(x => x.ParentId == r.ParentId && x.Name == r.Name);
+        if (existingFolder > 0)
+        {
+            return new ResultModel<bool>(false)
+            {
+                Data = false,
+                Status = 409,
+                ErrorMessage = "Tên folder này đã tồn tại",
+                IsError = true,
+            };
+        }
+
         fileManagementRepository.Add(fileManagement);
         await _unitOfWork.CommitAsync();
 
