@@ -1,18 +1,22 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
-
+using WorkManagementSystem.Features.ToImplementer;
 namespace WorkManagementSystem.Features.WorkDispatch.AddWorkDispatch;
 
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
-    public Data(IUnitOfWork unitOfWork)
+    private readonly IEventImplement _eventImplement;
+    public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
     {
         _unitOfWork = unitOfWork;
+        _eventImplement = eventImplement;
     }
 
-    public async Task<string> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
+    public async Task<(string, List<Guid> UserReceiveNotification)> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
     {
+        var userNotifications = new List<Guid>();
+        var implementRepository = _unitOfWork.GetRepository<Implementer>();
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
         if (r.IsPublish)
         {
@@ -51,7 +55,7 @@ public class Data
             }
             await company.AddRangeAsync(lst);
         }
-      //  var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
+        //  var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
 
         //var use = new UserWorkflow
         //{
@@ -59,8 +63,14 @@ public class Data
         //    UserId = workItem.Id,
         //    UserWorkflowType = UserWorkflowType.Implementer
         //};
+        var implementOld = await implementRepository.FindBy(x => x.IssuesId == workItem.Id).ToListAsync();
+        if(implementOld is not null)
+        implementRepository.HardDeletes(implementOld);
+        var implements = _eventImplement.ToImplementer(r.RequestImplementer, workItem.Id);
+        await implementRepository.AddRangeAsync(implements);
+        userNotifications = implements.Select(x => x.UserReceiveId).ToList();
         await _unitOfWork.CommitAsync();
-        return workItem.Id.ToString();
+        return (workItem.Id.ToString(), userNotifications);
     }
 
     public async Task<string> GetUserName(Request r)

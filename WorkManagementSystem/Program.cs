@@ -1,6 +1,7 @@
 using FastEndpoints.Swagger;
 using System.Reflection;
 using WorkManagementSystem;
+using WorkManagementSystem.Features.ToImplementer;
 using WorkManagementSystem.Infrastructure.DataSeeder;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +43,7 @@ builder.Services.AddDbContext<MainDbContext>(options =>
 }, ServiceLifetime.Scoped);
 
 builder.Services.AddScoped<DataSeeder>();
-
+builder.Services.AddScoped<IEventImplement, EventImplement>();
 //builder.Services.SwaggerDocument(o =>
 //{
 //    o.DocumentSettings = s =>
