@@ -1,4 +1,4 @@
-namespace WorkManagementSystem.Features.File.CreateFolder;
+namespace WorkManagementSystem.Features.Folder.CreateFolder;
 
 public class Request
 {
