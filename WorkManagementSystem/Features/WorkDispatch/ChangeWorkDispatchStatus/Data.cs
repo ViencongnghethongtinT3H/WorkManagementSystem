@@ -1,5 +1,5 @@
 ﻿namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
-// Thay đổi trạng thái của công văn đi (luồng trình/duyệt)
+// Thay đổi trạng thái của công văn đi (luồng trình/duyệt)  => thêm phần note
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;

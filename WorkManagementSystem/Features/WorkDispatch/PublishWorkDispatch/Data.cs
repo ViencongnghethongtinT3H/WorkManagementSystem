@@ -55,7 +55,7 @@ public class Data
                 await new SendEmailCommand
                 {
                     toEmail = acc.Email,
-                    FileNames = fileName,
+                    //FileNames = fileName,
                     body = "232",
                     subject = "Thông báo về công văn đến"
                 }.ExecuteAsync();
