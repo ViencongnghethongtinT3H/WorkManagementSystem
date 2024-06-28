@@ -34,13 +34,13 @@
                                   WorkItemNumber = w.WorkItemNumber,
                                   Content = w.Content,
                                   Notation = $"{w.ItemId}/{b1.Value}",
-                                  DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
+                                  DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy HH:mm"),
                                   Priority = w.Priority,
                                   Subjective = w.Subjective,
                                   UserIdCreated = w.UserIdCreated,
                                   DepartmentId = w.DepartmentId,
-                                  Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
-                                  EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
+                                  Dealine = w.Dealine.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy HH:mm"),
                                   IndustryId = b5.Value,
                                   IndustryName = b5.Value,
                                   LeadershipDirectId = w.LeadershipDirectId,
@@ -63,7 +63,10 @@
                                          Email = re.Email,
                                          Fax = re.Fax
                                        }).ToListAsync();
-                work.ReceiveCompanys = receiveCompanys;
+
+                var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
+                //var historys = 
+                //work.ReceiveCompanys = historys;
             }
 
             return ResultModel<WorkDispatchDetailResponse>.Create(work);

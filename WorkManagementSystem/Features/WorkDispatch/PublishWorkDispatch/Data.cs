@@ -1,25 +1,29 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
+using WorkManagementSystem.Features.ToImplementer;
 
 namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
-    public Data(IUnitOfWork unitOfWork)
+    private readonly IEventImplement _eventImplement;
+    public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
     {
         _unitOfWork = unitOfWork;
+        _eventImplement = eventImplement;
     }
 
     public async Task<string> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
     {
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-
+        var userNotifications = new List<Guid>();
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
         workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
         workDispatchRepository.Add(workItem);
         List<string> FileNames = new List<string>();
+        var implementRepository = _unitOfWork.GetRepository<Implementer>();
         if (r.FileAttachIds.IsAny())
         {
             var filesRepo = _unitOfWork.GetRepository<FileAttach>();
@@ -66,6 +70,12 @@ public class Data
             }
             await company.AddRangeAsync(lst);
         }
+        var implementOld = await implementRepository.FindBy(x => x.IssuesId == workItem.Id).ToListAsync();
+        if (implementOld is not null)
+        implementRepository.HardDeletes(implementOld);
+        var implements = _eventImplement.ToImplementer(r.RequestImplementer, workItem.Id);
+        await implementRepository.AddRangeAsync(implements);
+        userNotifications = implements.Select(x => x.UserReceiveId).ToList();
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();
     }
