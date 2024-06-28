@@ -1,6 +1,6 @@
-namespace WorkManagementSystem.Features.File.GetFolders
+namespace WorkManagementSystem.Features.Folder.ShareFile
 {
-    public class Endpoint : Endpoint<Request, ResultModel<List<Response>>>
+    public class Endpoint :  Endpoint<Request, ResultModel<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -12,14 +12,14 @@ namespace WorkManagementSystem.Features.File.GetFolders
         public override void Configure()
         {
             AllowAnonymous();
-            Get("/folders/get-folders");
+            Post("/folders/share-file");
         }
 
        public override async Task HandleAsync(Request r, CancellationToken ct)
         {
               var data = new Data(_unitOfWork);
-              var result = await data.GetFolder(r);
-              await SendAsync(ResultModel<List<Response>>.Create(result));       
+              var result = await data.ShareFile(r);
+            await SendAsync(result); 
         }
 
 
