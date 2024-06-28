@@ -35,15 +35,8 @@ public class Data
                     IsError = true,
                 };
             }
-
-                if (r.WorkflowStatus == WorkflowStatusEnum.Submited)
-                {
-                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Submited;
-                }
-                else
-                {
-                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Signartured;
-                }
+                
+                workDispatch.WorkflowStatus = r.WorkflowStatus;
                 workDispatchRepo.Update(workDispatch);
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)
