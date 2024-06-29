@@ -37,7 +37,8 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
                     UserId = item.UserIds,
                     WorkflowId = r.WorkflowId,
                     UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
-                    UserWorkflowStatus = UserWorkflowStatusEnum.Waitting    // mặc định chuyển người xử lý thì gán mặc định là 1
+                    UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,    // mặc định chuyển người xử lý thì gán mặc định là 1,
+                    Note = item.Note
                 };
                 lst.Add(user);
             }

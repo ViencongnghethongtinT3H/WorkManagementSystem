@@ -53,7 +53,7 @@ public class Data
             UserId = r.UserCompile,
             UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
             UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
-            Note = $"{GetUserName(r.UserCompile)} đã khởi tạo công văn vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+            Note = $"{await GetUserName(r.UserCompile)} đã khởi tạo công văn vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
 
         };
 
@@ -63,7 +63,7 @@ public class Data
             UserId = r.LeadershipDirectId,
             UserWorkflowType = UserWorkflowType.Followers,
             UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
-            Note = $"{GetUserName(r.LeadershipDirectId)} đã khởi tạo công văn vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+            Note = $"{await GetUserName(r.LeadershipDirectId)} đã khởi tạo công văn vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
         };
 
         await userWorkRepo.AddAsync(userCompile);

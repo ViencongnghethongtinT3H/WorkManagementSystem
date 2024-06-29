@@ -11,5 +11,6 @@ public class UserProccess
 {
     public Guid UserIds { get; set; }
     public UserWorkflowType UserWorkflowType { get; set; }
+    public string? Note { get; set; }
 }
 
