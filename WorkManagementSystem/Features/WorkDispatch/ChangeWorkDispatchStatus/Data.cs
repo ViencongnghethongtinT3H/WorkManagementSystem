@@ -39,37 +39,36 @@ public class Data
                     IsError = true,
                 };
             }
-
-            // thay đổi trạng thái của văn bản 
-            workDispatch.WorkflowStatus = r.WorkflowStatus;
-
-            workDispatchRepo.Update(workDispatch);
-         
-            
             var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == r.UserId);           
             if (userWorkflow is not null)
             {
                 userWorkflow.Note = r.Note;
                 userWorkflow.Updated = DateTime.Now;
 
-                if (r.WorkflowStatus == WorkflowStatusEnum.Submited || r.WorkflowStatus == WorkflowStatusEnum.Signartured)
+                if (r.ActionType == ActionType.Submited || r.ActionType == ActionType.Signatured)
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Proccesing;
                 }
-                else if (r.WorkflowStatus == WorkflowStatusEnum.ReceiveProccess)
-                {
-                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.ReceiveProccess;
-                }
-                else if (r.WorkflowStatus == WorkflowStatusEnum.Cancel)
+                else if (r.ActionType == ActionType.Canceled)
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Cancel;
+                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Cancel;   // huỷ văn bản
                 }
-                else if (r.WorkflowStatus == WorkflowStatusEnum.Waitting)
+                else if (r.ActionType == ActionType.Return)
+                {
+                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.ReceiveProccess;
+                    workDispatch.WorkflowStatus = WorkflowStatusEnum.ReceiveProccess;  // trả lại văn bản
+                }
+                else if (r.ActionType == ActionType.Proccessing)
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
+                    workDispatch.WorkflowStatus = WorkflowStatusEnum.Proccesing;
                 }
 
                 userWorkflowRepo.Update(userWorkflow);
+                // thay đổi trạng thái của văn bản          
+                workDispatchRepo.Update(workDispatch);
             }
 
             await _unitOfWork.CommitAsync();

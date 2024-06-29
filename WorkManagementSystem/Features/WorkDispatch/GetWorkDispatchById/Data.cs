@@ -75,14 +75,21 @@
                                          Fax = re.Fax
                                        }).ToListAsync();
 
-                var historys = _unitOfWork.GetRepository<Entities.History>().GetAll().AsNoTracking()
-                    .Where(p=>p.IssueId == r.WorkDispatchId).Select(p=> new HistoryListModel
-                    {
-                        ActionContent = p.actionContent,
-                        ActionTime = p.actionContent,
-                        UserUpdated = p.UserIdUpdated
-                    });
-                work.Histories = historys.ToList();
+                var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
+                var usersRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
+
+                var histories = await (from h in historyRepo
+                                       join u in usersRepo on h.UserId equals u.Id
+                                       where h.IssueId == r.WorkDispatchId
+                                       orderby h.Created descending
+                                       select new HistoryListModel
+                                       {
+                                           ActionContent = h.actionContent,
+                                           ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy HH:mm"),
+                                           UserUpdated = u.Name
+                                       }).ToListAsync();
+
+                work.Histories = histories;
 
                 var nameUser = await GetUserName(work.UserCompile.Value);
 

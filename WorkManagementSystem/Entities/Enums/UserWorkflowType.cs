@@ -2,7 +2,7 @@
 {
     public enum UserWorkflowType
     {
-        Followers = 2,  // Người theo dõi   -- nằm ở menu: theo dõi
+        Followers = 2,  // Người theo dõi   -- nằm ở menu: theo dõi  -- lãnh đạo chỉ đạo
 
         Implementer = 1,   // Ngưới thực hiện   -- nằm ở menu: xử lý    
         Submit = 3,    // nguoi duyet           -- nằm ở menu: xử lý

@@ -22,6 +22,7 @@ public class Data
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
         workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
         workDispatchRepository.Add(workItem);
+        
         List<string> FileNames = new List<string>();
         var implementRepository = _unitOfWork.GetRepository<Implementer>();
         if (r.FileAttachIds.IsAny())
@@ -38,9 +39,6 @@ public class Data
         }
         var company = _unitOfWork.GetRepository<DispatchReceiveCompany>();
         var lst = new List<DispatchReceiveCompany>();
-
-        // lấy ra tên file
-      
 
         // Lấy ra email đơn vị nhận
         var receiveRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();

@@ -21,7 +21,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 
         // Xử lý notification
         var lstcmd = new List<NotificationCommandbase>();
-        var name = await data.GetUserName(r);
+        var name = await data.GetUserName(r.UserCompile);
         var receiveName = await new GetUserNameCommand
         {
             UserId = r.LeadershipDirectId

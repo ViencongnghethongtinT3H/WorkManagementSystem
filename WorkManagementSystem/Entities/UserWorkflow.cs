@@ -7,7 +7,7 @@
         public Guid UserId { get; set; }
         [StringLength(500)]
         public string? Note { get; set; }
-        public UserWorkflowType UserWorkflowType { get; set; }     // Trạng thái của người xử lý (user login)
+        public UserWorkflowType UserWorkflowType { get; set; }     // vai trò của người xử lý (user login)
         public UserWorkflowStatusEnum UserWorkflowStatus{ get; set; }   // sub menu
         
 

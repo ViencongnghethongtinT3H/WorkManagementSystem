@@ -21,42 +21,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
         var data = new Data(_unitOfWork, _eventImplement);
-        ResultModel<bool>? result= await data.AddUserToWorkDispatch(r);
-        
-        foreach (var item in r.UserIds)
-        {
-            var name = await data.GetUserName(item);
-            //var receiveName = await new GetUserNameCommand
-            //{
-            //    UserId = item,
-            //}.ExecuteAsync();
-            //
-            //foreach (var notification in userNotifications)
-            //{
-            //    lstcmd.Add(new NotificationCommandbase
-            //    {
-            //        Content = $"Tài khoản {name}  đã thêm người dùng {receiveName} theo dõi vào công văn",
-            //        UserReceive = notification,
-            //        UserSend = item,
-            //        Url = r.WorkflowId.ToString(),
-            //        NotificationType = NotificationType.WorkItem,
-            //        NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
-            //    });
-            //}
-            //await new LstNotificationCommand
-            //{
-            //    NotificationCommands = lstcmd
-            //}.ExecuteAsync();
-
-            await new HistoryCommand
-            {
-                UserId = item,
-                IssueId = r.WorkflowId,
-                ActionContent = $"Tài khoản {name} đã thêm người dùng theo dõi vào công văn "
-            }.ExecuteAsync();
-          
-        }
-        
+        var result = await data.AddUserToWorkDispatch(r);
         // Thêm phần lịch sử
 
         // Thêm phần notification

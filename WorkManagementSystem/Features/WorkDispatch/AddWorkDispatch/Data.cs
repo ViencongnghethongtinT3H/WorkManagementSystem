@@ -15,16 +15,9 @@ public class Data
         var userNotifications = new List<Guid>();
         var implementRepository = _unitOfWork.GetRepository<Implementer>();
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-        if (r.IsPublish)
-        {
-            int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
-            workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
-            workItem.WorkflowStatus = WorkflowStatusEnum.Release;
-        }
-        else
-        {
-            workItem.WorkflowStatus = WorkflowStatusEnum.Waitting;
-        }
+
+        workItem.WorkflowStatus = WorkflowStatusEnum.Waitting;
+
         workDispatchRepository.Add(workItem);
 
         if (r.FileAttachIds.IsAny())
@@ -59,7 +52,9 @@ public class Data
             WorkflowId = workItem.Id,
             UserId = r.UserCompile,
             UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
-            UserWorkflowStatus = UserWorkflowStatusEnum.Waitting
+            UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+            Note = $"{GetUserName(r.UserCompile)} đã khởi tạo công văn vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+
         };
 
         var leaderShip = new UserWorkflow
@@ -67,7 +62,8 @@ public class Data
             WorkflowId = workItem.Id,
             UserId = r.LeadershipDirectId,
             UserWorkflowType = UserWorkflowType.Followers,
-            UserWorkflowStatus = UserWorkflowStatusEnum.Waitting
+            UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+            Note = $"{GetUserName(r.LeadershipDirectId)} đã khởi tạo công văn vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
         };
 
         await userWorkRepo.AddAsync(userCompile);
@@ -77,9 +73,9 @@ public class Data
         return workItem.Id.ToString();
     }
 
-    public async Task<string> GetUserName(Request r)
+    public async Task<string> GetUserName(Guid userId)
     {
-        var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(r.UserCompile);
+        var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(userId);
         if (user is not null)
         {
             return user.Name;

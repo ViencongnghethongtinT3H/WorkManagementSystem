@@ -13,15 +13,12 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
         }
         public async Task<ResultModel<bool>> AddUserToWorkDispatch(Request r)
         {
-            var userNotifications = new List<Guid>();
-            var implementRepository = _unitOfWork.GetRepository<Implementer>();
             var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
             var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
             var listUserFlow = new List<UserWorkflow>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
 
-            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
-
+            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);         
             if (workDispatch is null)
             {
                 return new ResultModel<bool>(false)
@@ -32,32 +29,19 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
                     IsError = true,
                 };
             }
-
-
-            foreach (var item in r.UserIds)
+            var lst = new List<UserWorkflow>();
+            foreach (var item in r.UserProccess)
             {
-                var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == item);
-                if (user is null)
+                var user = new UserWorkflow
                 {
-                    return new ResultModel<bool>(false)
-                    {
-                        Data = false,
-                        Status = 200,
-                        ErrorMessage = $"Không tìm thông tin người dùng theo Id = ${item}!",
-                        IsError = true,
-                    };
-                }
-                var userWorkFlow = new UserWorkflow();
-                userWorkFlow.UserId = item;
-                userWorkFlow.WorkflowId = r.WorkflowId;
-                userWorkFlow.UserWorkflowType = r.UserWorkflowType;
-                listUserFlow.Add(userWorkFlow);
+                    UserId = item.UserIds,
+                    WorkflowId = r.WorkflowId,
+                    UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
+                    UserWorkflowStatus = UserWorkflowStatusEnum.Waitting    // mặc định chuyển người xử lý thì gán mặc định là 1
+                };
+                lst.Add(user);
             }
-            if (listUserFlow is not null)
-            {
-                await userWorkflowRepo.AddRangeAsync(listUserFlow);
-            }
-         
+            await userWorkflowRepo.AddRangeAsync(lst);
             await _unitOfWork.CommitAsync();
             return new ResultModel<bool>(true)
             {

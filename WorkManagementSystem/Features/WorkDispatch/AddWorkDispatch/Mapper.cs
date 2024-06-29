@@ -22,6 +22,6 @@ public class Mapper : Mapper<Request, Response, Entities.WorkDispatch>
         UserCompile = r.UserCompile,
         DepartmentCompile = r.DepartmentCompile,
         TransferType = r.TransferType,
-        WorkflowStatus = r.IsPublish == true ? WorkflowStatusEnum.Release : WorkflowStatusEnum.Waitting
+        WorkflowStatus =  WorkflowStatusEnum.Waitting
     };
 }
