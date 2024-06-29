@@ -1,5 +1,6 @@
 ﻿namespace WorkManagementSystem.Entities.Enums;
 
+// Trạng thái của công văn - ứng với menu
 public enum ContitionWorkflowEnum
 {
     All = 1,    // tất cả các văn bản tương ứng với sub menu tất cả

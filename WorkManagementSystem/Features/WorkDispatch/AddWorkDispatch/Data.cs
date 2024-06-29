@@ -64,8 +64,9 @@ public class Data
         //    UserWorkflowType = UserWorkflowType.Implementer
         //};
         var implementOld = await implementRepository.FindBy(x => x.IssuesId == workItem.Id).ToListAsync();
-        if(implementOld is not null)
-        implementRepository.HardDeletes(implementOld);
+        if (implementOld is not null)
+            implementRepository.HardDeletes(implementOld);
+
         var implements = _eventImplement.ToImplementer(r.RequestImplementer, workItem.Id);
         await implementRepository.AddRangeAsync(implements);
         userNotifications = implements.Select(x => x.UserReceiveId).ToList();
