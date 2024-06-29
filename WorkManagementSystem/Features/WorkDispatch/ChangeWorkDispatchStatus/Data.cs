@@ -71,6 +71,10 @@ public class Data
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Cancel;
                 }
+                else
+                {
+                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
+                }
                 userWorkflowRepo.Update(userWorkflow);
             }
 
