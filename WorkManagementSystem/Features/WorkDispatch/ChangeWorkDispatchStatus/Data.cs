@@ -1,4 +1,5 @@
 ﻿using WorkManagementSystem.Features.ToImplementer;
+using WorkManagementSystem.Migrations;
 
 namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
 // Thay đổi trạng thái của công văn đi (luồng trình/duyệt)  => thêm phần note
@@ -30,7 +31,7 @@ public class Data
                     Status = 200,
                     ErrorMessage = "Không tìm thông tin người dùng!",
                     IsError = true,
-                },userNotifications);
+                }, userNotifications);
             }
             var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkFlowId);
             if (workDispatch is null)
@@ -45,6 +46,7 @@ public class Data
             }
 
             workDispatch.WorkflowStatus = r.WorkflowStatus;
+
             workDispatchRepo.Update(workDispatch);
 
             var implementOld = await implementRepository.FindBy(x => x.IssuesId == r.WorkFlowId).ToListAsync();
@@ -53,17 +55,25 @@ public class Data
             var implements = _eventImplement.ToImplementer(r.RequestImplementer, r.WorkFlowId);
             await implementRepository.AddRangeAsync(implements);
             userNotifications = implements.Select(x => x.UserReceiveId).ToList();
-
-            var userWorkflow = new UserWorkflow()
+            var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == r.UserId);
+            if (userWorkflow is not null)
             {
-                Created = DateTime.Now,
-                UserWorkflowType = r.UserWorkflowType,
-                Note = r.Note,
-                WorkflowId = workDispatch.Id,
+                userWorkflow.Note = r.Note;
+                userWorkflow.Updated = DateTime.Now;
+                userWorkflow.WorkflowId = workDispatch.Id;
+                userWorkflow.UserWorkflowType = r.UserWorkflowType;
+                if (workDispatch.WorkflowStatus == WorkflowStatusEnum.Release || workDispatch.WorkflowStatus == WorkflowStatusEnum.Signarture
+                    || workDispatch.WorkflowStatus == WorkflowStatusEnum.Submit || workDispatch.WorkflowStatus == WorkflowStatusEnum.ReceiveProccess)
+                {
+                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                }
+                else if (workDispatch.WorkflowStatus == WorkflowStatusEnum.Cancel)
+                {
+                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Cancel;
+                }
+                userWorkflowRepo.Update(userWorkflow);
+            }
 
-            };
-
-            userWorkflowRepo.Add(userWorkflow);
             await _unitOfWork.CommitAsync();
             return (new ResultModel<bool>(true)
             {
