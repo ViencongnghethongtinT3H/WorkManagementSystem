@@ -2,7 +2,7 @@
 {
     public class RequestImplementer
     {
-        public List<ImplementerDto> Implementers { get; set; }
+        public List<ImplementerDto> Implementers { get; set; }   // người thực hiện
     }
     public class ImplementerDto
     {

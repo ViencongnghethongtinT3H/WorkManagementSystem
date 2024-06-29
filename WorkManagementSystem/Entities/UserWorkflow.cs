@@ -8,7 +8,7 @@
         [StringLength(500)]
         public string? Note { get; set; }
         public UserWorkflowType UserWorkflowType { get; set; }     // Trạng thái của người xử lý (user login)
-        public UserWorkflowStatusEnum UserWorkflowStatus{ get; set; }
+        public UserWorkflowStatusEnum UserWorkflowStatus{ get; set; }   // sub menu
         
 
     }

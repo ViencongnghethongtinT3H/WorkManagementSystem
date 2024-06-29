@@ -15,6 +15,7 @@ public class Response
     public string Dealine { get; set; }  // hết hạn
     public string LeadershipName { get; set; }   // Tên lãnh đạo chỉ đạo   
     public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
+    public UserWorkflowStatusEnum UserWorkflowStatus { get; set; }   // trạng thái của công văn ứng với 
 }
 
 

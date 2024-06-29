@@ -30,9 +30,7 @@
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
         public bool IsPublish { get; set; }
         public List<Guid>? FileAttachIds { get; set; }
-        public List<Guid>? ReceiveCompanyIds { get; set; }
-
-        public RequestImplementer RequestImplementer { get; set; }
+        public List<Guid>? ReceiveCompanyIds { get; set; }        
     }
     public class Validator : Validator<Request>
     {

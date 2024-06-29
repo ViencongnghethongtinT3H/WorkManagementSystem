@@ -1,19 +1,16 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
-using WorkManagementSystem.Features.ToImplementer;
 namespace WorkManagementSystem.Features.WorkDispatch.AddWorkDispatch;
 
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IEventImplement _eventImplement;
-    public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+    public Data(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _eventImplement = eventImplement;
     }
 
-    public async Task<(string, List<Guid> UserReceiveNotification)> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
+    public async Task<string> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
     {
         var userNotifications = new List<Guid>();
         var implementRepository = _unitOfWork.GetRepository<Implementer>();
@@ -55,23 +52,29 @@ public class Data
             }
             await company.AddRangeAsync(lst);
         }
-        //  var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
+        var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
 
-        //var use = new UserWorkflow
-        //{
-        //    WorkflowId = workItem.Id,
-        //    UserId = workItem.Id,
-        //    UserWorkflowType = UserWorkflowType.Implementer
-        //};
-        var implementOld = await implementRepository.FindBy(x => x.IssuesId == workItem.Id).ToListAsync();
-        if (implementOld is not null)
-            implementRepository.HardDeletes(implementOld);
+        var userCompile = new UserWorkflow
+        {
+            WorkflowId = workItem.Id,
+            UserId = r.UserCompile,
+            UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
+            UserWorkflowStatus = UserWorkflowStatusEnum.Waitting
+        };
 
-        var implements = _eventImplement.ToImplementer(r.RequestImplementer, workItem.Id);
-        await implementRepository.AddRangeAsync(implements);
-        userNotifications = implements.Select(x => x.UserReceiveId).ToList();
+        var leaderShip = new UserWorkflow
+        {
+            WorkflowId = workItem.Id,
+            UserId = r.LeadershipDirectId,
+            UserWorkflowType = UserWorkflowType.Followers,
+            UserWorkflowStatus = UserWorkflowStatusEnum.Waitting
+        };
+
+        await userWorkRepo.AddAsync(userCompile);
+        await userWorkRepo.AddAsync(leaderShip);
+
         await _unitOfWork.CommitAsync();
-        return (workItem.Id.ToString(), userNotifications);
+        return workItem.Id.ToString();
     }
 
     public async Task<string> GetUserName(Request r)
