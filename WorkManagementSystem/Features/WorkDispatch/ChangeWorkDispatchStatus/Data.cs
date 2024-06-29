@@ -1,22 +1,17 @@
-﻿using WorkManagementSystem.Features.ToImplementer;
-using WorkManagementSystem.Migrations;
-
-namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
-// Thay đổi trạng thái của công văn đi (luồng trình/duyệt)  => thêm phần note
+﻿namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
+// Thay đổi trạng thái của công văn đi 
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IEventImplement _eventImplement;
-    public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+    public Data(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _eventImplement = eventImplement;
     }
-    public async Task<(ResultModel<bool>, List<Guid> Notifications)> ChangeApproveWorkDispatch(Request r)
+    public async Task<ResultModel<bool>> ChangeApproveWorkDispatch(Request r)
     {
         var userNotifications = new List<Guid>();
         var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-        var userWorkflowRepo = _unitOfWork.GetRepository<Entities.UserWorkflow>();
+        var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
         var userRepo = _unitOfWork.GetRepository<Entities.User>();
         var implementRepository = _unitOfWork.GetRepository<Implementer>();
 
@@ -25,67 +20,66 @@ public class Data
             var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.UserId);
             if (user is null)
             {
-                return (new ResultModel<bool>(false)
+                return new ResultModel<bool>(false)
                 {
                     Data = false,
                     Status = 200,
                     ErrorMessage = "Không tìm thông tin người dùng!",
                     IsError = true,
-                }, userNotifications);
+                };
             }
             var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkFlowId);
             if (workDispatch is null)
             {
-                return (new ResultModel<bool>(false)
+                return new ResultModel<bool>(false)
                 {
                     Data = false,
                     Status = 200,
                     ErrorMessage = "Không tìm thấy công văn!",
                     IsError = true,
-                }, userNotifications);
+                };
             }
 
+            // thay đổi trạng thái của văn bản 
             workDispatch.WorkflowStatus = r.WorkflowStatus;
 
             workDispatchRepo.Update(workDispatch);
-
-            var implementOld = await implementRepository.FindBy(x => x.IssuesId == r.WorkFlowId).ToListAsync();
-            if (implementOld is not null)
-                implementRepository.HardDeletes(implementOld);
-            var implements = _eventImplement.ToImplementer(r.RequestImplementer, r.WorkFlowId);
-            await implementRepository.AddRangeAsync(implements);
-            userNotifications = implements.Select(x => x.UserReceiveId).ToList();
-            var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == r.UserId);
+         
+            
+            var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == r.UserId);           
             if (userWorkflow is not null)
             {
                 userWorkflow.Note = r.Note;
                 userWorkflow.Updated = DateTime.Now;
-                userWorkflow.WorkflowId = workDispatch.Id;
-                userWorkflow.UserWorkflowType = r.UserWorkflowType;
-                if (workDispatch.WorkflowStatus == WorkflowStatusEnum.Release || workDispatch.WorkflowStatus == WorkflowStatusEnum.Signarture
-                    || workDispatch.WorkflowStatus == WorkflowStatusEnum.Submit || workDispatch.WorkflowStatus == WorkflowStatusEnum.ReceiveProccess)
+
+                if (r.WorkflowStatus == WorkflowStatusEnum.Submited || r.WorkflowStatus == WorkflowStatusEnum.Signartured)
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                 }
-                else if (workDispatch.WorkflowStatus == WorkflowStatusEnum.Cancel)
+                else if (r.WorkflowStatus == WorkflowStatusEnum.ReceiveProccess)
+                {
+                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.ReceiveProccess;
+                }
+                else if (r.WorkflowStatus == WorkflowStatusEnum.Cancel)
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Cancel;
                 }
-                else
+                else if (r.WorkflowStatus == WorkflowStatusEnum.Waitting)
                 {
                     userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
                 }
+
                 userWorkflowRepo.Update(userWorkflow);
             }
 
             await _unitOfWork.CommitAsync();
-            return (new ResultModel<bool>(true)
+            return new ResultModel<bool>(true)
             {
                 Data = true,
                 Status = 200,
                 ErrorMessage = "Cập nhật thành công!",
                 IsError = false,
-            }, userNotifications);
+            };
         }
         catch (Exception ex)
         {

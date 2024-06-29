@@ -20,40 +20,41 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var userNotifications = new List<Guid>();
         var data = new Data(_unitOfWork, _eventImplement);
-        ResultModel<bool>? result;
-        (result, userNotifications) = await data.AddUserToWorkDispatch(r);
-        var lstcmd = new List<NotificationCommandbase>();
-        var receiveName = await new GetUserNameCommand
-        {
-            UserId = r.RequestImplementer.Implementers.FirstOrDefault().UserReceiveId,
-        }.ExecuteAsync();
+        ResultModel<bool>? result= await data.AddUserToWorkDispatch(r);
+        
         foreach (var item in r.UserIds)
         {
             var name = await data.GetUserName(item);
+            //var receiveName = await new GetUserNameCommand
+            //{
+            //    UserId = item,
+            //}.ExecuteAsync();
+            //
+            //foreach (var notification in userNotifications)
+            //{
+            //    lstcmd.Add(new NotificationCommandbase
+            //    {
+            //        Content = $"Tài khoản {name}  đã thêm người dùng {receiveName} theo dõi vào công văn",
+            //        UserReceive = notification,
+            //        UserSend = item,
+            //        Url = r.WorkflowId.ToString(),
+            //        NotificationType = NotificationType.WorkItem,
+            //        NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
+            //    });
+            //}
+            //await new LstNotificationCommand
+            //{
+            //    NotificationCommands = lstcmd
+            //}.ExecuteAsync();
+
             await new HistoryCommand
             {
                 UserId = item,
-                IssueId =r.WorkflowId,
-                ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+                IssueId = r.WorkflowId,
+                ActionContent = $"Tài khoản {name} đã thêm người dùng theo dõi vào công văn "
             }.ExecuteAsync();
-            foreach (var notification in userNotifications)
-            {
-                lstcmd.Add(new NotificationCommandbase
-                {
-                    Content = $"Tài khoản {name} chuyển một công văn tới mục Văn Bản đến của {receiveName}",
-                    UserReceive = notification,
-                    UserSend = item,
-                    Url = r.WorkflowId.ToString(),
-                    NotificationType = NotificationType.WorkItem,
-                    NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
-                });
-            }
-            await new LstNotificationCommand
-            {
-                NotificationCommands = lstcmd
-            }.ExecuteAsync();
+          
         }
         
         // Thêm phần lịch sử

@@ -31,7 +31,6 @@
         public bool IsPublish { get; set; }
         public List<Guid>? FileAttachIds { get; set; }
         public List<Guid>? ReceiveCompanyIds { get; set; }
-        public RequestImplementer RequestImplementer { get; set; }
 
     }
     public class Validator : Validator<Request>

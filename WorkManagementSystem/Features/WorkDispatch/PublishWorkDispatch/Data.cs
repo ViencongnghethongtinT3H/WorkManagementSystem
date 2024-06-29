@@ -70,12 +70,6 @@ public class Data
             }
             await company.AddRangeAsync(lst);
         }
-        var implementOld = await implementRepository.FindBy(x => x.IssuesId == workItem.Id).ToListAsync();
-        if (implementOld is not null)
-        implementRepository.HardDeletes(implementOld);
-        var implements = _eventImplement.ToImplementer(r.RequestImplementer, workItem.Id);
-        await implementRepository.AddRangeAsync(implements);
-        userNotifications = implements.Select(x => x.UserReceiveId).ToList();
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();
     }

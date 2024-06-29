@@ -11,7 +11,7 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
             _unitOfWork = unitOfWork;
             _eventImplement = eventImplement;
         }
-        public async Task<(ResultModel<bool>, List<Guid> UserReceiveNotification)> AddUserToWorkDispatch(Request r)
+        public async Task<ResultModel<bool>> AddUserToWorkDispatch(Request r)
         {
             var userNotifications = new List<Guid>();
             var implementRepository = _unitOfWork.GetRepository<Implementer>();
@@ -24,13 +24,13 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
 
             if (workDispatch is null)
             {
-                return (new ResultModel<bool>(false)
+                return new ResultModel<bool>(false)
                 {
                     Data = false,
                     Status = 200,
                     ErrorMessage = "Không tìm thấy công văn!",
                     IsError = true,
-                }, userNotifications);
+                };
             }
 
 
@@ -39,13 +39,13 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
                 var user = await userRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == item);
                 if (user is null)
                 {
-                    return (new ResultModel<bool>(false)
+                    return new ResultModel<bool>(false)
                     {
                         Data = false,
                         Status = 200,
                         ErrorMessage = $"Không tìm thông tin người dùng theo Id = ${item}!",
                         IsError = true,
-                    }, userNotifications);
+                    };
                 }
                 var userWorkFlow = new UserWorkflow();
                 userWorkFlow.UserId = item;
@@ -57,21 +57,15 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
             {
                 await userWorkflowRepo.AddRangeAsync(listUserFlow);
             }
-            var implementOld = await implementRepository.FindBy(x => x.IssuesId == r.WorkflowId).ToListAsync();
-            if (implementOld is not null)
-            implementRepository.HardDeletes(implementOld);
-            var implements = _eventImplement.ToImplementer(r.RequestImplementer, r.WorkflowId);
-            await implementRepository.AddRangeAsync(implements);
-            userNotifications = implements.Select(x => x.UserReceiveId).ToList();
-
+         
             await _unitOfWork.CommitAsync();
-            return (new ResultModel<bool>(true)
+            return new ResultModel<bool>(true)
             {
                 Data = true,
                 Status = 200,
                 ErrorMessage = "Thêm thành công!",
                 IsError = false,
-            }, userNotifications);
+            };
         }
         public async Task<string> GetUserName(Guid UserId)
         {
