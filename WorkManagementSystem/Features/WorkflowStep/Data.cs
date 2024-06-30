@@ -8,14 +8,14 @@
             _unitOfWork = unitOfWork;
         }
         public async Task<ResultModel<bool>> CreateWorkStep(WorkflowStep model, Request r)
-        {   
+        {
             var workStepRepo = _unitOfWork.GetRepository<WorkflowStep>();
-            var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
+            var workArrivedRepo = _unitOfWork.GetRepository<Entities.WorkArrived>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
 
             try
             {
-                var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
+                var workDispatch = await workArrivedRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
                 if (workDispatch is null)
                 {
                     return new ResultModel<bool>(false)
@@ -37,14 +37,20 @@
                         IsError = true,
                     };
                 }
-                model.Step = StepEnum.ManagerApprove;
-                workStepRepo.Add(model);
+                if (r.Id != null)
+                {
+                    workStepRepo.Update(model);
+                }
+                else
+                {
+                    workStepRepo.Add(model);
+                }
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)
                 {
                     Data = true,
                     Status = 200,
-                    ErrorMessage = "",
+                    ErrorMessage = string.Empty,
                     IsError = false,
                 };
             }

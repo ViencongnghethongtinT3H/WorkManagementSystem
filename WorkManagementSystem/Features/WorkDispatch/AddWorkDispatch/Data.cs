@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
+
 namespace WorkManagementSystem.Features.WorkDispatch.AddWorkDispatch;
 
 public class Data
@@ -17,7 +18,10 @@ public class Data
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
 
         workItem.WorkflowStatus = WorkflowStatusEnum.Waitting;
+        int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
 
+        string code = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
+        workItem.WorkItemNumber = code;
         workDispatchRepository.Add(workItem);
 
         if (r.FileAttachIds.IsAny())

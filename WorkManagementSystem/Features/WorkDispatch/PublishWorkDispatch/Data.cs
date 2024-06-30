@@ -1,17 +1,13 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
-using WorkManagementSystem.Features.ToImplementer;
-
 namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
 public class Data
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IEventImplement _eventImplement;
-    public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+    public Data(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _eventImplement = eventImplement;
     }
 
     public async Task<string> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
@@ -72,14 +68,4 @@ public class Data
         return workItem.Id.ToString();
     }
 
-    public async Task<string> GetUserName(Request r)
-    {
-        var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(r.UserCompile);
-        if (user is not null)
-        {
-            return user.Name;
-        }
-        return string.Empty;
-
-    }
 }

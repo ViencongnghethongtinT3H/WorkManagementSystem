@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/WorkArrived/create");
+            Post("/WorkArrived/create-or-update");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)
@@ -20,7 +20,8 @@
             {
                 WorkItemId = await data.CreateWorkArrived(Map.ToEntity(r), r)
             });
-            var name = await data.GetUserName(r);
+            var name = new GetUserNameCommand() { UserId = r.LeadershipDirectId }.ExecuteAsync();
+
 
             await new HistoryCommand
             {

@@ -15,8 +15,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var userNotifications = new List<Guid>();
-        var data = new Data(_unitOfWork);
+        var data = new Data(_unitOfWork);   
         string workItemId = await data.CreateWorkDispatch(Map.ToEntity(r), r);
 
         // Xử lý notification
@@ -26,11 +25,14 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.LeadershipDirectId
         }.ExecuteAsync();
-
+        var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+        {
+            WorkDispatchId = new Guid(workItemId),
+        }.ExecuteAsync();
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã tạo một công văn do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
+            Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = workItemId,
