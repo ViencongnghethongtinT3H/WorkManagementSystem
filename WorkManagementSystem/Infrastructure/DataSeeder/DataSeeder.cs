@@ -16,15 +16,113 @@ public class DataSeeder
             await SeedDataPosition();
             await SeedDataUser();
             await SeedReceiveCompany();
+            await SeedDataFileManagement();
         }
-        catch (Exception ex )
+        catch (Exception ex)
         {
 
             throw ex;
         }
-       
-    }
 
+    }
+    private async Task SeedDataFileManagement()
+    {
+        if (await dbContext.FileManagements.AnyAsync())
+        {
+            return;
+        }
+        var fileManagements = new List<FileManagement>
+        {
+
+            new FileManagement
+            {
+                UserId = Guid.Parse("95ab46e4-0f8c-4f17-8523-08dc78ea81a9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("95ab46e4-0f8c-4f17-8523-08dc78ea81a9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("95ab46e4-0f8c-4f17-8523-08dc78ea81a9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("95ab46e4-0f8c-4f17-8523-08dc78ea81a9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("ba8655f7-c7e8-41b3-8520-08dc78ea81a9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("ba8655f7-c7e8-41b3-8520-08dc78ea81a9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("ba8655f7-c7e8-41b3-8520-08dc78ea81a9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("ba8655f7-c7e8-41b3-8520-08dc78ea81a9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            }
+
+        };
+        await dbContext.AddRangeAsync(fileManagements);
+        await dbContext.SaveChangesAsync();
+    }
     private async Task SeedDataSetting()
     {
         if (await dbContext.Settings.AnyAsync())
@@ -305,7 +403,7 @@ public class DataSeeder
             }
         };
 
-        await dbContext.Users.AddRangeAsync(lst);       
+        await dbContext.Users.AddRangeAsync(lst);
         await dbContext.SaveChangesAsync();
     }
 

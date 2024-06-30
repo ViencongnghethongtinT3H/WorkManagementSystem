@@ -22,4 +22,8 @@
         public string FileName { get; set; }
         public string FileUrl { get; set; }
     }
+     public class Response
+    {
+        public List<Guid> ids { get; set; }
+    }
 }

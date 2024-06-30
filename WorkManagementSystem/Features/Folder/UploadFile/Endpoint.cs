@@ -4,7 +4,7 @@ using System.Text;
 namespace WorkManagementSystem.Features.Folder.UploadFile;
 
 
-public class Endpoint : Endpoint<Request, ResultModel<bool>>
+public class Endpoint : Endpoint<Request, Response>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly HttpClient _httpClient;
@@ -48,7 +48,9 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             }
             var data = new Data(_unitOfWork);
             var result = await data.AddFileAttachs(lst, req);
-            await SendAsync(result);
+            var kq = new Response();
+            kq.ids = result;
+            await SendAsync(kq);
         }
     }
 

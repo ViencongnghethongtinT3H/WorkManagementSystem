@@ -10,7 +10,7 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ResultModel<bool>> AddFileAttachs(List<FileInfo> fileInfos, Request req)
+    public async Task<List<Guid>> AddFileAttachs(List<FileInfo> fileInfos, Request req)
     {
         var fileRepo = _unitOfWork.GetRepository<FileAttach>();
         var lst = new List<FileAttach>();
@@ -29,13 +29,7 @@ public class Data
         await _unitOfWork.CommitAsync();
 
 
-         return new ResultModel<bool>(true)
-        {
-            Data = true,
-            Status = 200,
-            ErrorMessage = "Upload file thành công",
-            IsError = false,
-        };
+         return lst.Select(x => x.Id).ToList();
     }
 
 

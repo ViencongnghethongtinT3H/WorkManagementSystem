@@ -8,15 +8,15 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ResultModel<bool>> CreateFolders(FileManagement fileManagement, Request r)
+    public async Task<ResultModel<FileManagement>> CreateFolders(FileManagement fileManagement, Request r)
     {
         var fileManagementRepository = _unitOfWork.GetRepository<FileManagement>();
         var existingFolder = await fileManagementRepository.GetAll().AnyAsync(x => x.ParentId == r.ParentId && x.Name == r.Name);
         if (existingFolder)
         {
-            return new ResultModel<bool>(false)
+            return new ResultModel<FileManagement>(null)
             {
-                Data = false,
+                Data = null,
                 Status = 409,
                 ErrorMessage = "Tên folder này đã tồn tại",
                 IsError = true,
@@ -26,9 +26,9 @@ public class Data
         fileManagementRepository.Add(fileManagement);
         await _unitOfWork.CommitAsync();
 
-        return new ResultModel<bool>(true)
+        return new ResultModel<FileManagement>(fileManagement)
         {
-            Data = true,
+            Data = fileManagement,
             Status = 200,
             ErrorMessage = "Tạo mới folder thành công",
             IsError = false,

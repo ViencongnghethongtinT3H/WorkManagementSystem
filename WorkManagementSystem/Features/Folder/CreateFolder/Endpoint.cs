@@ -1,6 +1,6 @@
 namespace WorkManagementSystem.Features.Folder.CreateFolder;
 
-public class Endpoint : Endpoint<Request, ResultModel<bool>, Mapper>
+public class Endpoint : Endpoint<Request, ResultModel<FileManagement>, Mapper>
 {
     private readonly IUnitOfWork _unitOfWork;
     public Endpoint(IUnitOfWork unitOfWork)
