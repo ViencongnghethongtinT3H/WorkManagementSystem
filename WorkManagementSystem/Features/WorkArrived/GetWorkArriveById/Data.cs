@@ -43,7 +43,7 @@
                                   WorkItemNumber = w.WorkItemNumber,
                                   Content = w.Content,
                                   Notation = $"{w.ItemId}/{b7.Value}",
-                                  Priority = w.Priority,
+                                  Priority = w.Priority.GetDescription(),
                                   DepartmentId = w.DepartmentId,
                                   Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
                                   LeadershipDirectId = w.LeadershipDirectId,
