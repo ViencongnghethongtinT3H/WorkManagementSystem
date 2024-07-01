@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingWork
+﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingArrive
 {
     public class Data
     {
@@ -9,7 +9,7 @@
         }
         public async Task<ListResultModel<WorkDispatchResponse>> GetListWorkDispatchWattingWork(InputRequest request)
         {
-            var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
+            var workArrivedRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
             var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>();
             var settingRepo = _unitOfWork.GetRepository<Entities.Setting>();
@@ -21,11 +21,11 @@
                               select d.WorkDispatchId;
 
             // Truy vấn WorkDispatchs dựa trên danh sách DispatchIds
-            var query = from w in workDispatchRepo.GetAll().AsNoTracking()
+            var query = from w in workArrivedRepo.GetAll().AsNoTracking()
                         join s in settingRepo.GetAll().AsNoTracking() on w.Notation equals s.Key
                         join de in depaRepo.GetAll().AsNoTracking() on w.DepartmentId equals de.Id
                         join u in userRepo.GetAll().AsNoTracking() on w.LeadershipDirectId equals u.Id
-                        where w.WorkflowStatus == WorkflowStatusEnum.WaittingWorkArrived && dispatchIds.Contains(w.Id)
+                        where w.WorkflowStatus == WorkflowStatusEnum.Done && dispatchIds.Contains(w.Id)
                         select new WorkDispatchResponse
                         {
                             WorkDispatchId = w.Id,

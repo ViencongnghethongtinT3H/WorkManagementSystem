@@ -1,15 +1,12 @@
-﻿using WorkManagementSystem.Features.ToImplementer;
-namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
+﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
 {
     // Chuyển người xử lý bước tiếp theo  => thêm phần note
     public class Data
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IEventImplement _eventImplement;
-        public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+        public Data(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _eventImplement = eventImplement;
         }
         public async Task<ResultModel<bool>> AddUserToWorkDispatch(Request r)
         {
@@ -51,16 +48,6 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
                 ErrorMessage = "Thêm thành công!",
                 IsError = false,
             };
-        }
-        public async Task<string> GetUserName(Guid UserId)
-        {
-            var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(UserId);
-            if (user is not null)
-            {
-                return user.Name;
-            }
-            return string.Empty;
-
         }
 
     }

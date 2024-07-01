@@ -10,8 +10,8 @@
         Cancel = 4,
         [Description("Trả lại")]
         ReceiveProccess = 5,
-        [Description("Chờ vào sổ văn bản đến")]
-        WaittingWorkArrived = 9,
+        [Description("Hoàn thành")]
+        Done = 9,
     }
 
     public enum UserWorkflowStatusEnum

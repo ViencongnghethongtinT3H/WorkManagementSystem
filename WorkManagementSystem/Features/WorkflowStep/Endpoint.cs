@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/WorkflowStep/create");
+            Post("/WorkflowStep/create-or-update");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)

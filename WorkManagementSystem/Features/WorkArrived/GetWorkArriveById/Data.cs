@@ -22,24 +22,18 @@
                               from b3 in ud.DefaultIfEmpty()
                               join d in dispatchReceiveCompanyRepo.AsNoTracking() on w.Id equals d.WorkDispatchId into dw
                               from b4 in dw.DefaultIfEmpty()
-                              join st in stepRepo.AsNoTracking() on w.Id equals st.WorkflowId into stw
-                              from b6 in stw.DefaultIfEmpty()
                               join se in settingRepo.AsNoTracking() on w.Notation equals se.Key into sew
                               from b7 in sew.DefaultIfEmpty()
                               where w.Id == r.WorkDispatchId
                               select new WorkArriveDetailResponse
                               {
-                                  TypeSetting = b7.Type,
                                   IndustryId = b7.Value,
                                   IndustryName = b7.Value,
-                                  Step = b6.Step,
-                                  Note = b6.Note,
-                                  UserConfirm = b6.UserConfirm,
                                   DocumentTypeKey = w.DocumentTypeKey,
                                   DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
                                   ItemId = w.ItemId,
-                                  TransferType = w.TransferType,    
-                                  WorkArrivedStatus = w.WorkArrivedStatus,
+                                  TransferType = w.TransferType.GetDescription(),    
+                                  WorkArrivedStatus = w.WorkArrivedStatus.GetDescription(),
                                   WorkItemNumber = w.WorkItemNumber,
                                   Content = w.Content,
                                   Notation = $"{w.ItemId}/{b7.Value}",
@@ -51,22 +45,13 @@
                                   LeadershipDirectName = b3.Name,
 
                               }).FirstOrDefaultAsync();
-            if (work is not null)
+           if(work is not null)
             {
-                var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
-                var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
-                                             join d in dispatchReceiveCompanyRepo on re.Id equals d.AccountReceiveId
-                                             where d.WorkDispatchId == r.WorkDispatchId
-                                             orderby re.Created descending
-                                             select new ReceiveCompanyModel
-                                             {
-                                                 AccountReceiveId = re.AccountReceiveId.Value,
-                                                 Name = re.Name,
-                                                 Address = re.Address,
-                                                 Email = re.Email,
-                                                 Fax = re.Fax
-                                             }).ToListAsync();
-                work.ReceiveCompanys = receiveCompanys;
+                var step = from st in stepRepo.AsNoTracking()
+                           join w in workRepo on st.WorkflowId equals w.Id
+                           select new WorkArrivedStep { Note  = st.Note, Step = st.Step, UserConfirm = st.UserConfirm};
+
+                work.WorkArrivedStep = await step.FirstOrDefaultAsync();
             }
 
             return ResultModel<WorkArriveDetailResponse>.Create(work);

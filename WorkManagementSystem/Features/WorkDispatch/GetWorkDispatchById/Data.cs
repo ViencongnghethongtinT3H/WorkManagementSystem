@@ -14,7 +14,7 @@
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
             var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>().GetAll();
-
+            var fileAttachs = _unitOfWork.GetRepository<FileAttach>().GetAll();
             var work = await (from w in workRepo.AsNoTracking()
                               join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                               from b1 in sd3.DefaultIfEmpty()
@@ -26,18 +26,20 @@
                               from b3 in ud.DefaultIfEmpty()
                               join d in dispatchReceiveCompanyRepo.AsNoTracking() on w.Id equals d.WorkDispatchId into dw
                               from b4 in dw.DefaultIfEmpty()
+                              join f in fileAttachs.AsNoTracking() on w.Id equals f.IssuesId into wf
+                              from b6 in wf.DefaultIfEmpty()
                               where w.Id == r.WorkDispatchId
                               select new WorkDispatchDetailResponse
                               {
+                                  FileExtension = b6.FileExtension,
+                                  FileName = b6.FileName,
+                                  FileUrl = b6.FileUrl,
                                   SignDay = w.SignDay.ToFormatString("dd/MM/yyyy HH:mm"),
                                   DepartmentCompile = w.DepartmentId,
                                   DocumentTypeKey = w.DocumentTypeKey,
                                   WorkflowStatus = w.WorkflowStatus,
-                                  Key = b1.Key,
                                   ItemId = w.ItemId,
-                                  TransferType = w.TransferType,
-                                  Type = b1.Type,
-                                  Value = b1.Value,
+                                  TransferType = w.TransferType.GetDescription(),
                                   UserCompile = w.UserCompile,
                                   KeyWord = w.KeyWord,
                                   UserSign = w.UserSign,
@@ -59,21 +61,23 @@
                                   LeadershipDirectName = b3.Name,
 
                               }).FirstOrDefaultAsync();
-            if(work is not null)
+            if (work is not null)
             {
                 var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
                 var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
-                                       join d in dispatchReceiveCompanyRepo on re.Id equals d.AccountReceiveId
-                                       where d.WorkDispatchId == r.WorkDispatchId
-                                       orderby re.Created descending
-                                       select new ReceiveCompanyModel
-                                       {
-                                         AccountReceiveId = re.AccountReceiveId.Value,
-                                         Name = re.Name,
-                                         Address = re.Address,
-                                         Email = re.Email,
-                                         Fax = re.Fax
-                                       }).ToListAsync();
+                                             join d in dispatchReceiveCompanyRepo on re.Id equals d.AccountReceiveId
+                                             where d.WorkDispatchId == r.WorkDispatchId
+                                             orderby re.Created descending
+                                             select new ReceiveCompanyModel
+                                             {
+                                                 AccountReceiveId = re.AccountReceiveId.Value,
+                                                 Name = re.Name,
+                                                 Address = re.Address,
+                                                 Email = re.Email,
+                                                 Fax = re.Fax
+                                             }).ToListAsync();
+
+                work.ReceiveCompanys = receiveCompanys;
 
                 var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
                 var usersRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();

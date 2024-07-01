@@ -21,10 +21,9 @@
        
         public string Priority { get; set; }  // Độ khẩn cấp
         public string? Dealine { get; set; }  // Thời hạn xử lý
-        public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
-        public WorkArrivedStatus WorkArrivedStatus { get; set; }  // trạng thái của công văn
+        public string TransferType { get; set; }  // hình thức vận chuyển
+        public string WorkArrivedStatus { get; set; }  // trạng thái của công văn
        
-        public string? Note { get; set; }
 
         // Lich su
         // y kien xu ly
@@ -34,6 +33,7 @@
     }
     public class WorkArrivedStep
     {
+        public string? Note { get; set; }
         public StepEnum Step { get; set; }
         public Guid UserConfirm { get; set; } // người xử lý của bước đấy
     }

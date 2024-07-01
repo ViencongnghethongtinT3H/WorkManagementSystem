@@ -2,6 +2,7 @@
 
 public class Request
 {
+    public Guid UserId { get; set; } // user add người xử lý
     public Guid WorkflowId { get; set; }
     public List<UserProccess> UserProccess { get; set; }
 

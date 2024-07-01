@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingWork
+﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingArrive
 {
     public class Request
     {

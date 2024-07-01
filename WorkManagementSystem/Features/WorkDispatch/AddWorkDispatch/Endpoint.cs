@@ -10,27 +10,29 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/WorkDispatch/create");
+        Post("/WorkDispatch/create-or-update");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var userNotifications = new List<Guid>();
-        var data = new Data(_unitOfWork);
+        var data = new Data(_unitOfWork);   
         string workItemId = await data.CreateWorkDispatch(Map.ToEntity(r), r);
 
         // Xử lý notification
         var lstcmd = new List<NotificationCommandbase>();
-        var name = await data.GetUserName(r.UserCompile);
+        var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
         var receiveName = await new GetUserNameCommand
         {
             UserId = r.LeadershipDirectId
         }.ExecuteAsync();
-
+        var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+        {
+            WorkDispatchId = new Guid(workItemId),
+        }.ExecuteAsync();
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã tạo một công văn do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
+            Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = workItemId,
@@ -48,7 +50,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(workItemId),
-            ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+            ActionContent = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo"
         }.ExecuteAsync();
 
 
