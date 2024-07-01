@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Security.Cryptography;
-
-namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
+﻿namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
 {
     public class Data
     {
@@ -12,25 +9,43 @@ namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
         }
         public async Task<string> CreateWorkArrived(Entities.WorkArrived workItem, Request r)
         {
-            var workArrivedRepository = _unitOfWork.GetRepository<Entities.WorkArrived>();      
-            int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
-            workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
+            var workArrivedRepository = _unitOfWork.GetRepository<Entities.WorkArrived>();
             workItem.WorkArrivedStatus = WorkArrivedStatus.Waitting;
+            var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
             try
             {
-                if(r.Id != null)
+                if (r.Id != null)
                 {
-                    var workArrive = await workArrivedRepository.FindBy(p=>p.Id == r.Id).FirstOrDefaultAsync();
-                    if(workArrive != null) 
-                    {
-                        workArrivedRepository.Update(workItem);
-                       
-                    }
+                    workItem.Id = r.Id.Value;
+                    workArrivedRepository.Update(workItem);
+
                 }
                 else
                 {
-                        workArrivedRepository.Add(workItem); 
+                    workArrivedRepository.Add(workItem);
+                    var userCompile = new UserWorkflow
+                    {
+                        WorkflowId = workItem.Id,
+                        UserId = r.UserCompile,
+                        UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
+                        UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+                        Note = $"{await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+
+                    };
+
+                    var leaderShip = new UserWorkflow
+                    {
+                        WorkflowId = workItem.Id,
+                        UserId = r.LeadershipDirectId,
+                        UserWorkflowType = UserWorkflowType.Followers,
+                        UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+                        Note = $"{await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+                    };
+                    await userWorkRepo.AddAsync(userCompile);
+                    await userWorkRepo.AddAsync(leaderShip);
                 }
+
+
                 await _unitOfWork.CommitAsync();
                 return workItem.Id.ToString();
 
@@ -40,8 +55,8 @@ namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
             {
                 throw new Exception(ex.Message);
             }
-           
-           
+
+
         }
     }
 }

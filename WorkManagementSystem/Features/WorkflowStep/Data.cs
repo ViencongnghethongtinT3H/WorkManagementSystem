@@ -15,8 +15,8 @@
 
             try
             {
-                var workDispatch = await workArrivedRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
-                if (workDispatch is null)
+                var workArrived = await workArrivedRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
+                if (workArrived is null)
                 {
                     return new ResultModel<bool>(false)
                     {
@@ -39,7 +39,10 @@
                 }
                 if (r.Id != null)
                 {
-                    workStepRepo.Update(model);
+
+                    model.Id = r.Id.Value;                  
+                    workStepRepo.Update(model);                  
+                    
                 }
                 else
                 {

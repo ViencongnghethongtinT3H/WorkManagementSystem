@@ -1,6 +1,6 @@
 ﻿namespace WorkManagementSystem.Entities;
 
-// Luồng công văn đến
+// Luồng công văn chờ vào sổ
 public class WorkArrived : EntityBase
 {
     public string? WorkItemNumber { get; set; }
@@ -19,5 +19,6 @@ public class WorkArrived : EntityBase
     public DateTime? Dealine { get; set; }  // Thời hạn xử lý
     public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
     public WorkArrivedStatus WorkArrivedStatus { get; set; }  // trạng thái của công văn
-    
+    public WorkArrivedProcedureStatus WorkArrivedProcedureStatus { get; set; }
+
 }

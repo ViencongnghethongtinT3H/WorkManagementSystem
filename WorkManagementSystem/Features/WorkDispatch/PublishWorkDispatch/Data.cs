@@ -10,15 +10,20 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<string> CreateWorkDispatch(Entities.WorkDispatch workItem, Request r)
+    public async Task<string> CreateWorkDispatch(Entities.WorkArriveWatting workItem, Request r)
     {
+
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-        var userNotifications = new List<Guid>();
+        var workArriveWattingRepo = _unitOfWork.GetRepository<WorkArriveWatting>();
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
-        workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
-        workDispatchRepository.Add(workItem);
-        
+        workItem.WorkflowStatus = WorkflowStatusEnum.Done;
+      //  workDispatchRepository.Update(workItem);
+
+        // them moi cong van vao danh sách chờ
+        //var 
+
+
         List<string> FileNames = new List<string>();
         var implementRepository = _unitOfWork.GetRepository<Implementer>();
         if (r.FileAttachIds.IsAny())
@@ -64,6 +69,7 @@ public class Data
             }
             await company.AddRangeAsync(lst);
         }
+        //Todo: Insert vào 1 bảng mới
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();
     }

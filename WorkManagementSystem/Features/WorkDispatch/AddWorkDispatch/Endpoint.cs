@@ -10,7 +10,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/WorkDispatch/create");
+        Post("/WorkDispatch/create-or-update");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
@@ -20,7 +20,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 
         // Xử lý notification
         var lstcmd = new List<NotificationCommandbase>();
-        var name = await data.GetUserName(r.UserCompile);
+        var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
         var receiveName = await new GetUserNameCommand
         {
             UserId = r.LeadershipDirectId
@@ -50,7 +50,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(workItemId),
-            ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+            ActionContent = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo"
         }.ExecuteAsync();
 
 

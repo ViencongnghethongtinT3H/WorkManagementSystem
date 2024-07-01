@@ -13,7 +13,6 @@ public class Data
         var workDispatchRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
         var userWorkflowRepo = _unitOfWork.GetRepository<UserWorkflow>();
         var userRepo = _unitOfWork.GetRepository<Entities.User>();
-        var implementRepository = _unitOfWork.GetRepository<Implementer>();
 
         try
         {
