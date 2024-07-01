@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Security.Cryptography;
-
-namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
+﻿namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
 {
     public class Data
     {
@@ -13,35 +10,52 @@ namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
         public async Task<string> CreateWorkArrived(Entities.WorkArrived workItem, Request r)
         {
             var workArrivedRepository = _unitOfWork.GetRepository<Entities.WorkArrived>();
-            int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
-            workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
             workItem.WorkArrivedStatus = WorkArrivedStatus.Waitting;
+            var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
             try
             {
-                if (r.WorkArrivedStatus == WorkArrivedStatus.Waitting)
+                if (r.Id != null)
                 {
-                    
-                    workArrivedRepository.Add(workItem);
-                    await _unitOfWork.CommitAsync();
-                    return workItem.Id.ToString();
+                    workItem.Id = r.Id.Value;
+                    workArrivedRepository.Update(workItem);
+
                 }
-                return "Công văn không ở trạng thái chờ vào sổ";
+                else
+                {
+                    workArrivedRepository.Add(workItem);
+                    var userCompile = new UserWorkflow
+                    {
+                        WorkflowId = workItem.Id,
+                        UserId = r.UserCompile,
+                        UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
+                        UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+                        Note = $"{await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+
+                    };
+
+                    var leaderShip = new UserWorkflow
+                    {
+                        WorkflowId = workItem.Id,
+                        UserId = r.LeadershipDirectId,
+                        UserWorkflowType = UserWorkflowType.Followers,
+                        UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+                        Note = $"{await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+                    };
+                    await userWorkRepo.AddAsync(userCompile);
+                    await userWorkRepo.AddAsync(leaderShip);
+                }
+
+
+                await _unitOfWork.CommitAsync();
+                return workItem.Id.ToString();
+
+
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-           
-           
-        }
-        public async Task<string> GetUserName(Request r)
-        {
-            var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(r.UserCompile);
-            if (user is not null)
-            {
-                return user.Name;
-            }
-            return string.Empty;
+
 
         }
     }

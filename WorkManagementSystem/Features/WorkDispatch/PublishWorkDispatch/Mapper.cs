@@ -1,8 +1,8 @@
 ﻿namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
-public class Mapper : Mapper<Request, Response, Entities.WorkDispatch>
+public class Mapper : Mapper<Request, Response, Entities.WorkArriveWatting>
 {
-    public override Entities.WorkDispatch ToEntity(Request r) => new()
+    public override WorkArriveWatting ToEntity(Request r) => new()
     {
         KeyWord = r.KeyWord,
         Content = r.Content,

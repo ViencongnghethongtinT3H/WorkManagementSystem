@@ -15,7 +15,7 @@ public class Data
 
         if (r.FileAttachIds.IsAny())
         {
-            var filesRepo = _unitOfWork.GetRepository<Entities.FileAttach>();
+            var filesRepo = _unitOfWork.GetRepository<FileAttach>();
             var files = await filesRepo.GetAll().Where(x => r.FileAttachIds.Contains(x.Id)).ToListAsync();
             foreach (var item in files)
             {

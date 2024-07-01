@@ -1,6 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingArrive
+﻿namespace WorkManagementSystem.Features.WorkArrived.GetListWorkDispatchWattingArrive
 {
-    public class Endpoint : Endpoint<Request, ListResultModel<WorkDispatchResponse>>
+    public class Endpoint : Endpoint<Request, ListResultModel<WorkArriveResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         public Endpoint(IUnitOfWork unitOfWork)
@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Get("WorkDispatch/get-list-work-dispatch-watting-arrive");
+            Get("WorkDispatch/get-list-work-watting-arrive");
         }
 
         public override async Task HandleAsync(Request query, CancellationToken c)
