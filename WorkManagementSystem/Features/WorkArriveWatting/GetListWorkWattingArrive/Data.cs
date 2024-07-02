@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchWattingArrive
+﻿namespace WorkManagementSystem.Features.WorkArriveWatting.GetListWorkWattingArrive
 {
     public class Data
     {
@@ -7,73 +7,72 @@
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ListResultModel<WorkDispatchResponse>> GetListWorkDispatchWattingWork(InputRequest request)
+        public async Task<ListResultModel<WorkArriveResponse>> GetListWorkDispatchWattingWork(InputRequest request)
         {
-            var workArrivedRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>();
+            var workArrivedRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
             var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>();
             var settingRepo = _unitOfWork.GetRepository<Entities.Setting>();
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
-
             // Truy vấn để lấy danh sách DispatchIds
-            var dispatchIds = from d in dispatchReceiveCompanyRepo.GetAll().AsNoTracking().Where(x => x.AccountReceiveId == request.UserId)
-                              select d.WorkDispatchId;
 
+
+            var receiveCompanyIds = from d in receiveCompanyRepo.GetAll().AsNoTracking().Where(x => x.AccountReceiveId == request.UserId)
+                              select d.Id;
+            var dispatchIds = dispatchReceiveCompanyRepo.GetAll().AsNoTracking().Where(x => receiveCompanyIds.Contains(x.AccountReceiveId)).Select(x=>x.WorkDispatchId);
             // Truy vấn WorkDispatchs dựa trên danh sách DispatchIds
             var query = from w in workArrivedRepo.GetAll().AsNoTracking()
                         join s in settingRepo.GetAll().AsNoTracking() on w.Notation equals s.Key
                         join de in depaRepo.GetAll().AsNoTracking() on w.DepartmentId equals de.Id
                         join u in userRepo.GetAll().AsNoTracking() on w.LeadershipDirectId equals u.Id
-                        where w.WorkflowStatus == WorkflowStatusEnum.Done && dispatchIds.Contains(w.Id)
-                        select new WorkDispatchResponse
+                        where w.WorkflowStatus == WorkflowStatusEnum.WaittingWorkArrived && dispatchIds.Contains(w.Id)
+                        select new WorkArriveResponse
                         {
-                            WorkDispatchId = w.Id,
-                            IndustryId = s.Value,
+                            WorkArriveWattingId = w.Id,
                             IndustryName = s.Value,
                             Content = w.Content,
                             SignDay = w.SignDay.ToFormatString("dd/MM/yyyy"),
                             Subjective = w.Subjective,
                             Notation = $"{w.ItemId}/{s.Value}",
                             UserSign = w.UserSign,
-                            WorkflowStatus = w.WorkflowStatus,
+                            WorkflowStatus = w.WorkflowStatus.GetDescription(),
                             DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
                             Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
                             DepartmentCompile = w.DepartmentCompile,
-                            DepartmentId = w.DepartmentId,
                             DocumentTypeKey = w.DocumentTypeKey,
                             EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
-                            ItemId = w.ItemId,
                             KeyWord = w.KeyWord,
-                            LeadershipDirectId = w.LeadershipDirectId,
                             Priority = w.Priority,
-                            TransferType = w.TransferType,
+                            TransferType = w.TransferType.GetDescription(),
                             UserCompile = w.UserCompile,
                             WorkItemNumber = w.WorkItemNumber,
                             DepartmentName = de.Name,
                             LeadershipDirectName = u.Name,
+                            Created = w.Created,
+
                         };
-            var fromDate = request.Filters.GetFilterModel("FromDate");
-            var toDate = request.Filters.GetFilterModel("ToDate");
-            if (fromDate is not null && toDate is not null)
-            {
-                var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-                var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-                query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
-            }
+            //var fromDate = request.Filters.GetFilterModel("FromDate");
+            //var toDate = request.Filters.GetFilterModel("ToDate");
+            //if (fromDate is not null && toDate is not null)
+            //{
+            //    var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+            //    var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+            //    query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
+            //}
 
             var data = new Response
             {
                 Count = await query.CountAsync(),
                 Items = await FilterActivitiesRepresentativeDetail(request, query)
             };
-            return ListResultModel<WorkDispatchResponse>.Create(data.Items, data.Count, request.Page, request.PageSize);
+            return ListResultModel<WorkArriveResponse>.Create(data.Items, data.Count, request.Page, request.PageSize);
 
         }
-        private async Task<List<WorkDispatchResponse>> FilterActivitiesRepresentativeDetail(InputRequest r, IQueryable<WorkDispatchResponse> query)
+        private async Task<List<WorkArriveResponse>> FilterActivitiesRepresentativeDetail(InputRequest r, IQueryable<WorkArriveResponse> query)
         {
-            query = EntityQueryFilterHelper.CreateSort<WorkDispatchResponse>(r.Sorts)(query);
-            query = EntityQueryFilterHelper.Page<WorkDispatchResponse>(r.Page, r.PageSize)(query);
+            query = EntityQueryFilterHelper.CreateSort<WorkArriveResponse>(r.Sorts)(query);
+            query = EntityQueryFilterHelper.Page<WorkArriveResponse>(r.Page, r.PageSize)(query);
             return await query.ToListAsync();
         }
     }

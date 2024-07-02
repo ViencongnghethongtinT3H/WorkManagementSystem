@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkArrived.GetListWorkDispatchWattingArrive
+﻿namespace WorkManagementSystem.Features.WorkArriveWatting.GetListWorkWattingArrive
 {
     public class Endpoint : Endpoint<Request, ListResultModel<WorkArriveResponse>>
     {
@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Get("WorkDispatch/get-list-work-watting-arrive");
+            Get("WorkArriveWatting/get-list-work-watting-arrive");
         }
 
         public override async Task HandleAsync(Request query, CancellationToken c)

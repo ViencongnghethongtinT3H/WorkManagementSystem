@@ -1,6 +1,4 @@
-﻿using WorkManagementSystem.Entities;
-
-namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
+﻿namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
 public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 {

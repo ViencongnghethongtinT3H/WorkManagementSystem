@@ -4,7 +4,6 @@
 public class WorkArriveWatting : EntityBase
 {
     #region Step 1
-
     public string? WorkItemNumber { get; set; }
     [MaxLength(100)]
     public string? ItemId { get; set; }  // số
@@ -39,7 +38,6 @@ public class WorkArriveWatting : EntityBase
     #endregion
 
     public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
-
     // Thêm phần người theo dõi khi tạo mới văn bản đi
     
 }

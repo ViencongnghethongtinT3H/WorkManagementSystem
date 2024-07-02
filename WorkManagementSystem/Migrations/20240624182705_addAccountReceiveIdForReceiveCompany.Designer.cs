@@ -122,7 +122,7 @@ namespace WorkManagementSystem.Migrations
                     b.Property<string>("UserIdUpdated")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("WorkDispatchId")
+                    b.Property<Guid>("WorkWattingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
