@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchByCondition;
+﻿namespace WorkManagementSystem.Features.WorkArrived.GetListWorkArrivedByCondition;
 
 public class Data
 {
@@ -10,15 +10,15 @@ public class Data
     public async Task<ListResultModel<Response>> GetWorkDispatchByCondition(Request input)
     {
         var userWorkflow = _unitOfWork.GetRepository<UserWorkflow>().GetAll();
-        var work = _unitOfWork.GetRepository<Entities.WorkDispatch>().GetAll();
+        var work = _unitOfWork.GetRepository<Entities.WorkArrived>().GetAll();
         var setting = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
         var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
         var listUserWorkflowType = new List<UserWorkflowType>();
-        if (input.ContitionWorkflow == ContitionWorkflowEnum.Follow)
+        if (input.MenuStatus == ContitionWorkflowEnum.Follow)
         {
             listUserWorkflowType.Add(UserWorkflowType.Followers);
         }
-        else if (input.ContitionWorkflow== ContitionWorkflowEnum.Proccess)
+        else if (input.MenuStatus == ContitionWorkflowEnum.Proccess)
         {
             listUserWorkflowType.Add(UserWorkflowType.Signarture);
             listUserWorkflowType.Add(UserWorkflowType.Submit);
@@ -32,17 +32,16 @@ public class Data
                    from b1 in sd3.DefaultIfEmpty()
                    join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
                    from b2 in ud.DefaultIfEmpty()
-                        // where uw.UserId == input.UserId && (listUserWorkflowType.IsAny() && listUserWorkflowType.Contains(uw.UserWorkflowType))
                    select new Response
                    {
-                       WorkDispatchId = w.Id,
+                       WorkArrivedId = w.Id,
                        UserId = uw.UserId,
                        Content = w.Content,
                        Notation = $"{w.ItemId}/{b1.Value}",
-                       WorkflowDispatchNumber = w.WorkItemNumber,
+                       WorkflowArrivedNumber = w.WorkItemNumber,
                        LeadershipName = b2.Name,
                        Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
-                       // WorkflowStatus = w.WorkflowStatus,
+                       WorkflowStatus = w.WorkArrivedStatus,
                        UserWorkflowStatus = uw.UserWorkflowStatus,
                        UserWorkflowType = uw.UserWorkflowType
                    };
@@ -53,7 +52,7 @@ public class Data
         else  // trường hợp là muốn lấy tất cả cả văn bản của user login
         {
             data = data.Where(x => x.UserId == input.UserId);
-        }    
+        }
         return ListResultModel<Response>.Create(await data.ToListAsync());
     }
 }

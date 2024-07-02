@@ -2,7 +2,7 @@
 
 public class Request
 {
-    public Guid UserId { get; set; }
+    public List<Guid> UserIds { get; set; }
     public Guid WorkFlowId {  get; set; }
     public ActionType ActionType { get; set; }       
     public string? Note { get; set; }      

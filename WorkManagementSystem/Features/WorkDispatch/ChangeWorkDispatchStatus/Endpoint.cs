@@ -21,7 +21,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         // Xử lý notification
         var name = await  new GetUserNameCommand
         {
-            UserId = r.UserId
+            UserId = r.UserIds.FirstOrDefault(),
         }.ExecuteAsync();
         
         var receiveName = await new GetUserNameCommand
@@ -40,7 +40,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         {
             Content = $"Tài khoản {name} đã cập nhật lại trạng thái của công văn {subjectWorkDispatch} do {receiveName} tạo",
             UserReceive = new Guid(userCompileId),
-            UserSend = r.UserId,
+            UserSend = r.UserIds.FirstOrDefault(),
             Url = r.WorkFlowId.ToString(),
             NotificationType = NotificationType.WorkItem,
             NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
@@ -54,7 +54,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         // history
         await new HistoryCommand
         {
-            UserId = r.UserId,
+            UserId = r.UserIds.FirstOrDefault(),
             IssueId = r.WorkFlowId ,
             ActionContent = $"Tài khoản {name} đã thay đổi trạng thái công văn"
         }.ExecuteAsync();

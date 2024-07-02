@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.GetListWorkDispatchByCondition;
+﻿
+
+namespace WorkManagementSystem.Features.WorkArrived.GetListWorkArrivedByCondition;
 
 public class Endpoint : Endpoint<Request, ListResultModel<Response>>
 {
@@ -10,13 +12,12 @@ public class Endpoint : Endpoint<Request, ListResultModel<Response>>
     public override void Configure()
     {
         AllowAnonymous();
-        Get("/workDispatch/get-dispatch-by-condition");
+        Get("/workArrived/get-by-condition");
     }
 
     public override async Task HandleAsync(Request query, CancellationToken c)
     {
         var data = new Data(_unitOfWork);
-        var data1 = await data.GetWorkDispatchByCondition(query);
-        await SendAsync(data1);
+        await SendAsync(await data.GetWorkDispatchByCondition(query));
     }
 }
