@@ -1,10 +1,15 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Org.BouncyCastle.Asn1.IsisMtt.Ocsp;
+using System.Security.Cryptography.X509Certificates;
 
 public class PdfSignatureInserter
 {
-    public static void InsertSignatureImage(string inputPdfPath, string outputPdfPath, string signatureImagePath)
+    public static void InsertSignatureImage(string inputPdfPath, string outputPdfPath, string signatureImagePath, string certPath)
     {
+        // Đọc chứng chỉ số
+        var certificate = new X509Certificate2(certPath, "200990a@A");
+
         // Đọc tài liệu PDF từ file input
         PdfReader pdfReader = new PdfReader(inputPdfPath);
         using (FileStream outputStream = new FileStream(outputPdfPath, FileMode.Create))
@@ -31,11 +36,12 @@ public class PdfSignatureInserter
 
     public static void Main(string[] args)
     {
+        string certPath = "myPersonalCertificate.pfx"; // Đường dẫn đến file PDF gốc
         string inputPdfPath = "input.pdf"; // Đường dẫn đến file PDF gốc
         string outputPdfPath = "output_signed.pdf"; // Đường dẫn đến file PDF sau khi chèn ảnh chữ ký
         string signatureImagePath = "signature.png"; // Đường dẫn đến file ảnh chữ ký
 
-        InsertSignatureImage(inputPdfPath, outputPdfPath, signatureImagePath);
+        InsertSignatureImage(inputPdfPath, outputPdfPath, signatureImagePath, certPath);
         Console.WriteLine("Chèn ảnh chữ ký vào PDF thành công.");
     }
 }
