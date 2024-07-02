@@ -54,7 +54,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(result.Data.WorkItemId),
-            ActionContent = $"Tài khoản {name} đã tạo thêm công văn"
+            ActionContent = $"Tài khoản {name} đã tạo thêm công văn {subjectWorkDispatch} do {receiveName} tạo"
         }.ExecuteAsync();
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))

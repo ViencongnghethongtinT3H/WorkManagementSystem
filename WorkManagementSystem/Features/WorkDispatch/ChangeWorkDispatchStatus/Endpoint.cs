@@ -56,7 +56,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         {
             UserId = r.UserId,
             IssueId = r.WorkFlowId ,
-            ActionContent = $"Tài khoản {name} đã thay đổi trạng thái công văn"
+            ActionContent = $"Tài khoản {name} đã thay đổi trạng thái công văn {subjectWorkDispatch} do {receiveName} tạo"
         }.ExecuteAsync();
         await SendAsync(result);
     }

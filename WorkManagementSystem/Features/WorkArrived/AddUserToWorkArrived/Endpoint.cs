@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch;
+﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkArrived;
 
 // Chức năng chuyển công văn cho người/n-người theo dõi (bật popup lên cho chọn người theo dõi công văn và có thêm phần vai trò:  Người theo dõi, Người phối hợp/ xử lý)
 public class Endpoint : Endpoint<Request, ResultModel<bool>>
@@ -11,7 +11,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/workDispatch/add-user-to-work-dispatch");
+        Post("/workDispatch/add-user-to-work-arrive");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)

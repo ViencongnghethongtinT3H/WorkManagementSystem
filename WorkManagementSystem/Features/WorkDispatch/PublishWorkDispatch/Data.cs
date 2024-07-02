@@ -14,8 +14,6 @@ public class Data
     {
 
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-        var workUserFlowRepository = _unitOfWork.GetRepository<UserWorkflow>();
-
         var workArriveWattingRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
@@ -30,30 +28,8 @@ public class Data
         var listUserWorkFlow = new List<UserWorkflow>();
 
         var workDispatch = await workDispatchRepository.FindBy(p => p.Id == r.WorkflowId).FirstOrDefaultAsync();
-        if(workDispatch is not null)
+        if (workDispatch is not null)
         {
-            var workFlows = workUserFlowRepository.FindBy(p => p.WorkflowId == workDispatch.Id);
-            foreach (var item in workFlows)
-            {
-                var workFlow = new UserWorkflow
-                {
-                    Id = Guid.NewGuid(),
-                    Status = item.Status,
-                    UserWorkflowStatus = item.UserWorkflowStatus,
-                    Created = item.Created,
-                    Note = item.Note,
-                    Updated = item.Updated,
-                    UserWorkflowType = item.UserWorkflowType,
-                    WorkflowId = workItem.Id,
-                    UserId = item.UserId,
-                    UserIdCreated = item.UserIdCreated,
-                    UserIdUpdated = item.UserIdUpdated,
-                };
-                listUserWorkFlow.Add(workFlow);
-
-            }
-            await workUserFlowRepository.AddRangeAsync(listUserWorkFlow);
-
 
             // cap nhay lai trang thai cua cong van di
             workDispatch.WorkItemNumber = workItem.WorkItemNumber;
@@ -61,7 +37,7 @@ public class Data
             workDispatchRepository.Update(workDispatch);
 
         }
-      
+
         List<string> FileNames = new List<string>();
         if (r.FileAttachIds.IsAny())
         {
@@ -92,7 +68,7 @@ public class Data
                 });
 
                 var acc = await receiveRepo.FirstOrDefaultAsync(x => x.Id == item);
-                if(acc is not null)
+                if (acc is not null)
                 {
                     await new SendEmailCommand
                     {
@@ -102,7 +78,7 @@ public class Data
                         subject = "Thông báo về công văn đến"
                     }.ExecuteAsync();
                 }
-                
+
             }
             await company.AddRangeAsync(lst);
         }

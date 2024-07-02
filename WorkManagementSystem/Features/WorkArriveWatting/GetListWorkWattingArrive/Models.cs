@@ -25,7 +25,6 @@
         #region Step 1
         public string? WorkItemNumber { get; set; }
         public Guid WorkArriveWattingId { get; set; }
-        public string? ItemId { get; set; }  // số
 
         public string? Notation { get; set; }  // ký hiệu link tới bảng setting
         public string? DateIssued { get; set; }  // ngày ban hành

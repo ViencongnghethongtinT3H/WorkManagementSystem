@@ -13,7 +13,7 @@
             var workDispatch = await _unitOfWork.GetRepository<Entities.WorkDispatch>().GetAsync(command.WorkDispatchId);
             if (workDispatch is not null)
             {
-                return workDispatch.Subjective;
+                return $"{workDispatch.ItemId}/{workDispatch.Subjective}";
             }
             return string.Empty;
         }
