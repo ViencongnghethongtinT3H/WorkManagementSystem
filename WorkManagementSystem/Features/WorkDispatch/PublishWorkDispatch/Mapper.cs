@@ -2,7 +2,7 @@
 
 public class Mapper : Mapper<Request, Response, Entities.WorkArriveWatting>
 {
-    public override WorkArriveWatting ToEntity(Request r) => new()
+    public override Entities.WorkArriveWatting ToEntity(Request r) => new()
     {
         KeyWord = r.KeyWord,
         Content = r.Content,

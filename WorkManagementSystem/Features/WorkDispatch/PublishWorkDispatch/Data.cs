@@ -14,18 +14,55 @@ public class Data
     {
 
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-        var workArriveWattingRepo = _unitOfWork.GetRepository<WorkArriveWatting>();
+        var workUserFlowRepository = _unitOfWork.GetRepository<UserWorkflow>();
+
+        var workArriveWattingRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
-        workItem.WorkflowStatus = WorkflowStatusEnum.Done;
-      //  workDispatchRepository.Update(workItem);
+
 
         // them moi cong van vao danh sách chờ
-        //var 
+        workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
+        await workArriveWattingRepo.AddAsync(workItem);
+
+        // them moi userWork dua tren danh sach cho
+
+        var listUserWorkFlow = new List<UserWorkflow>();
+
+        var workDispatch = await workDispatchRepository.FindBy(p => p.Id == r.WorkflowId).FirstOrDefaultAsync();
+        if(workDispatch is not null)
+        {
+            var workFlows = workUserFlowRepository.FindBy(p => p.WorkflowId == workDispatch.Id);
+            foreach (var item in workFlows)
+            {
+                var workFlow = new UserWorkflow
+                {
+                    Id = Guid.NewGuid(),
+                    Status = item.Status,
+                    UserWorkflowStatus = item.UserWorkflowStatus,
+                    Created = item.Created,
+                    Note = item.Note,
+                    Updated = item.Updated,
+                    UserWorkflowType = item.UserWorkflowType,
+                    WorkflowId = workItem.Id,
+                    UserId = item.UserId,
+                    UserIdCreated = item.UserIdCreated,
+                    UserIdUpdated = item.UserIdUpdated,
+                };
+                listUserWorkFlow.Add(workFlow);
+
+            }
+            await workUserFlowRepository.AddRangeAsync(listUserWorkFlow);
 
 
+            // cap nhay lai trang thai cua cong van di
+            workDispatch.WorkItemNumber = workItem.WorkItemNumber;
+            workDispatch.WorkflowStatus = WorkflowStatusEnum.Done;
+            workDispatchRepository.Update(workDispatch);
+
+        }
+      
         List<string> FileNames = new List<string>();
-        var implementRepository = _unitOfWork.GetRepository<Implementer>();
         if (r.FileAttachIds.IsAny())
         {
             var filesRepo = _unitOfWork.GetRepository<FileAttach>();
