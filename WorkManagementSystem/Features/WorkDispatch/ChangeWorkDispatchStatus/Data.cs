@@ -33,7 +33,7 @@ public class Data
 
             foreach (var item in r.UserIds)
             {
-                var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item);
+                var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkFlowId);
                 if (userWorkflow is not null)
                 {
                     userWorkflow.Note = r.Note;

@@ -29,6 +29,10 @@
             var lst = new List<UserWorkflow>();
             foreach (var item in r.UserProccess)
             {
+                //if (userWorkflowRepo)
+                //{
+
+                //}
                 var user = new UserWorkflow
                 {
                     UserId = item.UserIds,
@@ -40,6 +44,15 @@
                 lst.Add(user);
             }
             await userWorkflowRepo.AddRangeAsync(lst);
+            // update lại trạng thái đã hoàn thành cho người chuyển văn bản
+            var userUpdate = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(x => x.UserId == r.UserId);
+            if (userUpdate is not null)
+            {
+                userUpdate.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                userUpdate.Updated = DateTime.Now;
+            }
+            userWorkflowRepo.Update(userUpdate);
+
             await _unitOfWork.CommitAsync();
             return new ResultModel<bool>(true)
             {

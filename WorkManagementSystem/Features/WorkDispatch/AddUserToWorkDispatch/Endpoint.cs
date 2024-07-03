@@ -32,6 +32,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             {
                 UserId = r.UserId
             }.ExecuteAsync();
+
             // Thêm phần notification
             lstcmd.Add(new NotificationCommandbase
             {
