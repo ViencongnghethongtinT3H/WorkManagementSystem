@@ -10,8 +10,7 @@
         Cancel = 4,
         [Description("Trả lại")]
         ReceiveProccess = 5,
-        [Description("Chờ vào sổ văn bản đến")]
-        WaittingWorkArrived = 6,
+      
         [Description("Hoàn thành")]
         Complete = 7,
     }
