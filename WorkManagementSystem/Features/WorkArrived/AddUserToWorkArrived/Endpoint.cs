@@ -11,7 +11,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/workDispatch/add-user-to-work-arrive");
+        Post("/workArrived/add-user-to-work-arrive");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)

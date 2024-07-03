@@ -40,7 +40,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
+            Content = $"Tài khoản {name} đã phát hành công văn {subjectWorkDispatch} do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = result.Data.WorkItemId,
@@ -54,7 +54,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(result.Data.WorkItemId),
-            ActionContent = $"Tài khoản {name} đã tạo thêm công văn {subjectWorkDispatch} do {receiveName} tạo"
+            ActionContent = $"Tài khoản {name} đã phát hành công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
         }.ExecuteAsync();
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))

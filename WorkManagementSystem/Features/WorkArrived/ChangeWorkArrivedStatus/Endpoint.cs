@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
+﻿using System.Xml.Linq;
+
+namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
 {
     public class Endpoint : Endpoint<Request, ResultModel<bool>>
     {
@@ -17,6 +19,39 @@
         {
             var data = new Data(_unitOfWork);
             var result = await data.ChangeWorkArrivedStatus(r);
+            var name = await new GetUserNameCommand
+            {
+                UserId = r.UserId
+            }.ExecuteAsync();
+            // láy ra subject cua cong van
+            var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+            {
+                WorkDispatchId = r.WorkArriveId
+            }.ExecuteAsync();
+            var lstcmd = new List<NotificationCommandbase>();
+            // notifine
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = new Guid(userCompileId),
+                UserSend = r.UserId,
+                Url = r.WorkFlowId.ToString(),
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
+            });
+
+            await new LstNotificationCommand
+            {
+                NotificationCommands = lstcmd
+            }.ExecuteAsync();
+
+            // history
+            await new HistoryCommand
+            {
+                UserId = r.UserId,
+                IssueId = r.WorkFlowId,
+                ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+            }.ExecuteAsync();
             await SendAsync(result);
         }
     }

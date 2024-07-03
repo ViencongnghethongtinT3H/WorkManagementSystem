@@ -36,7 +36,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             lstcmd.Add(new NotificationCommandbase
             {
                 UserSend = r.UserId,
-                Content = $"Tài khoản {nameFlow} đã được thêm vào công văn {subjectWorkDispatch} bởi {name}",
+                Content = $"Tài khoản {nameFlow} đã được thêm vào công văn {subjectWorkDispatch} bởi {name} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
                 UserReceive = item.UserIds,
                 Url = r.WorkflowId.ToString(),
                 NotificationType = NotificationType.WorkItem,
@@ -59,7 +59,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             {
                 UserId = r.UserId,
                 IssueId = r.WorkflowId,
-                ActionContent = $"Tài khoản {name} đã thêm  người dùng {nameFlow} vào công văn {subjectWorkDispatch}"
+                ActionContent = $"Tài khoản {name} đã thêm người dùng {nameFlow} vào công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
             }.ExecuteAsync();
         }
 

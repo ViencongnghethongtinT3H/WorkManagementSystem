@@ -29,17 +29,29 @@
             var lst = new List<UserWorkflow>();
             foreach (var item in r.UserProccess)
             {
-                var user = new UserWorkflow
+                var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item.UserIds && p.WorkflowId == r.WorkflowId);
+                if(userWorkflow is  not null)
                 {
-                    UserId = item.UserIds,
-                    WorkflowId = r.WorkflowId,
-                    UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
-                    UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,    // mặc định chuyển người xử lý thì gán mặc định là 1,
-                    Note = item.Note
-                };
-                lst.Add(user);
+                    userWorkflow.Note = item.Note;  
+                    userWorkflow.Updated = DateTime.Now;
+                    userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Waitting;
+                    userWorkflowRepo.Update(userWorkflow);
+                }
+                else
+                {
+                    var user = new UserWorkflow
+                    {
+                        UserId = item.UserIds,
+                        WorkflowId = r.WorkflowId,
+                        UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
+                        UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,    // mặc định chuyển người xử lý thì gán mặc định là 1,
+                        Note = item.Note
+                    };
+                    lst.Add(user);
+                    await userWorkflowRepo.AddRangeAsync(lst);
+                }
             }
-            await userWorkflowRepo.AddRangeAsync(lst);
+            
             await _unitOfWork.CommitAsync();
             return new ResultModel<bool>(true)
             {

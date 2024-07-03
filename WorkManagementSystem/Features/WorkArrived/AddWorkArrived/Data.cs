@@ -10,7 +10,6 @@
         public async Task<string> CreateWorkArrived(Entities.WorkArrived workItem, Request r)
         {
             var workArrivedRepository = _unitOfWork.GetRepository<Entities.WorkArrived>();
-            workItem.WorkArrivedStatus = WorkArrivedStatus.Waitting;
             var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
             try
             {
@@ -28,7 +27,7 @@
                         WorkflowId = workItem.Id,
                         UserId = r.UserCompile,
                         UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
-                        UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
+                        UserWorkflowStatus = UserWorkflowStatusEnum.Done,
                         Note = $"{await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
 
                     };

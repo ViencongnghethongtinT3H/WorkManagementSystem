@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/WorkArrived/create-or-update");
+            Post("/workArrived/create-or-update");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)
@@ -22,7 +22,7 @@
             });
             // Xử lý notification
             var lstcmd = new List<NotificationCommandbase>();
-            var name = await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync();
+            var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
             var receiveName = await new GetUserNameCommand
             {
                 UserId = r.LeadershipDirectId
@@ -34,7 +34,7 @@
 
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
+                Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}. Bạn vui lòng kiểm tra ",
                 UserReceive = r.LeadershipDirectId,
                 UserSend = r.UserCompile,
                 Url = result.Data.WorkItemId,
@@ -52,7 +52,7 @@
             {
                 UserId = r.UserCompile,
                 IssueId = new Guid(result.Data.WorkItemId),
-                ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+                ActionContent = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
             }.ExecuteAsync();
 
 
