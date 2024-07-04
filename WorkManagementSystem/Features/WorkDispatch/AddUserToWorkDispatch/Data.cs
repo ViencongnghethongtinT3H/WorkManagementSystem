@@ -45,6 +45,7 @@
             }
             await userWorkflowRepo.AddRangeAsync(lst);
             // update lại trạng thái đã hoàn thành cho người chuyển văn bản
+
             var userUpdate = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(x => x.UserId == r.UserId);
             if (userUpdate is not null)
             {
