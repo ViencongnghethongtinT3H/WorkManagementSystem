@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
+using static iTextSharp.text.pdf.AcroFields;
 namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
 public class Data
@@ -14,8 +15,10 @@ public class Data
     {
         List<string> FileNames = new List<string>();
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
-        var companyRepository = _unitOfWork.GetRepository<Entities.DispatchReceiveCompany>();
+        var companyRepository = _unitOfWork.GetRepository<DispatchReceiveCompany>();
         var workArriveWattingRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
+        var companyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
+
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
        
@@ -62,8 +65,6 @@ public class Data
         workItem.WorkItemNumber = workDispatch.WorkItemNumber;
         workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
         await workArriveWattingRepo.AddAsync(workItem);
-
-        var company = _unitOfWork.GetRepository<DispatchReceiveCompany>();
         var lst = new List<DispatchReceiveCompany>();
 
         // Lấy ra email đơn vị nhận
@@ -73,24 +74,31 @@ public class Data
         {
             foreach (var item in r.ReceiveCompanys)
             {
-                var acc = await companyRepository.GetAll().FirstOrDefaultAsync(x => x.AccountReceiveId == item.AccountReceiveId);
-                if (acc is not null)
+                var company = await companyRepository.GetAll().Where(p=>p.AccountReceiveId == item.Id).FirstOrDefaultAsync();
+                if (company != null)
                 {
                     lst.Add(new DispatchReceiveCompany
                     {
                         WorkDispatchId = workItem.Id,
-                        AccountReceiveId = acc.Id
+                        AccountReceiveId = item.AccountReceiveId.Value,
                     });
-                    await new SendEmailCommand
+
+                    var acc = await companyRepo.GetAll().FirstOrDefaultAsync(p => p.Id == company.AccountReceiveId);
+                    if (acc != null)
                     {
-                        toEmail = item.Email,
-                        FileNames = FileNames,
-                        body = "232",
-                        subject = "Thông báo về công văn đến"
-                    }.ExecuteAsync();
-                }
+                        await new SendEmailCommand
+                        {
+                            toEmail = "hoangpham19112002@gmail.com",
+                            FileNames = FileNames,
+                            body = "232",
+                            subject = "Thông báo về công văn đến"
+                        }.ExecuteAsync();
+                    }
+                   
+                }           
             }
-            await company.AddRangeAsync(lst);
+            
+            await companyRepository.AddRangeAsync(lst);
         }
         //Todo: Insert vào 1 bảng mới
         await _unitOfWork.CommitAsync();
