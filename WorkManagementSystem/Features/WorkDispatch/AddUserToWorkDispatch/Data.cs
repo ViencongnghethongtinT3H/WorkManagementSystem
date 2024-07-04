@@ -15,7 +15,7 @@
             var listUserFlow = new List<UserWorkflow>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
 
-            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);         
+            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
             if (workDispatch is null)
             {
                 return new ResultModel<bool>(false)
@@ -44,15 +44,17 @@
                 lst.Add(user);
             }
             await userWorkflowRepo.AddRangeAsync(lst);
-            // update lại trạng thái đã hoàn thành cho người chuyển văn bản
 
-            var userUpdate = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(x => x.UserId == r.UserId);
-            if (userUpdate is not null)
+            // update lại trạng thái đã hoàn thành cho người chuyển văn bản
+            var userComplete = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(x => x.UserId == r.UserId && x.WorkflowId == r.WorkflowId);
+            if (userComplete is not null)
             {
-                userUpdate.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
-                userUpdate.Updated = DateTime.Now;
+                userComplete.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                userComplete.UserWorkflowType = UserWorkflowType.Implementer;
+                userComplete.Updated = DateTime.Now;
             }
-            userWorkflowRepo.Update(userUpdate);
+           
+            userWorkflowRepo.Update(userComplete);
 
             await _unitOfWork.CommitAsync();
             return new ResultModel<bool>(true)

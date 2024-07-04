@@ -1,7 +1,4 @@
-﻿using WorkManagementSystem.Entities;
-using static iTextSharp.text.pdf.AcroFields;
-
-namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
+﻿namespace WorkManagementSystem.Features.WorkDispatch.ChangeWorkDispatchStatus;
 // Thay đổi trạng thái của công văn đi 
 public class Data
 {
@@ -59,9 +56,7 @@ public class Data
                         userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
                         workDispatch.WorkflowStatus = WorkflowStatusEnum.Proccesing;
                     }
-
                     userWorkflowRepo.Update(userWorkflow);
-                   
                 }
                 // thay đổi trạng thái của văn bản  
                 workDispatchRepo.Update(workDispatch);

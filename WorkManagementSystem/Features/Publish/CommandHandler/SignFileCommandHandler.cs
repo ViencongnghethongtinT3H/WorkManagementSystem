@@ -18,12 +18,11 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
             try
             {
                 await Task.Run(() => PdfSigner.InsertSignatureImage(url, outputFilePath, signatureImage));
-                return outputFilePath;
+                return $"https://file-manager.digins.vn/Output/2023/file/signature/{outputName}";
             }
             catch (Exception ex)
             {
-
-                throw new Exception("Không thể ký file");
+                throw;
             }
           
 

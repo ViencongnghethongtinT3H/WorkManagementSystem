@@ -3,7 +3,6 @@
     public class Request
     {
         public Guid FileId { get; set; }
-        public Guid WorkFollowId { get; set; }
     }   
 
     public class Response

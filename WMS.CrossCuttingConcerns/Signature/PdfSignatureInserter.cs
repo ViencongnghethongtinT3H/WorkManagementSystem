@@ -7,34 +7,43 @@ public class PdfSigner
 {
     public static void InsertSignatureImage(string inputPdfPath, string outputPdfPath, string signatureImagePath)
     {
-        // Đọc tài liệu PDF từ file input
-        using (PdfReader pdfReader = new PdfReader(inputPdfPath))
-        using (FileStream outputStream = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+        try
         {
-            using (PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream))
+            // Đọc tài liệu PDF từ file input
+            using (PdfReader pdfReader = new PdfReader(inputPdfPath))
+            using (FileStream outputStream = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                // Lấy số trang cuối cùng
-                int lastPage = pdfReader.NumberOfPages;
+                using (PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream))
+                {
+                    // Lấy số trang cuối cùng
+                    int lastPage = pdfReader.NumberOfPages;
 
-                // Lấy trang cuối cùng để chèn ảnh chữ ký
-                PdfContentByte pdfContentByte = pdfStamper.GetOverContent(lastPage);
+                    // Lấy trang cuối cùng để chèn ảnh chữ ký
+                    PdfContentByte pdfContentByte = pdfStamper.GetOverContent(lastPage);
 
-                // Đọc ảnh chữ ký từ file
-                Image signatureImage = Image.GetInstance(signatureImagePath);
+                    // Đọc ảnh chữ ký từ file
+                    Image signatureImage = Image.GetInstance(signatureImagePath);
 
-                // Lấy kích thước của trang cuối cùng
-                Rectangle pageSize = pdfReader.GetPageSize(lastPage);
+                    // Lấy kích thước của trang cuối cùng
+                    Rectangle pageSize = pdfReader.GetPageSize(lastPage);
 
-                // Thiết lập vị trí và kích thước của ảnh chữ ký (ở góc dưới bên trái)
-                float x = signatureImage.ScaledWidth - pageSize.Right + 10; // Cách lề phải 10 đơn vị
-                float y = pageSize.Bottom + 10; // Cách lề dưới 10 đơn vị
-                signatureImage.SetAbsolutePosition(x, y);
-                signatureImage.ScaleToFit(100, 50);// Kích thước ảnh chữ ký
+                    // Thiết lập vị trí và kích thước của ảnh chữ ký (ở góc dưới bên trái)
+                    float x = signatureImage.ScaledWidth - pageSize.Right + 10; // Cách lề phải 10 đơn vị
+                    float y = pageSize.Bottom + 20; // Cách lề dưới 10 đơn vị
+                    signatureImage.SetAbsolutePosition(x, y);
+                    signatureImage.ScaleToFit(100, 50);// Kích thước ảnh chữ ký
 
-                // Chèn ảnh chữ ký vào tài liệu PDF
-                pdfContentByte.AddImage(signatureImage);
+                    // Chèn ảnh chữ ký vào tài liệu PDF
+                    pdfContentByte.AddImage(signatureImage);
+                }
             }
         }
+        catch (Exception ex)
+        {
+
+            throw new Exception ("ky số lỗi " + ex.Message);
+        }
+        
     }
 
     public static string AppendSuffixToFileName(string originalFileName, string suffix)
