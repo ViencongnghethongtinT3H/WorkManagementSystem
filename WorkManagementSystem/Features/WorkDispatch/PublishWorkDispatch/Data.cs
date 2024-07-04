@@ -80,7 +80,7 @@ public class Data
                     lst.Add(new DispatchReceiveCompany
                     {
                         WorkDispatchId = workItem.Id,
-                        AccountReceiveId = item.AccountReceiveId.Value,
+                        AccountReceiveId = item.Id,
                     });
 
                     var acc = await companyRepo.GetAll().FirstOrDefaultAsync(p => p.Id == company.AccountReceiveId);
