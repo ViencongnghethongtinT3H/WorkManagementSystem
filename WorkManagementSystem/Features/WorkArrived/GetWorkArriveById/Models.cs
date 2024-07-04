@@ -25,11 +25,6 @@
         public string TransferType { get; set; }  // hình thức vận chuyển
         public string WorkArrivedStatus { get; set; }  // trạng thái của công văn
 
-        // files
-        public string FileName { get; set; } 
-        public string? FileUrl { get; set; }  
-        public string? FileExtension { get; set; }  
-
         // step 
         public WorkArrivedStep WorkArrivedStep {  get; set; }
 

@@ -66,6 +66,7 @@
                                              orderby re.Created descending
                                              select new ReceiveCompanyModel
                                              {
+                                                 Id = re.Id,
                                                  AccountReceiveId = re.AccountReceiveId.Value,
                                                  Name = re.Name,
                                                  Address = re.Address,
