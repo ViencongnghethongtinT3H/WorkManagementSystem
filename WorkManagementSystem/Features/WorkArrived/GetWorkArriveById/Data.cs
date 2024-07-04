@@ -15,6 +15,7 @@
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>().GetAll();
             var stepRepo = _unitOfWork.GetRepository<WorkflowStep>().GetAll();
             var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
+            var fileAttachs = _unitOfWork.GetRepository<FileAttach>().GetAll();
             var work = await (from w in workRepo.AsNoTracking()
                               join s4 in depaRepo.AsNoTracking() on w.DepartmentId equals s4.Id into sd4
                               from b2 in sd4.DefaultIfEmpty()
@@ -48,10 +49,20 @@
            if(work is not null)
             {
                 var step = from st in stepRepo.AsNoTracking()
-                           join w in workRepo on st.WorkflowId equals w.Id
+                           join w in workRepo on st.WorkflowId equals w.Id where st.UserConfirm == r.UserId
                            select new WorkArrivedStep { Note  = st.Note, Step = st.Step, UserConfirm = st.UserConfirm};
 
                 work.WorkArrivedStep = await step.FirstOrDefaultAsync();
+
+                var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
+                   .Where(p => p.IssuesId == r.WorkDispatchId).Select(p => new Files
+                   {
+                       FileExtension = p.FileExtension,
+                       FileId = p.Id,
+                       FileName = p.FileName,
+                       FileUrl = p.FileUrl,
+                   });
+                work.Files = files.ToList();
             }
 
             return ResultModel<WorkArriveDetailResponse>.Create(work);

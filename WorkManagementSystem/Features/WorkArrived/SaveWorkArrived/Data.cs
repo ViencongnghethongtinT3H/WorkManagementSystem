@@ -37,6 +37,7 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
                 var file = await fileRepo.FindBy(p => p.IssuesId == workItem.Id).FirstOrDefaultAsync();
                 if (file is not null)
                 {
+                    file.IssuesId = workItem.Id;
                     file.RefId = folder.Id;
                     file.Updated = DateTime.Now;
                     fileRepo.Update(file);

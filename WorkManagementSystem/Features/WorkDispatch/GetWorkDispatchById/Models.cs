@@ -45,11 +45,8 @@
 
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công vă
 
-        // files
-        public string FileName { get; set; }  // tên phòng ban
-        public string? FileUrl { get; set; }  // tên phòng ban
-        public string? FileExtension { get; set; }  // tên phòng ban
 
+        public List<FileModel> Files { get; set; }
         public List<ReceiveCompanyModel> ReceiveCompanys { get; set; }
         public List<Notes> Notes { get; set; }   // Ý kiến xử lý
         public List<HistoryListModel> Histories { get; set; }  // lịch sử
@@ -77,5 +74,14 @@
         public string UserUpdated { get; set; }
         public string ActionContent { get; set; }
     }
+    public class FileModel 
+    {
+        // files
+        public string FileName { get; set; }  // tên phòng ban
+        public string? FileUrl { get; set; }  // tên phòng ban
+        public string? FileExtension { get; set; }  // tên phòng ban
+        public Guid FileId { get; set; }
+    }
+
 
 }
