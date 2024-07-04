@@ -14,16 +14,23 @@ public class Data
     {
         List<string> FileNames = new List<string>();
         var workDispatchRepository = _unitOfWork.GetRepository<Entities.WorkDispatch>();
+        var companyRepository = _unitOfWork.GetRepository<Entities.DispatchReceiveCompany>();
         var workArriveWattingRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
-        var workDispatch = await workDispatchRepository.FindBy(p => p.Id == r.WorkflowId).FirstOrDefaultAsync();
+       
+        
+        var workDispatch = await workDispatchRepository.FindBy(p => p.Id == r.workDispatchId).FirstOrDefaultAsync();
+
+
         if (workDispatch is not null)
         {
             // cap nhay lai trang thai cua cong van di
             workDispatch.WorkItemNumber = workItem.WorkItemNumber;
             workDispatch.WorkflowStatus = WorkflowStatusEnum.Done;
             workDispatchRepository.Update(workDispatch);
+           
+            // Lưu file
             var folder = new FileManagement()
             {
                 Created = DateTime.Now,
@@ -48,6 +55,11 @@ public class Data
             }
         }
         // them moi cong van vao danh sách chờ
+        // them moi cong van vao danh sách chờ
+        workItem.Notation = workDispatch.Notation;
+        workItem.ItemId = workDispatch.ItemId;
+        workItem.IndustryId = workDispatch.IndustryId;
+        workItem.WorkItemNumber = workDispatch.WorkItemNumber;
         workItem.WorkflowStatus = WorkflowStatusEnum.WaittingWorkArrived;
         await workArriveWattingRepo.AddAsync(workItem);
 
@@ -57,28 +69,26 @@ public class Data
         // Lấy ra email đơn vị nhận
         var receiveRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
 
-        if (r.ReceiveCompanyIds.IsAny())
+        if (r.ReceiveCompanys.IsAny())
         {
-            foreach (var item in r.ReceiveCompanyIds)
+            foreach (var item in r.ReceiveCompanys)
             {
-                lst.Add(new DispatchReceiveCompany
-                {
-                    WorkDispatchId = workItem.Id,
-                    AccountReceiveId = item
-                });
-
-                var acc = await receiveRepo.FirstOrDefaultAsync(x => x.Id == item);
+                var acc = await companyRepository.GetAll().FirstOrDefaultAsync(x => x.AccountReceiveId == item.AccountReceiveId);
                 if (acc is not null)
                 {
+                    lst.Add(new DispatchReceiveCompany
+                    {
+                        WorkDispatchId = workItem.Id,
+                        AccountReceiveId = acc.Id
+                    });
                     await new SendEmailCommand
                     {
-                        toEmail = acc.Email,
+                        toEmail = item.Email,
                         FileNames = FileNames,
                         body = "232",
                         subject = "Thông báo về công văn đến"
                     }.ExecuteAsync();
                 }
-
             }
             await company.AddRangeAsync(lst);
         }

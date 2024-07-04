@@ -20,7 +20,8 @@
 
             var receiveCompanyIds = from d in receiveCompanyRepo.GetAll().AsNoTracking().Where(x => x.AccountReceiveId == request.UserId)
                               select d.Id;
-            var dispatchIds = dispatchReceiveCompanyRepo.GetAll().AsNoTracking().Where(x => receiveCompanyIds.Contains(x.AccountReceiveId)).Select(x=>x.WorkDispatchId);
+            var dispatchIds = dispatchReceiveCompanyRepo.GetAll().AsNoTracking().Where(x => receiveCompanyIds.Contains(x.AccountReceiveId))
+                .Select(x=>x.WorkDispatchId);
             // Truy vấn WorkDispatchs dựa trên danh sách DispatchIds
             var query = from w in workArrivedRepo.GetAll().AsNoTracking()
                         join s in settingRepo.GetAll().AsNoTracking() on w.Notation equals s.Key

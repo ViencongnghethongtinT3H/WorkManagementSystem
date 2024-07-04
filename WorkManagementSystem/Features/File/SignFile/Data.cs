@@ -21,8 +21,16 @@ public class Data
                 FileName = fileInfo.FileName,
                 FileUrl = fileInfo.FileUrl,
             }.ExecuteAsync();
+            var file = new FileAttach
+            {
+                IssuesId = fileInfo.IssuesId,
+                Status = StatusEnum.Active,
+
+            };
+
             return output;
         }
+        
         return string.Empty;
     }
 

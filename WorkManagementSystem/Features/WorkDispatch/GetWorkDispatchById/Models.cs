@@ -81,6 +81,8 @@
         public string? FileUrl { get; set; }  // tên phòng ban
         public string? FileExtension { get; set; }  // tên phòng ban
         public Guid FileId { get; set; }
+        public StatusEnum Status { get; set; }
+
     }
 
 

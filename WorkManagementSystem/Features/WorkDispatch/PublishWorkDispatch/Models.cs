@@ -30,8 +30,8 @@
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
         public bool IsPublish { get; set; }
         public List<Guid>? FileAttachIds { get; set; }
-        public List<Guid>? ReceiveCompanyIds { get; set; }
-        public Guid? WorkflowId { get; set; }
+        public List<ReceiveCompanyInput>? ReceiveCompanys { get; set; }
+        public Guid? workDispatchId { get; set; }
 
 
     }
@@ -49,4 +49,14 @@
         public string Message => "Work Item saved!";
         public string WorkItemId { get; set; }
     }
+
+    public class ReceiveCompanyInput 
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string? Fax { get; set; }
+        public string? Address { get; set; }
+        public Guid? AccountReceiveId { get; set; }   // Id của văn thư đơn vị nhận
+    }
+
 }

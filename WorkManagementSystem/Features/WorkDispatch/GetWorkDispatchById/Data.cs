@@ -110,6 +110,7 @@
                         FileId = p.Id,
                         FileName = p.FileName,
                         FileUrl = p.FileUrl,
+                        Status = p.Status,
                     });
                 work.Files = files.ToList();
             }
