@@ -3,37 +3,53 @@ using iTextSharp.text.pdf;
 using Org.BouncyCastle.Asn1.IsisMtt.Ocsp;
 using System.Security.Cryptography.X509Certificates;
 
-public class PdfSignatureInserter
+public class PdfSigner
 {
-    public static void InsertSignatureImage(string inputPdfPath, string outputPdfPath, string signatureImagePath, string certPath)
+    public static void InsertSignatureImage(string inputPdfPath, string outputPdfPath, string signatureImagePath)
     {
-        // Đọc chứng chỉ số
-        var certificate = new X509Certificate2(certPath, "200990a@A");
-
         // Đọc tài liệu PDF từ file input
-        PdfReader pdfReader = new PdfReader(inputPdfPath);
-        using (FileStream outputStream = new FileStream(outputPdfPath, FileMode.Create))
+        using (PdfReader pdfReader = new PdfReader(inputPdfPath))
+        using (FileStream outputStream = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
         {
-            PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
+            using (PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream))
+            {
+                // Lấy số trang cuối cùng
+                int lastPage = pdfReader.NumberOfPages;
 
-            // Lấy trang đầu tiên để chèn ảnh chữ ký (có thể thay đổi nếu cần)
-            PdfContentByte pdfContentByte = pdfStamper.GetOverContent(1);
+                // Lấy trang cuối cùng để chèn ảnh chữ ký
+                PdfContentByte pdfContentByte = pdfStamper.GetOverContent(lastPage);
 
-            // Đọc ảnh chữ ký từ file
-            Image signatureImage = Image.GetInstance(signatureImagePath);
+                // Đọc ảnh chữ ký từ file
+                Image signatureImage = Image.GetInstance(signatureImagePath);
 
-            // Thiết lập vị trí và kích thước của ảnh chữ ký (có thể thay đổi nếu cần)
-            signatureImage.SetAbsolutePosition(100, 100); // Vị trí (x, y) trên trang PDF
-            signatureImage.ScaleToFit(200, 100); // Kích thước ảnh chữ ký
+                // Lấy kích thước của trang cuối cùng
+                Rectangle pageSize = pdfReader.GetPageSize(lastPage);
 
-            // Chèn ảnh chữ ký vào tài liệu PDF
-            pdfContentByte.AddImage(signatureImage);
+                // Thiết lập vị trí và kích thước của ảnh chữ ký (ở góc dưới bên trái)
+                float x = signatureImage.ScaledWidth - pageSize.Right + 10; // Cách lề phải 10 đơn vị
+                float y = pageSize.Bottom + 10; // Cách lề dưới 10 đơn vị
+                signatureImage.SetAbsolutePosition(x, y);
+                signatureImage.ScaleToFit(100, 50);// Kích thước ảnh chữ ký
 
-            pdfStamper.Close();
+                // Chèn ảnh chữ ký vào tài liệu PDF
+                pdfContentByte.AddImage(signatureImage);
+            }
         }
-        pdfReader.Close();
     }
 
+    public static string AppendSuffixToFileName(string originalFileName, string suffix)
+    {
+        // Lấy tên tệp mà không có phần mở rộng
+        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(originalFileName);
+
+        // Lấy phần mở rộng của tệp
+        string extension = Path.GetExtension(originalFileName);
+
+        // Tạo tên tệp mới với phần hậu tố và phần mở rộng
+        string newFileName = fileNameWithoutExtension + suffix + extension;
+
+        return newFileName;
+    }
     public static void Main(string[] args)
     {
         string certPath = "myPersonalCertificate.pfx"; // Đường dẫn đến file PDF gốc
@@ -41,7 +57,7 @@ public class PdfSignatureInserter
         string outputPdfPath = "output_signed.pdf"; // Đường dẫn đến file PDF sau khi chèn ảnh chữ ký
         string signatureImagePath = "signature.png"; // Đường dẫn đến file ảnh chữ ký
 
-        InsertSignatureImage(inputPdfPath, outputPdfPath, signatureImagePath, certPath);
+        InsertSignatureImage(inputPdfPath, outputPdfPath, signatureImagePath);
         Console.WriteLine("Chèn ảnh chữ ký vào PDF thành công.");
     }
 }
