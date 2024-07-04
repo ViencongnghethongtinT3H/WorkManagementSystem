@@ -3,6 +3,7 @@
     public class Request
     {
         public Guid WorkDispatchId { get; set; }
+        public Guid UserId {  get; set; }
     }
     public class WorkArriveDetailResponse
     {
@@ -23,18 +24,29 @@
         public string? Dealine { get; set; }  // Thời hạn xử lý
         public string TransferType { get; set; }  // hình thức vận chuyển
         public string WorkArrivedStatus { get; set; }  // trạng thái của công văn
-       
 
-        // Lich su
-        // y kien xu ly
-        
+        // files
+        public string FileName { get; set; } 
+        public string? FileUrl { get; set; }  
+        public string? FileExtension { get; set; }  
+
         // step 
         public WorkArrivedStep WorkArrivedStep {  get; set; }
+
+        public List<Files> Files { get; set; }
     }
     public class WorkArrivedStep
     {
         public string? Note { get; set; }
         public StepEnum Step { get; set; }
         public Guid UserConfirm { get; set; } // người xử lý của bước đấy
+    }
+    public class Files
+    {
+        // files
+        public Guid FileId { get; set; }
+        public string FileName { get; set; }  // tên phòng ban
+        public string? FileUrl { get; set; }  // tên phòng ban
+        public string? FileExtension { get; set; }  // tên phòng ban
     }
 }

@@ -26,14 +26,10 @@
                               from b3 in ud.DefaultIfEmpty()
                               join d in dispatchReceiveCompanyRepo.AsNoTracking() on w.Id equals d.WorkDispatchId into dw
                               from b4 in dw.DefaultIfEmpty()
-                              join f in fileAttachs.AsNoTracking() on w.Id equals f.IssuesId into wf
-                              from b6 in wf.DefaultIfEmpty()
                               where w.Id == r.WorkDispatchId
                               select new WorkDispatchDetailResponse
                               {
-                                  FileExtension = b6.FileExtension,
-                                  FileName = b6.FileName,
-                                  FileUrl = b6.FileUrl,
+
                                   SignDay = w.SignDay.ToFormatString("dd/MM/yyyy HH:mm"),
                                   DepartmentCompile = w.DepartmentId,
                                   DocumentTypeKey = w.DocumentTypeKey,
@@ -106,6 +102,16 @@
                         Note = p.Note
                     });
                 work.Notes = notes.ToList();
+
+                var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
+                    .Where(p => p.IssuesId == r.WorkDispatchId).Select(p => new FileModel
+                    {
+                        FileExtension = p.FileExtension,
+                        FileId = p.Id,
+                        FileName = p.FileName,
+                        FileUrl = p.FileUrl,
+                    });
+                work.Files = files.ToList();
             }
 
             return ResultModel<WorkDispatchDetailResponse>.Create(work);
