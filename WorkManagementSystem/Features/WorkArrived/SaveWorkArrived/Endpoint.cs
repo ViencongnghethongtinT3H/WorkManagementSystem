@@ -1,6 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkArrived.AddWorkArrived
+﻿namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
 {
-    public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
+    public class Endpoint : Endpoint<Request, ResultModel<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         public Endpoint(IUnitOfWork unitOfWork)
@@ -10,34 +10,29 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/workArrived/create-or-update");
+            Post("/workArrived/save-work-arrived");
         }
-
         public override async Task HandleAsync(Request r, CancellationToken c)
         {
-            var data = new Data(_unitOfWork);
-            var result = ResultModel<Response>.Create(new Response
-            {
-                WorkItemId = await data.CreateWorkArrived(Map.ToEntity(r), r)
-            });
+           
             // Xử lý notification
             var lstcmd = new List<NotificationCommandbase>();
-            var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
+            var name = await new GetUserNameCommand { UserId = r.UserId }.ExecuteAsync();
             var receiveName = await new GetUserNameCommand
             {
                 UserId = r.LeadershipDirectId
             }.ExecuteAsync();
             var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
             {
-                WorkDispatchId = new Guid(result.Data.WorkItemId),
+                WorkDispatchId = r.WorkArriveId,
             }.ExecuteAsync();
 
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                Content = $"Tài khoản {name} đã lưu công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
                 UserReceive = r.LeadershipDirectId,
-                UserSend = r.UserCompile,
-                Url = result.Data.WorkItemId,
+                UserSend = r.UserId,
+                Url = r.WorkArriveId.ToString(),
                 NotificationType = NotificationType.WorkItem,
                 NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
             });
@@ -50,16 +45,14 @@
             // Xử lý lưu lịch sử
             await new HistoryCommand
             {
-                UserId = r.UserCompile,
-                IssueId = new Guid(result.Data.WorkItemId),
-                ActionContent = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                UserId = r.UserId,
+                IssueId = r.WorkArriveId,
+                ActionContent = $"Tài khoản {name} đã lưu {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
             }.ExecuteAsync();
 
-
-            if (string.IsNullOrEmpty(result.Data.WorkItemId))
-                ThrowError("Không thể thêm công văn");
+            var data = new Data(_unitOfWork);
+            ResultModel<bool>? result = await data.SaveWorkArrived(r);
             await SendAsync(result);
-
         }
     }
 }

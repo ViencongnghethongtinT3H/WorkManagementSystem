@@ -50,8 +50,6 @@
         public string? FileExtension { get; set; }  // tên phòng ban
 
         public List<ReceiveCompanyModel> ReceiveCompanys { get; set; }
-        public List<Notes> Notes { get; set; }   // Ý kiến xử lý
-        public List<HistoryListModel> Histories { get; set; }  // lịch sử
     }
     public class ReceiveCompanyModel
     {
@@ -60,21 +58,6 @@
         public string? Fax { get; set; }
         public string? Address { get; set; }
         public Guid AccountReceiveId { get; set; }
-    }
-
-    public class Notes
-    {
-        public string DateNote { get; set; }   // ToFormatString("dd/MM/yyyy HH:mm"),
-        public string UserName { get; set; }   // người thực hiện
-        public string Note { get; set; }   // người thực hiện
-        public string DeparmentName { get; set; }   // người thực hiện
-    }
-
-    public class HistoryListModel
-    {
-        public string ActionTime { get; set; }
-        public string UserUpdated { get; set; }
-        public string ActionContent { get; set; }
     }
 
 }

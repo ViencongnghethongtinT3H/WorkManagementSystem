@@ -10,7 +10,6 @@
         Cancel = 4,
         [Description("Trả lại")]
         ReceiveProccess = 5,
-      
         [Description("Hoàn thành")]
         Complete = 7,
     }
@@ -19,7 +18,7 @@
     {
         [Description("Theo quy trình")]
         Flower = 1,
-        [Description("Đang xử lý")]
+        [Description("Không theo quy trình")]
         NotFlower = 2,
     }
 }

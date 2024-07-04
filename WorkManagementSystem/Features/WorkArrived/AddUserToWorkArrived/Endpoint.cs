@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch;
+﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkArrived;
 
 // Chức năng chuyển công văn cho người/n-người theo dõi (bật popup lên cho chọn người theo dõi công văn và có thêm phần vai trò:  Người theo dõi, Người phối hợp/ xử lý)
 public class Endpoint : Endpoint<Request, ResultModel<bool>>
@@ -11,7 +11,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/workDispatch/add-user-to-work-dispatch");
+        Post("/workArrived/add-user-to-work-arrive");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
@@ -32,12 +32,11 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             {
                 UserId = item.UserIds
             }.ExecuteAsync();
-
             // Thêm phần notification
             lstcmd.Add(new NotificationCommandbase
             {
                 UserSend = r.UserId,
-                Content = $"Tài khoản {nameFlow} đã được thêm vào công văn {subjectWorkDispatch} bởi {name} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                Content = $"Tài khoản {nameFlow} đã được thêm vào công văn {subjectWorkDispatch} bởi {name}",
                 UserReceive = item.UserIds,
                 Url = r.WorkflowId.ToString(),
                 NotificationType = NotificationType.WorkItem,
@@ -60,7 +59,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             {
                 UserId = r.UserId,
                 IssueId = r.WorkflowId,
-                ActionContent = $"Tài khoản {name} đã thêm người dùng {nameFlow} vào công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                ActionContent = $"Tài khoản {name} đã thêm  người dùng {nameFlow} vào công văn {subjectWorkDispatch}"
             }.ExecuteAsync();
         }
 

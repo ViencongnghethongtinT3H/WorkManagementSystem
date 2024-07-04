@@ -77,34 +77,6 @@
                                              }).ToListAsync();
 
                 work.ReceiveCompanys = receiveCompanys;
-
-                var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
-                var usersRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
-
-                var histories = await (from h in historyRepo
-                                       join u in usersRepo on h.UserId equals u.Id
-                                       where h.IssueId == r.WorkWattingId
-                                       orderby h.Created descending
-                                       select new HistoryListModel
-                                       {
-                                           ActionContent = h.actionContent,
-                                           ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy HH:mm"),
-                                           UserUpdated = u.Name
-                                       }).ToListAsync();
-
-                work.Histories = histories;
-
-                var nameUser = await GetUserName(work.UserCompile.Value);
-
-                var notes = _unitOfWork.GetRepository<UserWorkflow>().GetAll().AsNoTracking()
-                    .Where(p => p.WorkflowId == r.WorkWattingId).Select(p => new Notes
-                    {
-                        DateNote = p.Created.ToFormatString("dd/MM/yyyy HH:mm"),
-                        UserName = nameUser,
-                        DeparmentName = work.DepartmentName,
-                        Note = p.Note
-                    });
-                work.Notes = notes.ToList();
             }
 
             return ResultModel<WorkWattingArriveDetailResponse>.Create(work);

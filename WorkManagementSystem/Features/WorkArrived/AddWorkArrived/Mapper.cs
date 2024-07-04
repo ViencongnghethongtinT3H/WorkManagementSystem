@@ -4,6 +4,8 @@
     {
         public override Entities.WorkArrived ToEntity(Request r) => new()
         {
+          Created = DateTime.Now,
+          WorkArrivedProcedureStatus = r.WorkArrivedProcedureStatus,
           WorkArrivedStatus = r.WorkArrivedStatus,
           Content = r.Content,
           TransferType = r.TransferType,
@@ -14,7 +16,6 @@
           LeadershipDirectId = r.LeadershipDirectId,
           Priority = r.Priority,
           ItemId = r.ItemId,
-          WorkItemNumber = r.WorkItemNumber,
           Notation = r.Notation
         };
     }
