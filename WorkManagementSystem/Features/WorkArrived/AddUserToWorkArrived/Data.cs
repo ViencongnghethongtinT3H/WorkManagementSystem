@@ -1,4 +1,8 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkArrived
+﻿using System.Globalization;
+using System.Security.Cryptography;
+using WorkManagementSystem.Entities;
+
+namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkArrived
 {
     // Chuyển người xử lý bước tiếp theo  => thêm phần note
     public class Data
@@ -25,6 +29,13 @@
                     ErrorMessage = "Không tìm thấy công văn!",
                     IsError = true,
                 };
+            }
+            else
+            {
+                int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
+                workDispatch.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
+                workDispatch.Updated = DateTime.Now;
+                workWaitingRepo.Update(workDispatch);
             }
             var lst = new List<UserWorkflow>();
             foreach (var item in r.UserProccess)

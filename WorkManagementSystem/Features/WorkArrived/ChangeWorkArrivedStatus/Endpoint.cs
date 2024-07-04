@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
+﻿namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
 {
     public class Endpoint : Endpoint<Request, ResultModel<bool>>
     {
@@ -21,7 +19,7 @@ namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
             var result = await data.ChangeWorkArrivedStatus(r);
             var name = await new GetUserNameCommand
             {
-                UserId = r.UserId
+                UserId = r.UserIds.FirstOrDefault()
             }.ExecuteAsync();
             // láy ra subject cua cong van
             var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
@@ -32,10 +30,10 @@ namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
             // notifine
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
-                UserReceive = new Guid(userCompileId),
-                UserSend = r.UserId,
-                Url = r.WorkFlowId.ToString(),
+                Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = r.UserIds.FirstOrDefault(),
+                UserSend = r.UserIds.FirstOrDefault(),
+                Url = r.UserIds.FirstOrDefault().ToString(),
                 NotificationType = NotificationType.WorkItem,
                 NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
             });
@@ -48,9 +46,9 @@ namespace WorkManagementSystem.Features.WorkArrived.ChangeWorkArrivedStatus
             // history
             await new HistoryCommand
             {
-                UserId = r.UserId,
-                IssueId = r.WorkFlowId,
-                ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                UserId = r.UserIds.FirstOrDefault(),
+                IssueId = r.WorkArriveId,
+                ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
             }.ExecuteAsync();
             await SendAsync(result);
         }

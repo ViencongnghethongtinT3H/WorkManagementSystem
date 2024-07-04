@@ -3,9 +3,8 @@
     public class Request
     {
         public string Note { get; set; }
-        public Guid UserId { get; set; }
+        public List<Guid> UserIds { get; set; }
         public Guid WorkArriveId { get; set; }
-        public WorkArrivedStatus WorkArrivedStatus { get; set; }
         public ActionType ActionType { get; set; }
     }
     public enum ActionType

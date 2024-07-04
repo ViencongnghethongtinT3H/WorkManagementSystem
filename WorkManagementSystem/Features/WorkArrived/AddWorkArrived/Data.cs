@@ -38,24 +38,18 @@
                         UserId = r.LeadershipDirectId,
                         UserWorkflowType = UserWorkflowType.Followers,
                         UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
-                        Note = $"{await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
+                        Note = $"{await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã được theo dõi công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
                     };
                     await userWorkRepo.AddAsync(userCompile);
                     await userWorkRepo.AddAsync(leaderShip);
                 }
-
-
                 await _unitOfWork.CommitAsync();
                 return workItem.Id.ToString();
-
-
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
-
         }
     }
 }

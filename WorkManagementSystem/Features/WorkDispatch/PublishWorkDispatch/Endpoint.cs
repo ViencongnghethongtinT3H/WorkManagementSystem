@@ -40,7 +40,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã phát hành công văn {subjectWorkDispatch} do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+            Content = $"Tài khoản {name} đã phát hành công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = result.Data.WorkItemId,
