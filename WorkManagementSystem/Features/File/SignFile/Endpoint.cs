@@ -14,7 +14,6 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>>
     public override void Configure()
     {
         Post("/files/sign-file");
-        AllowFileUploads();
         AllowAnonymous();
     }
 
