@@ -1,4 +1,6 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+﻿using System.Globalization;
+using System.Security.Cryptography;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
 {
@@ -14,9 +16,15 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
             var folderRepo = _unitOfWork.GetRepository<FileManagement>();
             var fileRepo = _unitOfWork.GetRepository<FileAttach>();
             var workItemRepo = _unitOfWork.GetRepository<Entities.WorkArrived>();
-            var workItem = await workItemRepo.FindBy(p=>p.WorkItemNumber == r.WorkItemNumber).FirstOrDefaultAsync();
-            if(workItem is not null)
+            var workItem = await workItemRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkArriveId);
+            if (workItem is not null)
             {
+                int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
+                workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
+                workItem.Updated = DateTime.Now;
+                workItemRepo.Update(workItem);
+
+
                 var folder = new FileManagement()
                 {
                     Created = DateTime.Now,
@@ -27,7 +35,7 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
                 };
                 await folderRepo.AddAsync(folder);
                 var file = await fileRepo.FindBy(p => p.IssuesId == workItem.Id).FirstOrDefaultAsync();
-                if(file is not null) 
+                if (file is not null)
                 {
                     file.RefId = folder.Id;
                     file.Updated = DateTime.Now;
