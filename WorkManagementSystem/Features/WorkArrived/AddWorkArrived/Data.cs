@@ -21,6 +21,7 @@
                 }
                 else
                 {
+                    workItem.WorkArrivedStatus = WorkArrivedStatus.Waitting;
                     workArrivedRepository.Add(workItem);
                     var userCompile = new UserWorkflow
                     {

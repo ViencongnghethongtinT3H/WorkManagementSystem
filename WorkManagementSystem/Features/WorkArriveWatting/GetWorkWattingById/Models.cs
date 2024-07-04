@@ -44,12 +44,8 @@
 
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công vă
 
-        // files
-        public string FileName { get; set; }  // tên phòng ban
-        public string? FileUrl { get; set; }  // tên phòng ban
-        public string? FileExtension { get; set; }  // tên phòng ban
-
         public List<ReceiveCompanyModel> ReceiveCompanys { get; set; }
+        public List<Files> Files { get; set; }
     }
     public class ReceiveCompanyModel
     {
@@ -58,6 +54,14 @@
         public string? Fax { get; set; }
         public string? Address { get; set; }
         public Guid AccountReceiveId { get; set; }
+    }
+    public class Files
+    {
+        // files
+        public Guid FileId { get; set; }
+        public string FileName { get; set; }  // tên phòng ban
+        public string? FileUrl { get; set; }  // tên phòng ban
+        public string? FileExtension { get; set; }  // tên phòng ban
     }
 
 }

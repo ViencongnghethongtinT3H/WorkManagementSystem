@@ -14,7 +14,7 @@
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
             var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>().GetAll();
-            var fileAttachs = _unitOfWork.GetRepository<FileAttach>().GetAll();
+            
             var work = await (from w in workRepo.AsNoTracking()
                               join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                               from b1 in sd3.DefaultIfEmpty()
@@ -26,14 +26,9 @@
                               from b3 in ud.DefaultIfEmpty()
                               join d in dispatchReceiveCompanyRepo.AsNoTracking() on w.Id equals d.WorkDispatchId into dw
                               from b4 in dw.DefaultIfEmpty()
-                              join f in fileAttachs.AsNoTracking() on w.Id equals f.IssuesId into wf
-                              from b6 in wf.DefaultIfEmpty()
                               where w.Id == r.WorkWattingId
                               select new WorkWattingArriveDetailResponse
                               {
-                                  FileExtension = b6.FileExtension,
-                                  FileName = b6.FileName,
-                                  FileUrl = b6.FileUrl,
                                   SignDay = w.SignDay.ToFormatString("dd/MM/yyyy HH:mm"),
                                   DepartmentCompile = w.DepartmentId,
                                   DocumentTypeKey = w.DocumentTypeKey,
@@ -62,6 +57,9 @@
                               }).FirstOrDefaultAsync();
             if (work is not null)
             {
+                var fileAttachs = _unitOfWork.GetRepository<FileAttach>().GetAll();
+                var folderRepo = _unitOfWork.GetRepository<FileManagement>().GetAll();
+
                 var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
                 var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
                                              join d in dispatchReceiveCompanyRepo on re.Id equals d.AccountReceiveId
@@ -77,19 +75,21 @@
                                              }).ToListAsync();
 
                 work.ReceiveCompanys = receiveCompanys;
-            }
 
+                var folderIds = folderRepo.Where(p => p.Name == work.WorkItemNumber).Select(p=>p.Id);
+               
+
+                var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
+                  .Where(p=> folderIds.Contains(p.RefId)).Select(p=> new Files
+                  {
+                      FileExtension = p.FileExtension,
+                      FileId = p.Id,
+                      FileName = p.FileName,
+                      FileUrl = p.FileUrl,
+                  });
+                work.Files = files.ToList();
+            }
             return ResultModel<WorkWattingArriveDetailResponse>.Create(work);
-        }
-        public async Task<string> GetUserName(Guid id)
-        {
-            var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(id);
-            if (user is not null)
-            {
-                return user.Name;
-            }
-            return string.Empty;
-
         }
     }
 }
