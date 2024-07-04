@@ -38,7 +38,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         // notifine
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã cập nhật lại trạng thái của công văn {subjectWorkDispatch} do {receiveName} tạo",
+            Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = new Guid(userCompileId),
             UserSend = r.UserIds.FirstOrDefault(),
             Url = r.WorkFlowId.ToString(),
@@ -56,7 +56,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         {
             UserId = r.UserIds.FirstOrDefault(),
             IssueId = r.WorkFlowId ,
-            ActionContent = $"Tài khoản {name} đã thay đổi trạng thái công văn"
+            ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
         }.ExecuteAsync();
         await SendAsync(result);
     }
