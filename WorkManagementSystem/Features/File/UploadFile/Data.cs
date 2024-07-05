@@ -21,6 +21,7 @@ public class Data
                 FileName = file.FileName,
                 IssuesId = null,
                 FileExtension = null,
+                Status = 0
             });
         }
         await fileRepo.AddRangeAsync(lst);
