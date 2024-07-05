@@ -43,10 +43,11 @@ public class Data
                 ParentId = null,
             };
             await fileManagerRepo.AddAsync(folder);
-            if (r.FileAttachIds.IsAny())
+            if (r.Files.IsAny())
             {
+                var fileIds = r.Files.Select(p => p.fileId);
                 var filesRepo = _unitOfWork.GetRepository<FileAttach>();
-                var files = await filesRepo.GetAll().Where(x => r.FileAttachIds.Contains(x.Id)).ToListAsync();
+                var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
                 foreach (var item in files)
                 {
                     item.IssuesId = workItem.Id;
