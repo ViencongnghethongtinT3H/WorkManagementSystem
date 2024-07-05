@@ -3,7 +3,6 @@
     public class Request
     {
         public Guid UserId { get; set; }
-        public string? WorkItemNumber { get; set; }
         public Guid WorkArriveId { get; set; }
         public Guid LeadershipDirectId { get; set; }
     }
