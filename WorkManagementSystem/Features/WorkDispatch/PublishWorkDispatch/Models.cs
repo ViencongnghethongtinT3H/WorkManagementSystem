@@ -29,12 +29,17 @@
         public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
         public bool IsPublish { get; set; }
-        public List<Guid>? FileAttachIds { get; set; }
+        public List<Files>? Files { get; set; }
         public List<ReceiveCompanyInput>? ReceiveCompanys { get; set; }
         public Guid? workDispatchId { get; set; }
 
 
     }
+    public class Files 
+    {
+        public Guid fileId { get; set; }
+    }
+
     public class Validator : Validator<Request>
     {
         public Validator()
