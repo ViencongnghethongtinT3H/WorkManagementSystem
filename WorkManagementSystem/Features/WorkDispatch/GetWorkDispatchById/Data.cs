@@ -105,7 +105,7 @@
                 work.Notes = notes.ToList();
 
                 var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
-                    .Where(p => p.IssuesId == r.WorkDispatchId).Select(p => new FileModel
+                    .Where(p => p.IssuesId == r.WorkDispatchId && p.Status == StatusEnum.Active).Select(p => new FileModel
                     {
                         FileExtension = p.FileExtension,
                         FileId = p.Id,
