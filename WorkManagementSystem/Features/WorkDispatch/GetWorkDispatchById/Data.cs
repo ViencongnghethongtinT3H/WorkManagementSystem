@@ -30,7 +30,7 @@
                               select new WorkDispatchDetailResponse
                               {
 
-                                  SignDay = w.SignDay.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  SignDay = w.SignDay.ToFormatString("dd/MM/yyyy"),
                                   DepartmentCompile = w.DepartmentId,
                                   DocumentTypeKey = w.DocumentTypeKey,
                                   WorkflowStatus = w.WorkflowStatus,
@@ -43,13 +43,13 @@
                                   WorkItemNumber = w.WorkItemNumber,
                                   Content = w.Content,
                                   Notation = $"{w.ItemId}/{b1.Value}",
-                                  DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
                                   Priority = w.Priority,
                                   Subjective = w.Subjective,
                                   UserIdCreated = w.UserIdCreated,
                                   DepartmentId = w.DepartmentId,
-                                  Dealine = w.Dealine.ToFormatString("dd/MM/yyyy HH:mm"),
-                                  EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
+                                  EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
                                   IndustryId = b5.Value,
                                   IndustryName = b5.Value,
                                   LeadershipDirectId = w.LeadershipDirectId,

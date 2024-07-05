@@ -88,9 +88,9 @@ public class Data
                     {
                         await new SendEmailCommand
                         {
-                            toEmail = "hoangpham19112002@gmail.com",
+                            toEmail = "vansy9x@gmail.com",
                             FileNames = FileNames,
-                            body = "232",
+                            body = "Công văn đi, kính gửi các đơn vị thành viên",
                             subject = "Thông báo về công văn đến"
                         }.ExecuteAsync();
                     }
