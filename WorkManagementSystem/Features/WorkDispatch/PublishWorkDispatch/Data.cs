@@ -18,7 +18,7 @@ public class Data
         var companyRepository = _unitOfWork.GetRepository<DispatchReceiveCompany>();
         var workArriveWattingRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
         var companyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
-
+        var fileManagerRepo = _unitOfWork.GetRepository<FileManagement>();
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
        
@@ -42,6 +42,7 @@ public class Data
                 UserId = r.UserCompile,
                 ParentId = null,
             };
+            await fileManagerRepo.AddAsync(folder);
             if (r.FileAttachIds.IsAny())
             {
                 var filesRepo = _unitOfWork.GetRepository<FileAttach>();
