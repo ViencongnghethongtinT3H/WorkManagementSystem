@@ -29,7 +29,7 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
                 {
                     Created = DateTime.Now,
                     FileManagementType = FileManagementType.WorkItem,
-                    Name = r.WorkItemNumber,
+                    Name = workItem.WorkItemNumber,
                     UserId = r.UserId,
                     ParentId = null,
                 };
