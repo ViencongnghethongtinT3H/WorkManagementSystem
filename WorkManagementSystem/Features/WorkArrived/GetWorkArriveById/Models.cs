@@ -32,6 +32,7 @@
     }
     public class WorkArrivedStep
     {
+        public Guid Id { get; set; }
         public string? Note { get; set; }
         public StepEnum Step { get; set; }
         public Guid UserConfirm { get; set; } // người xử lý của bước đấy
