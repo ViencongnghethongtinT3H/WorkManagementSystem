@@ -50,7 +50,7 @@
             {
                 var step = from st in stepRepo.AsNoTracking()
                            join w in workRepo on st.WorkflowId equals w.Id where st.UserConfirm == r.UserId
-                           select new WorkArrivedStep { Note  = st.Note, Step = st.Step, UserConfirm = st.UserConfirm};
+                           select new WorkArrivedStep { Note  = st.Note, Step = st.Step, UserConfirm = st.UserConfirm, Id = st.Id};
 
                 work.WorkArrivedStep = await step.FirstOrDefaultAsync();
 
