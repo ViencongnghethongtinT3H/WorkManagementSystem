@@ -5,7 +5,7 @@
         public string? ItemId { get; set; }  // số
         [MaxLength(100)]
         public string? Notation { get; set; }  // ký hiệu link tới bảng setting
-        public DateTime? DateIssued { get; set; }  // ngày ban hành
+        public string? DateIssued { get; set; }  // ngày ban hành
         public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
         public Guid? DepartmentId { get; set; }  //  cơ quan ban hành
 
@@ -19,9 +19,9 @@
         public Guid LeadershipDirectId { get; set; }   // Lãnh đạo chỉ đạo
         public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
 
-        public DateTime? Dealine { get; set; }  // Thời hạn xử lý
-        public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
-        public DateTime? SignDay { get; set; }  // Ngày ký
+        public string? Dealine { get; set; }  // Thời hạn xử lý
+        public string? EvictionTime { get; set; }  // Thời hạn thu hồi
+        public string? SignDay { get; set; }  // Ngày ký
         public Guid? UserSign { get; set; }    // Người ký 
         public Guid UserCompile { get; set; }    // Người biên soạn
         public Guid? DepartmentCompile { get; set; }  //  đơn vị soạn thảo
@@ -35,7 +35,7 @@
 
 
     }
-    public class Files 
+    public class Files
     {
         public Guid fileId { get; set; }
     }
@@ -55,7 +55,7 @@
         public string WorkItemId { get; set; }
     }
 
-    public class ReceiveCompanyInput 
+    public class ReceiveCompanyInput
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
