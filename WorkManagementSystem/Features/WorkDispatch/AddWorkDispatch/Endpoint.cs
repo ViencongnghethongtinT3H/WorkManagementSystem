@@ -25,14 +25,14 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.LeadershipDirectId
         }.ExecuteAsync();
-        var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand
         {
             WorkDispatchId = new Guid(workItemId),
         }.ExecuteAsync();
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}. Bạn vui lòng kiểm tra",
+            Content = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = workItemId,
@@ -50,7 +50,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(workItemId),
-            ActionContent = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+            ActionContent = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch}"
         }.ExecuteAsync();
 
 

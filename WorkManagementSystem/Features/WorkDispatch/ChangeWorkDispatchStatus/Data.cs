@@ -33,6 +33,7 @@ public class Data
                 var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkFlowId);
                 if (userWorkflow is not null)
                 {
+                    if(string.IsNullOrEmpty(r.Note))
                     userWorkflow.Note = r.Note;
                     userWorkflow.Updated = DateTime.Now;
 

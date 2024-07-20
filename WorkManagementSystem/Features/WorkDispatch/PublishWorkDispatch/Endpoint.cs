@@ -33,14 +33,14 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         }.ExecuteAsync();
 
         // láy ra subject cua cong van
-        var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand
         {
             WorkDispatchId = new Guid(result.Data.WorkItemId)
         }.ExecuteAsync();
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã phát hành công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+            Content = $"Tài khoản {name} đã phát hành công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = result.Data.WorkItemId,
@@ -54,11 +54,11 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(result.Data.WorkItemId),
-            ActionContent = $"Tài khoản {name} đã phát hành công văn {subjectWorkDispatch} do {receiveName} tạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+            ActionContent = $"Tài khoản {name} đã phát hành công văn {notationWorkDispatch}"
         }.ExecuteAsync();
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))
-            ThrowError("Không thể thêm công văn");
+            ThrowError("Không thể phát hành công văn");
         await SendAsync(result);
 
     }
