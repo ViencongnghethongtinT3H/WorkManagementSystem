@@ -24,7 +24,7 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
             {
                 throw;
             }
-          
+
 
         }
     }

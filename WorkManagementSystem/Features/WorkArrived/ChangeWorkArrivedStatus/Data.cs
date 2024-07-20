@@ -71,10 +71,10 @@
                         {
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Complete;   // cong van duoc hoan thanh
-
+                            var stepWorks = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
                             if (steps.IsAny())
                             {
-                                foreach (var step in steps)
+                                foreach (var step in stepWorks)
                                 {
                                     step.Note = "Hoàn thành";
                                     step.Step = StepEnum.Done;
