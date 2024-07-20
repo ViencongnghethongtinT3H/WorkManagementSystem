@@ -1,6 +1,6 @@
 ﻿namespace WorkManagementSystem.Features.Publish.Command
 {
-    public class GetSubjectWorkDispatchCommand : ICommand<string>
+    public class GetNotationWorkDispatchCommand : ICommand<string>
     {
         public Guid WorkDispatchId { get; set; }
     }
