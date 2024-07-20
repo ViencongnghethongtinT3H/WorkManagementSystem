@@ -27,14 +27,14 @@
             {
                 UserId = r.LeadershipDirectId
             }.ExecuteAsync();
-            var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+            var notationWorkDispatch = await new GetNotationWorkDispatchCommand
             {
                 WorkDispatchId = new Guid(result.Data.WorkItemId),
             }.ExecuteAsync();
 
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                Content = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
                 UserReceive = r.LeadershipDirectId,
                 UserSend = r.UserCompile,
                 Url = result.Data.WorkItemId,
@@ -52,7 +52,7 @@
             {
                 UserId = r.UserCompile,
                 IssueId = new Guid(result.Data.WorkItemId),
-                ActionContent = $"Tài khoản {name} đã tạo công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                ActionContent = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch}"
             }.ExecuteAsync();
 
 

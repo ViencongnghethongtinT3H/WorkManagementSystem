@@ -25,7 +25,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         }.ExecuteAsync(); // người thêm các người theo dõi vào công văn
 
         // lấy ra subject của công văn
-        var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand { WorkDispatchId = r.WorkflowId}.ExecuteAsync();
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand { WorkDispatchId = r.WorkflowId}.ExecuteAsync();
         foreach (var item in r.UserProccess)
         {
             var nameFlow =  await new GetUserNameCommand
@@ -37,7 +37,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             lstcmd.Add(new NotificationCommandbase
             {
                 UserSend = r.UserId,
-                Content = $"Tài khoản {nameFlow} đã được thêm vào công văn {subjectWorkDispatch} bởi {name} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                Content = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {name} để {item.UserWorkflowType.GetDescription()} bời {nameFlow} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
                 UserReceive = item.UserIds,
                 Url = r.WorkflowId.ToString(),
                 NotificationType = NotificationType.WorkItem,
@@ -60,7 +60,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             {
                 UserId = r.UserId,
                 IssueId = r.WorkflowId,
-                ActionContent = $"Tài khoản {name} đã thêm người dùng {nameFlow} vào công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                ActionContent = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {name} làm {item.UserWorkflowType.GetDescription()}"
             }.ExecuteAsync();
         }
 

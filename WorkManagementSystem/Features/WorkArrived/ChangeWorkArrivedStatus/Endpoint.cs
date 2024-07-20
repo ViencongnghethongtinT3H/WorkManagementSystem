@@ -22,7 +22,7 @@
                 UserId = r.UserIds.FirstOrDefault()
             }.ExecuteAsync();
             // láy ra subject cua cong van
-            var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+            var notationWorkDispatch = await new GetNotationWorkDispatchCommand
             {
                 WorkDispatchId = r.WorkArriveId
             }.ExecuteAsync();
@@ -30,7 +30,7 @@
             // notifine
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
                 UserReceive = r.UserIds.FirstOrDefault(),
                 UserSend = r.UserIds.FirstOrDefault(),
                 Url = r.UserIds.FirstOrDefault().ToString(),
@@ -48,7 +48,7 @@
             {
                 UserId = r.UserIds.FirstOrDefault(),
                 IssueId = r.WorkArriveId,
-                ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {subjectWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} {notationWorkDispatch} "
             }.ExecuteAsync();
             await SendAsync(result);
         }

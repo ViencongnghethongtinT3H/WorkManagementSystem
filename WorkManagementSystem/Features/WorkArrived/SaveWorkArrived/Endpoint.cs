@@ -22,14 +22,14 @@
             {
                 UserId = r.LeadershipDirectId
             }.ExecuteAsync();
-            var subjectWorkDispatch = await new GetSubjectWorkDispatchCommand
+            var notationWorkDispatch = await new GetNotationWorkDispatchCommand
             {
                 WorkDispatchId = r.WorkArriveId,
             }.ExecuteAsync();
 
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} đã lưu công văn {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                Content = $"Tài khoản {name} đã lưu công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
                 UserReceive = r.LeadershipDirectId,
                 UserSend = r.UserId,
                 Url = r.WorkArriveId.ToString(),
@@ -47,7 +47,7 @@
             {
                 UserId = r.UserId,
                 IssueId = r.WorkArriveId,
-                ActionContent = $"Tài khoản {name} đã lưu {subjectWorkDispatch} do {receiveName} chỉ đạo vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}"
+                ActionContent = $"Tài khoản {name} đã lưu {notationWorkDispatch}"
             }.ExecuteAsync();
 
             var data = new Data(_unitOfWork);

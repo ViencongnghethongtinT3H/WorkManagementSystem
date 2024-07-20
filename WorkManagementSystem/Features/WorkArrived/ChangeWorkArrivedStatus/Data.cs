@@ -19,23 +19,40 @@
 
                 if (workArrived is null)
                 {
-                    return (new ResultModel<bool>(false)
+                    return new ResultModel<bool>(false)
                     {
                         Data = false,
                         Status = 200,
                         ErrorMessage = "Không tìm thấy công văn!",
                         IsError = true,
-                    });
+                    };
                 }
                 foreach (var item in r.UserIds)
                 {
+                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId && p.UserConfirm == item);
                     var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkArriveId);
                     if (userWorkflow is not null)
                     {
                         userWorkflow.Note = r.Note;
                         userWorkflow.Updated = DateTime.Now;
                         workArrived.Updated = DateTime.Now;
-                        if (r.ActionType == ActionType.Submited || r.ActionType == ActionType.Proccessing)
+                        if (r.ActionType == ActionType.Submited)
+                        {
+                            userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
+                            workArrived.WorkArrivedStatus = WorkArrivedStatus.Proccesing;
+
+                            if (steps.IsAny())
+                            {
+                                foreach (var step in steps)
+                                {
+                                    step.Step = StepEnum.TranferProccesing;
+                                    step.Updated = DateTime.Now;
+                                    workStepRepo.Update(step);
+                                }
+                            }
+
+                        }
+                        else if (r.ActionType == ActionType.Proccessing)
                         {
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Proccesing;
@@ -54,10 +71,10 @@
                         {
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Complete;   // cong van duoc hoan thanh
-                            var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
+                            var stepWorks = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
                             if (steps.IsAny())
                             {
-                                foreach (var step in steps)
+                                foreach (var step in stepWorks)
                                 {
                                     step.Note = "Hoàn thành";
                                     step.Step = StepEnum.Done;
@@ -70,6 +87,17 @@
                         {
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Waitting;
+
+                            if (steps.IsAny())
+                            {
+                                foreach (var step in steps)
+                                {
+                                    step.Step = StepEnum.SavedFile;
+                                    step.Updated = DateTime.Now;
+                                    workStepRepo.Update(step);
+                                }
+                            }
+
                         }
                         // thay doi trang thai hanh dong xu ly cua van ban
                         userWorkflowRepo.Update(userWorkflow);
