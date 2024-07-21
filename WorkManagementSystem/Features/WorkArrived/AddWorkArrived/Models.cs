@@ -16,6 +16,7 @@
         public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
         public WorkArrivedStatus WorkArrivedStatus { get; set; }  // trạng thái của công văn
         public WorkArrivedProcedureStatus WorkArrivedProcedureStatus { get; set; }
+        public List<Guid>? FileAttachIds { get; set; }
     }
     public class Validator : Validator<Request>
     {

@@ -14,14 +14,10 @@
         }
         public override async Task HandleAsync(Request r, CancellationToken c)
         {
-           
+
             // Xử lý notification
             var lstcmd = new List<NotificationCommandbase>();
             var name = await new GetUserNameCommand { UserId = r.UserId }.ExecuteAsync();
-            var receiveName = await new GetUserNameCommand
-            {
-                UserId = r.LeadershipDirectId
-            }.ExecuteAsync();
             var notationWorkDispatch = await new GetNotationWorkDispatchCommand
             {
                 WorkDispatchId = r.WorkArriveId,
@@ -30,7 +26,7 @@
             lstcmd.Add(new NotificationCommandbase
             {
                 Content = $"Tài khoản {name} đã lưu công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
-                UserReceive = r.LeadershipDirectId,
+                UserReceive = r.UserId,
                 UserSend = r.UserId,
                 Url = r.WorkArriveId.ToString(),
                 NotificationType = NotificationType.WorkItem,

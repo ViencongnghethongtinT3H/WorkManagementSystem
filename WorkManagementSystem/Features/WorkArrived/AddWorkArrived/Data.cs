@@ -11,6 +11,8 @@
         {
             var workArrivedRepository = _unitOfWork.GetRepository<Entities.WorkArrived>();
             var userWorkRepo = _unitOfWork.GetRepository<UserWorkflow>();
+            var stepRepo = _unitOfWork.GetRepository<WorkflowStep>();
+
             try
             {
                 if (r.Id != null)
@@ -23,11 +25,41 @@
                 {
                     workItem.WorkArrivedStatus = WorkArrivedStatus.Waitting;
                     workArrivedRepository.Add(workItem);
+                    if (r.FileAttachIds.IsAny())
+                    {
+                        var filesRepo = _unitOfWork.GetRepository<FileAttach>();
+                        var files = await filesRepo.GetAll().Where(x => r.FileAttachIds.Contains(x.Id)).ToListAsync();
+                        foreach (var item in files)
+                        {
+                            item.IssuesId = workItem.Id;
+                            item.Updated = DateTime.Now;
+                            filesRepo.Update(item);
+                        }
+                    }
+
+                    var stepUserCompile = new WorkflowStep
+                    {
+                        Step = StepEnum.ManagerApprove,
+                        Note = "Lãnh đạo phê duyệt",
+                        UserConfirm = r.UserCompile,
+                        WorkflowId = workItem.Id,
+                    };
+                    var stepUserLeadershipDirect = new WorkflowStep
+                    {
+                        Step = StepEnum.ManagerApprove,
+                        Note = "Lãnh đạo phê duyệt",
+                        UserConfirm = r.LeadershipDirectId,
+                        WorkflowId = workItem.Id,
+                    };
+
+                    await stepRepo.AddAsync(stepUserCompile);
+                    await stepRepo.AddAsync(stepUserLeadershipDirect);
+
                     var userCompile = new UserWorkflow
                     {
                         WorkflowId = workItem.Id,
                         UserId = r.UserCompile,
-                        UserWorkflowType = UserWorkflowType.Implementer,   // người thực hiện chính là người biên soạn
+                        UserWorkflowType = UserWorkflowType.Followers,   // người thực hiện chính là người biên soạn
                         UserWorkflowStatus = UserWorkflowStatusEnum.Done,
                         Note = $"{await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
 
@@ -37,7 +69,7 @@
                     {
                         WorkflowId = workItem.Id,
                         UserId = r.LeadershipDirectId,
-                        UserWorkflowType = UserWorkflowType.Followers,
+                        UserWorkflowType = UserWorkflowType.Submit,
                         UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,
                         Note = $"{await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã được theo dõi công văn đến vào {DateTime.Now.ToFormatString("dd/MM/yyyy")}"
                     };
