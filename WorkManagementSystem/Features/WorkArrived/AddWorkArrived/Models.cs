@@ -2,6 +2,7 @@
 {
     public class Request
     {
+        public Guid IdworkArriveWatting { get; set; }
         public Guid? Id { get; set; }
         public string? ItemId { get; set; }  // số
         public string? Notation { get; set; }  // ký hiệu link tới bảng setting

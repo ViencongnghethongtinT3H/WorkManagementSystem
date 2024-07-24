@@ -76,18 +76,19 @@
 
                 work.ReceiveCompanys = receiveCompanys;
 
-                var folderIds = folderRepo.Where(p => p.Name == work.WorkItemNumber).Select(p => p.Id);
-
-
-                var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
-                  .Where(p => folderIds.Contains(p.RefId)).Select(p => new Files
-                  {
-                      FileExtension = p.FileExtension,
-                      FileId = p.Id,
-                      FileName = p.FileName,
-                      FileUrl = p.FileUrl,
-                  });
-                work.Files = files.ToList();
+                var folder = await folderRepo.FirstOrDefaultAsync(p => p.Name == work.WorkItemNumber);
+                if (folder is not null)
+                {
+                    var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking().Where(p => p.RefId == folder.Id)
+                   .Select(p => new Files
+                   {
+                       FileExtension = p.FileExtension,
+                       FileId = p.Id,
+                       FileName = p.FileName,
+                       FileUrl = p.FileUrl,
+                   });
+                    work.Files = files.ToList();
+                }
             }
             return ResultModel<WorkWattingArriveDetailResponse>.Create(work);
         }

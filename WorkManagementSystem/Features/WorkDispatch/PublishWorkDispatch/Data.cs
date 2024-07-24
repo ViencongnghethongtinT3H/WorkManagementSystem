@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
-using static iTextSharp.text.pdf.AcroFields;
 namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
 public class Data
@@ -19,47 +18,84 @@ public class Data
         var workArriveWattingRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
         var companyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
         var fileManagerRepo = _unitOfWork.GetRepository<FileManagement>();
+        var userWorkFlowRepo = _unitOfWork.GetRepository<UserWorkflow>();
+        var filesRepo = _unitOfWork.GetRepository<FileAttach>();
+
         int randomNumber = RandomNumberGenerator.GetInt32(0, 1000000);
         workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
-       
-        
+
         var workDispatch = await workDispatchRepository.FindBy(p => p.Id == r.workDispatchId).FirstOrDefaultAsync();
-
-
         if (workDispatch is not null)
         {
             // cap nhay lai trang thai cua cong van di
             workDispatch.WorkItemNumber = workItem.WorkItemNumber;
             workDispatch.WorkflowStatus = WorkflowStatusEnum.Done;
             workDispatchRepository.Update(workDispatch);
-           
-            // Lưu file
-            var folder = new FileManagement()
+
+            // update userWorkFlow
+            var userWorkFlow = await userWorkFlowRepo.GetAll().FirstOrDefaultAsync(p => p.WorkflowId == r.workDispatchId && p.UserId == r.UserCompile);
+            if (userWorkFlow is not null)
             {
-                Created = DateTime.Now,
-                FileManagementType = FileManagementType.WorkItem,
-                Name = workDispatch.WorkItemNumber,
-                UserId = r.UserCompile,
-                ParentId = null,
-            };
-            await fileManagerRepo.AddAsync(folder);
-            if (r.Files.IsAny())
+                userWorkFlow.Note = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId.Value }.ExecuteAsync()}";
+                userWorkFlow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                userWorkFlowRepo.Update(userWorkFlow);
+            }
+            // lấy ra toàn bộ các user đang theo dõi công văn 
+            var userWorks = await userWorkFlowRepo.GetAll().AsNoTracking().Where(p => p.WorkflowId == r.workDispatchId).ToListAsync();
+
+            foreach (var userWork in userWorks)
             {
-                var fileIds = r.Files.Select(p => p.fileId);
-                var filesRepo = _unitOfWork.GetRepository<FileAttach>();
-                var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
-                foreach (var item in files)
+                // tìm folder "công văn"
+                var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn Đến");
+
+                if (parnetFolder is not null)
                 {
-                    item.IssuesId = workItem.Id;
-                    item.Updated = DateTime.Now;
-                    item.RefId = folder.Id;
-                    filesRepo.Update(item);
-                    FileNames.Add(item.FileName);
-                    
+                    // kiem tra xem co folder dc tao ra tu WorkItemNumber hay chua
+                    var folder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Name == workDispatch.WorkItemNumber);
+                    if (folder is null)
+                    {
+                        folder = new FileManagement()
+                        {
+                            Id = Guid.NewGuid(),
+                            Created = DateTime.Now,
+                            FileManagementType = FileManagementType.WorkItem,
+                            Name = workItem.WorkItemNumber,
+                            UserId = userWork.UserId,
+                            ParentId = parnetFolder is not null ? parnetFolder.Id : null,
+                        };
+                        await fileManagerRepo.AddAsync(folder);
+                    }
+
+                    if (r.Files.IsAny())
+                    {
+                        // lưu file
+                        var fileIds = r.Files.Select(p => p.fileId);
+                        var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
+                        foreach (var item in files)
+                        {
+                            // check file trong folder
+                            var checkFile = files.Where(p => p.RefId == folder.Id);
+                            if (checkFile.Any())
+                            {
+                                item.IssuesId = userWork.WorkflowId;
+                                item.Updated = DateTime.Now;
+                                item.RefId = folder.Id;
+                                filesRepo.Update(item);
+                            }
+                            else
+                            {
+                                item.Id = Guid.NewGuid();
+                                item.IssuesId = userWork.WorkflowId;
+                                item.Created = DateTime.Now;
+                                item.RefId = folder.Id;
+                                await filesRepo.AddAsync(item);
+                            }
+                            FileNames.Add(item.FileName);
+                        }
+                    }
                 }
             }
         }
-        // them moi cong van vao danh sách chờ
         // them moi cong van vao danh sách chờ
         workItem.Notation = workDispatch.Notation;
         workItem.ItemId = workDispatch.ItemId;
@@ -76,7 +112,7 @@ public class Data
         {
             foreach (var item in r.ReceiveCompanys)
             {
-                var company = await companyRepository.GetAll().Where(p=>p.AccountReceiveId == item.Id).FirstOrDefaultAsync();
+                var company = await companyRepository.GetAll().Where(p => p.AccountReceiveId == item.Id).FirstOrDefaultAsync();
                 if (company != null)
                 {
                     lst.Add(new DispatchReceiveCompany
@@ -96,13 +132,14 @@ public class Data
                             subject = "Thông báo về công văn đến"
                         }.ExecuteAsync();
                     }
-                   
-                }           
+
+                }
             }
-            
+
             await companyRepository.AddRangeAsync(lst);
         }
-        //Todo: Insert vào 1 bảng mới
+
+       
         await _unitOfWork.CommitAsync();
         return workItem.Id.ToString();
     }

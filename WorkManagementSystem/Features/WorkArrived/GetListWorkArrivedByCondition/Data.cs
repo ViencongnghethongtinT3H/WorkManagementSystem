@@ -32,6 +32,7 @@ public class Data
                    from b1 in sd3.DefaultIfEmpty()
                    join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
                    from b2 in ud.DefaultIfEmpty()
+                   orderby w.Created descending
                    select new Response
                    {
                        WorkArrivedId = w.Id,
