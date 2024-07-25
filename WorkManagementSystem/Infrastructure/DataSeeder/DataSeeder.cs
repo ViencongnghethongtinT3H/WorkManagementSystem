@@ -27,14 +27,14 @@ public class DataSeeder
     }
     private async Task SeedDataFileManagement()
     {
-        if (await dbContext.FileManagements.AnyAsync())
-        {
-            return;
-        }
+        // if (await dbContext.FileManagements.AnyAsync())
+        // {
+        //     return;
+        // }
         var fileManagements = new List<FileManagement>
         {
 
-            new FileManagement
+ new FileManagement
             {
                 UserId = Guid.Parse("95ab46e4-0f8c-4f17-8523-08dc78ea81a9"),
                 Name ="Thư mục chia sẻ",
@@ -117,8 +117,91 @@ public class DataSeeder
                 Name ="Nhiệm vụ",
                 ParentId = null,
                 FileManagementType= Entities.Enums.FileManagementType.Document
-            }
-
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
+               new FileManagement
+            {
+                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
+                  new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+              new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            },
+             new FileManagement
+            {
+                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
         };
         await dbContext.AddRangeAsync(fileManagements);
         await dbContext.SaveChangesAsync();
