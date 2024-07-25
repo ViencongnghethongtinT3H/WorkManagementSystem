@@ -46,15 +46,13 @@ public class Data
             foreach (var userWork in userWorks)
             {
                 // tìm folder "công văn"
-                var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn Đến");
+                var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn đi");
 
                 if (parnetFolder is not null)
                 {
                     // kiem tra xem co folder dc tao ra tu WorkItemNumber hay chua
-                    var folder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Name == workDispatch.WorkItemNumber);
-                    if (folder is null)
-                    {
-                        folder = new FileManagement()
+
+                       var folder = new FileManagement()
                         {
                             Id = Guid.NewGuid(),
                             Created = DateTime.Now,
@@ -64,7 +62,7 @@ public class Data
                             ParentId = parnetFolder is not null ? parnetFolder.Id : null,
                         };
                         await fileManagerRepo.AddAsync(folder);
-                    }
+                    
 
                     if (r.Files.IsAny())
                     {
@@ -73,8 +71,8 @@ public class Data
                         var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
                         foreach (var item in files)
                         {
-                            // check file trong folder
-                            var checkFile = files.Where(p => p.RefId == folder.Id);
+                            // check file của công văn
+                            var checkFile = files.Where(p => p.IssuesId == workDispatch.Id);
                             if (checkFile.Any())
                             {
                                 item.IssuesId = userWork.WorkflowId;

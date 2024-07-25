@@ -29,7 +29,7 @@
                 }
                 foreach (var item in r.UserIds)
                 {
-                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
+                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId && p.UserConfirm == item);
                     var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkArriveId);
                     if (userWorkflow is not null)
                     {
