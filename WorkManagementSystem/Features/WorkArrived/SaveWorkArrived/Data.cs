@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
+using WorkManagementSystem.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
@@ -16,6 +17,9 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
             var folderRepo = _unitOfWork.GetRepository<FileManagement>();
             var fileRepo = _unitOfWork.GetRepository<FileAttach>();
             var workItemRepo = _unitOfWork.GetRepository<Entities.WorkArrived>();
+            var userWorkFlowRepo = _unitOfWork.GetRepository<UserWorkflow>();
+            var fileManagerRepo = _unitOfWork.GetRepository<FileManagement>();
+
             var workItem = await workItemRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkArriveId);
             if (workItem is not null)
             {
@@ -23,24 +27,36 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
                 workItem.WorkItemNumber = randomNumber.ToString("D6", CultureInfo.InvariantCulture);
                 workItem.Updated = DateTime.Now;
                 workItemRepo.Update(workItem);
-
-
-                var folder = new FileManagement()
+                // lấy ra toàn bộ các user đang theo dõi công văn 
+                var userWorks = await userWorkFlowRepo.GetAll().AsNoTracking().Where(p => p.WorkflowId == r.WorkArriveId).ToListAsync();
+                foreach (var userWork in userWorks)
                 {
-                    Created = DateTime.Now,
-                    FileManagementType = FileManagementType.WorkItem,
-                    Name = workItem.WorkItemNumber,
-                    UserId = r.UserId,
-                    ParentId = null,
-                };
-                await folderRepo.AddAsync(folder);
-                var file = await fileRepo.FindBy(p => p.IssuesId == workItem.Id).FirstOrDefaultAsync();
-                if (file is not null)
-                {
-                    file.IssuesId = workItem.Id;
-                    file.RefId = folder.Id;
-                    file.Updated = DateTime.Now;
-                    fileRepo.Update(file);
+                    // tìm folder "công văn"
+                    var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn");
+                    // kiem tra xem co folder dc tao ra tu WorkItemNumber hay chua
+                    var folder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Name == workItem.WorkItemNumber);
+                    if (folder is null)
+                    {
+                        folder = new FileManagement()
+                        {
+                            Id = Guid.NewGuid(),
+                            Created = DateTime.Now,
+                            FileManagementType = FileManagementType.WorkItem,
+                            Name = workItem.WorkItemNumber,
+                            UserId = userWork.UserId,
+                            ParentId = parnetFolder is not null ? parnetFolder.Id : null,
+                        };
+                        await fileManagerRepo.AddAsync(folder);
+                    }
+                    var file = await fileRepo.FindBy(p => p.IssuesId == userWork.WorkflowId).FirstOrDefaultAsync();
+                    if (file is not null)
+                    {
+                        // lưu file
+                        file.IssuesId = workItem.Id;
+                        file.RefId = folder.Id;
+                        file.Updated = DateTime.Now;
+                        fileRepo.Update(file);
+                    }
                 }
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)

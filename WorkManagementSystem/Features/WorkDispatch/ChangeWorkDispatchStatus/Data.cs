@@ -33,8 +33,8 @@ public class Data
                 var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkFlowId);
                 if (userWorkflow is not null)
                 {
-                    if(string.IsNullOrEmpty(r.Note))
-                    userWorkflow.Note = r.Note;
+                    if (!string.IsNullOrEmpty(r.Note))
+                        userWorkflow.Note = r.Note;
                     userWorkflow.Updated = DateTime.Now;
 
                     if (r.ActionType == ActionType.Submited || r.ActionType == ActionType.Signatured)

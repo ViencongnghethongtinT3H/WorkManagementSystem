@@ -14,7 +14,7 @@
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
             var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>().GetAll();
-            
+
             var work = await (from w in workRepo.AsNoTracking()
                               join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                               from b1 in sd3.DefaultIfEmpty()
@@ -29,7 +29,7 @@
                               where w.Id == r.WorkWattingId
                               select new WorkWattingArriveDetailResponse
                               {
-                                  SignDay = w.SignDay.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  SignDay = w.SignDay.ToFormatString("dd/MM/yyyy"),
                                   DepartmentCompile = w.DepartmentId,
                                   DocumentTypeKey = w.DocumentTypeKey,
                                   WorkflowStatus = w.WorkflowStatus,
@@ -42,12 +42,12 @@
                                   WorkItemNumber = w.WorkItemNumber,
                                   Content = w.Content,
                                   Notation = $"{w.ItemId}/{b1.Value}",
-                                  DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
                                   Priority = w.Priority,
                                   Subjective = w.Subjective,
                                   DepartmentId = w.DepartmentId,
-                                  Dealine = w.Dealine.ToFormatString("dd/MM/yyyy HH:mm"),
-                                  EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy HH:mm"),
+                                  Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
+                                  EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
                                   IndustryId = w.IndustryId,
                                   IndustryName = b5.Value,
                                   LeadershipDirectId = w.LeadershipDirectId,
@@ -76,18 +76,19 @@
 
                 work.ReceiveCompanys = receiveCompanys;
 
-                var folderIds = folderRepo.Where(p => p.Name == work.WorkItemNumber).Select(p=>p.Id);
-               
-
-                var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
-                  .Where(p=> folderIds.Contains(p.RefId)).Select(p=> new Files
-                  {
-                      FileExtension = p.FileExtension,
-                      FileId = p.Id,
-                      FileName = p.FileName,
-                      FileUrl = p.FileUrl,
-                  });
-                work.Files = files.ToList();
+                var folder = await folderRepo.FirstOrDefaultAsync(p => p.Name == work.WorkItemNumber);
+                if (folder is not null)
+                {
+                    var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking().Where(p => p.RefId == folder.Id)
+                   .Select(p => new Files
+                   {
+                       FileExtension = p.FileExtension,
+                       FileId = p.Id,
+                       FileName = p.FileName,
+                       FileUrl = p.FileUrl,
+                   });
+                    work.Files = files.ToList();
+                }
             }
             return ResultModel<WorkWattingArriveDetailResponse>.Create(work);
         }

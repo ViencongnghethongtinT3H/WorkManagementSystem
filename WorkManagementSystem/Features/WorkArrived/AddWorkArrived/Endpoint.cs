@@ -23,10 +23,6 @@
             // Xử lý notification
             var lstcmd = new List<NotificationCommandbase>();
             var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
-            var receiveName = await new GetUserNameCommand
-            {
-                UserId = r.LeadershipDirectId
-            }.ExecuteAsync();
             var notationWorkDispatch = await new GetNotationWorkDispatchCommand
             {
                 WorkDispatchId = new Guid(result.Data.WorkItemId),

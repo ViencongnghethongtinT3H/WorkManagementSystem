@@ -22,25 +22,14 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             WorkItemId = await data.CreateWorkDispatch(Map.ToEntity(r), r)
         });
         // Xử lý notification
-        var name = await new GetUserNameCommand
-        {
-            UserId = r.UserCompile
-        }.ExecuteAsync();
-
-        var receiveName = await new GetUserNameCommand
-        {
-            UserId = r.LeadershipDirectId
-        }.ExecuteAsync();
+        var receiveName = await new GetUserNameCommand{UserId = r.LeadershipDirectId}.ExecuteAsync();
 
         // láy ra subject cua cong van
-        var notationWorkDispatch = await new GetNotationWorkDispatchCommand
-        {
-            WorkDispatchId = new Guid(result.Data.WorkItemId)
-        }.ExecuteAsync();
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand{WorkDispatchId = new Guid(result.Data.WorkItemId)}.ExecuteAsync();
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã phát hành công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+            Content = $"Tài khoản {receiveName} đã phát hành công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = result.Data.WorkItemId,
@@ -54,7 +43,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(result.Data.WorkItemId),
-            ActionContent = $"Tài khoản {name} đã phát hành công văn {notationWorkDispatch}"
+            ActionContent = $"Tài khoản {receiveName} đã phát hành công văn {notationWorkDispatch}"
         }.ExecuteAsync();
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))

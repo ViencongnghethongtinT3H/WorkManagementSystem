@@ -29,11 +29,12 @@
                 }
                 foreach (var item in r.UserIds)
                 {
-                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId && p.UserConfirm == item);
+                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
                     var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkArriveId);
                     if (userWorkflow is not null)
                     {
-                        userWorkflow.Note = r.Note;
+                        if (!string.IsNullOrEmpty(r.Note))
+                            userWorkflow.Note = r.Note;
                         userWorkflow.Updated = DateTime.Now;
                         workArrived.Updated = DateTime.Now;
                         if (r.ActionType == ActionType.Submited)
@@ -45,6 +46,8 @@
                             {
                                 foreach (var step in steps)
                                 {
+                                    if (!string.IsNullOrEmpty(r.Note))
+                                        step.Note = r.Note;
                                     step.Step = StepEnum.TranferProccesing;
                                     step.Updated = DateTime.Now;
                                     workStepRepo.Update(step);
@@ -67,22 +70,6 @@
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.ReceiveProccess;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.ReceiveProccess;  // trả lại văn bản
                         }
-                        else if (r.ActionType == ActionType.Save)
-                        {
-                            userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
-                            workArrived.WorkArrivedStatus = WorkArrivedStatus.Complete;   // cong van duoc hoan thanh
-                            var stepWorks = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
-                            if (steps.IsAny())
-                            {
-                                foreach (var step in stepWorks)
-                                {
-                                    step.Note = "Hoàn thành";
-                                    step.Step = StepEnum.Done;
-                                    step.Updated = DateTime.Now;
-                                    workStepRepo.Update(step);
-                                }
-                            }
-                        }
                         else if (r.ActionType == ActionType.Swap)
                         {
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
@@ -99,11 +86,38 @@
                             }
 
                         }
+                        else if (r.ActionType == ActionType.Save)
+                        {
+                            userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                            workArrived.WorkArrivedStatus = WorkArrivedStatus.Complete;   // cong van duoc hoan thanh
+                            if (steps.IsAny())
+                            {
+                                foreach (var step in steps)
+                                {
+                                    step.Note = "Hoàn thành";
+                                    step.Step = StepEnum.Done;
+                                    step.Updated = DateTime.Now;
+                                    workStepRepo.Update(step);
+                                }
+                            }
+                        }
+
                         // thay doi trang thai hanh dong xu ly cua van ban
                         userWorkflowRepo.Update(userWorkflow);
+                        workArrivedRepo.Update(workArrived);
+
+                    }
+                    else
+                    {
+                        return new ResultModel<bool>(true)
+                        {
+                            Data = false,
+                            Status = 200,
+                            ErrorMessage = "Người dùng chưa được thêm vào công văn!",
+                            IsError = true,
+                        };
                     }
                     // thay đổi trạng thái của văn bản          
-                    workArrivedRepo.Update(workArrived);
                 }
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)
