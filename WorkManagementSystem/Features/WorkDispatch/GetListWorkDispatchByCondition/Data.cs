@@ -31,7 +31,7 @@ public class Data
                    join s3 in setting.AsNoTracking() on w.Notation equals s3.Key into sd3
                    from b1 in sd3.DefaultIfEmpty()
                    join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
-                   from b2 in ud.DefaultIfEmpty()
+                   from b2 in ud.DefaultIfEmpty() orderby w.Created descending
                         // where uw.UserId == input.UserId && (listUserWorkflowType.IsAny() && listUserWorkflowType.Contains(uw.UserWorkflowType))
                    select new Response
                    {

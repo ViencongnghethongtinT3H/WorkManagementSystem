@@ -64,9 +64,9 @@
     public class Notes
     {
         public string DateNote { get; set; }   // ToFormatString("dd/MM/yyyy HH:mm"),
-        public string UserName { get; set; }   // người thực hiện
-        public string Note { get; set; }   // người thực hiện
-        public string DeparmentName { get; set; }   // người thực hiện
+        public string UserName { get; set; } 
+        public string Note { get; set; }  
+        public string DeparmentName { get; set; }   
     }
 
     public class HistoryListModel

@@ -25,10 +25,10 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
         }.ExecuteAsync(); // người thêm các người theo dõi vào công văn
 
         // lấy ra subject của công văn
-        var notationWorkDispatch = await new GetNotationWorkDispatchCommand { WorkDispatchId = r.WorkflowId}.ExecuteAsync();
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand { WorkDispatchId = r.WorkflowId }.ExecuteAsync();
         foreach (var item in r.UserProccess)
         {
-            var nameFlow =  await new GetUserNameCommand
+            var nameFlow = await new GetUserNameCommand
             {
                 UserId = item.UserIds
             }.ExecuteAsync();
@@ -60,7 +60,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             {
                 UserId = r.UserId,
                 IssueId = r.WorkflowId,
-                ActionContent = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {name} làm {item.UserWorkflowType.GetDescription()}"
+                ActionContent = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {nameFlow} làm {item.UserWorkflowType.GetDescription()}"
             }.ExecuteAsync();
         }
 

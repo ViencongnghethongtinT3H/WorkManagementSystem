@@ -29,17 +29,14 @@
             var lst = new List<UserWorkflow>();
             foreach (var item in r.UserProccess)
             {
-                //if (userWorkflowRepo)
-                //{
-
-                //}
                 var user = new UserWorkflow
                 {
                     UserId = item.UserIds,
                     WorkflowId = r.WorkflowId,
                     UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
                     UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,    // mặc định chuyển người xử lý thì gán mặc định là 1,
-                    Note = item.Note
+                    Note = item.Note,
+                    UserCompile = r.UserCompile
                 };
                 lst.Add(user);
             }
@@ -52,10 +49,9 @@
                 userComplete.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                 userComplete.UserWorkflowType = UserWorkflowType.Implementer;
                 userComplete.Updated = DateTime.Now;
+                userComplete.UserCompile = r.UserCompile;
             }
-           
             userWorkflowRepo.Update(userComplete);
-
             await _unitOfWork.CommitAsync();
             return new ResultModel<bool>(true)
             {

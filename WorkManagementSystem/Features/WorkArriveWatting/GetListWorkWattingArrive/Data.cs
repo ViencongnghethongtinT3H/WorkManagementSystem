@@ -11,7 +11,7 @@
         {
             var workArrivedRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
             var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
-            var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>();
+            var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany   >();
             var settingRepo = _unitOfWork.GetRepository<Entities.Setting>();
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
@@ -28,6 +28,7 @@
                         join de in depaRepo.GetAll().AsNoTracking() on w.DepartmentId equals de.Id
                         join u in userRepo.GetAll().AsNoTracking() on w.LeadershipDirectId equals u.Id
                         where w.WorkflowStatus == WorkflowStatusEnum.WaittingWorkArrived && dispatchIds.Contains(w.Id)
+                        orderby w.Created descending
                         select new WorkArriveResponse
                         {
                             WorkArriveWattingId = w.Id,

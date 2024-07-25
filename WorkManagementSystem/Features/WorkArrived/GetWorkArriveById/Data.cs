@@ -33,7 +33,7 @@
                                   DocumentTypeKey = w.DocumentTypeKey,
                                   DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
                                   ItemId = w.ItemId,
-                                  TransferType = w.TransferType.GetDescription(),    
+                                  TransferType = w.TransferType.GetDescription(),
                                   WorkArrivedStatus = w.WorkArrivedStatus.GetDescription(),
                                   WorkItemNumber = w.WorkItemNumber,
                                   Content = w.Content,
@@ -46,16 +46,17 @@
                                   LeadershipDirectName = b3.Name,
 
                               }).FirstOrDefaultAsync();
-           if(work is not null)
+            if (work is not null)
             {
                 var step = from st in stepRepo.AsNoTracking()
-                           join w in workRepo on st.WorkflowId equals w.Id where st.UserConfirm == r.UserId
-                           select new WorkArrivedStep { Note  = st.Note, Step = st.Step, UserConfirm = st.UserConfirm, Id = st.Id};
+                           join w in workRepo on st.WorkflowId equals w.Id
+                           where st.UserConfirm == r.UserId && st.WorkflowId == r.WorkDispatchId
+                           select new WorkArrivedStep { Note = st.Note, Step = st.Step, UserConfirm = st.UserConfirm, Id = st.Id };
 
                 work.WorkArrivedStep = await step.FirstOrDefaultAsync();
 
                 var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
-                   .Where(p => p.IssuesId == r.WorkDispatchId).Select(p => new Files
+                   .Where(p => p.IssuesId == r.WorkDispatchId).OrderByDescending(p => p.Created).Select(p => new Files
                    {
                        FileExtension = p.FileExtension,
                        FileId = p.Id,

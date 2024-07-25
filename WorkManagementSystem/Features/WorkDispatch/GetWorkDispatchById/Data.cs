@@ -12,9 +12,11 @@
             var workRepo = _unitOfWork.GetRepository<Entities.WorkDispatch>().GetAll();
             var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
-            var user = _unitOfWork.GetRepository<Entities.User>().GetAll();
+            var users = _unitOfWork.GetRepository<Entities.User>().GetAll();
             var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>().GetAll();
             var fileAttachs = _unitOfWork.GetRepository<FileAttach>().GetAll();
+            var folders = _unitOfWork.GetRepository<FileManagement>().GetAll();
+
             var work = await (from w in workRepo.AsNoTracking()
                               join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                               from b1 in sd3.DefaultIfEmpty()
@@ -22,7 +24,7 @@
                               from b5 in sd5.DefaultIfEmpty()
                               join s4 in depaRepo.AsNoTracking() on w.DepartmentId equals s4.Id into sd4
                               from b2 in sd4.DefaultIfEmpty()
-                              join u in user.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
+                              join u in users.AsNoTracking() on w.LeadershipDirectId equals u.Id into ud
                               from b3 in ud.DefaultIfEmpty()
                               join d in dispatchReceiveCompanyRepo.AsNoTracking() on w.Id equals d.WorkDispatchId into dw
                               from b4 in dw.DefaultIfEmpty()
@@ -61,7 +63,7 @@
             {
                 var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
                 var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
-                                             join d in dispatchReceiveCompanyRepo on re.Id equals d.AccountReceiveId
+                                             join d in dispatchReceiveCompanyRepo.AsNoTracking() on re.Id equals d.AccountReceiveId
                                              where d.WorkDispatchId == r.WorkDispatchId
                                              orderby re.Created descending
                                              select new ReceiveCompanyModel
@@ -93,27 +95,54 @@
                 work.Histories = histories;
 
                 var nameUser = await GetUserName(work.UserCompile.Value);
+                var notesQuery = _unitOfWork.GetRepository<UserWorkflow>().GetAll().AsNoTracking()
+                    .Where(p => p.WorkflowId == r.WorkDispatchId)
+                    .OrderByDescending(p => p.Updated);
 
-                var notes = _unitOfWork.GetRepository<UserWorkflow>().GetAll().AsNoTracking()
-                    .Where(p => p.WorkflowId == r.WorkDispatchId).Select(p => new Notes
+                var notesList = await notesQuery.ToListAsync();
+
+                var notes = new List<Notes>();
+
+                foreach (var p in notesList)
+                {
+                    var note = new Notes
                     {
                         DateNote = p.Created.ToFormatString("dd/MM/yyyy HH:mm"),
-                        UserName = nameUser,
+                        UserName = await GetUserName(p.UserCompile),
                         DeparmentName = work.DepartmentName,
                         Note = p.Note
-                    });
-                work.Notes = notes.ToList();
+                    };
+                    notes.Add(note);
+                }
+                work.Notes = notes;
 
-                var files = _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
-                    .Where(p => p.IssuesId == r.WorkDispatchId).Select(p => new FileModel
-                    {
-                        FileExtension = p.FileExtension,
-                        FileId = p.Id,
-                        FileName = p.FileName,
-                        FileUrl = p.FileUrl,
-                        Status = p.Status,
-                    });
-                work.Files = files.ToList();
+                var files = await (from re in _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking().Where(p => p.IssuesId == r.WorkDispatchId)
+                                   join f in folders.AsNoTracking() on re.RefId equals f.Id 
+                                   join u in users.AsNoTracking() on f.UserId equals u.Id
+                                   where re.IssuesId == r.WorkDispatchId && f.UserId == work.UserCompile.Value && f.Name == work.WorkItemNumber
+                                   orderby re.Created descending
+                                   select new FileModel
+                                   {
+                                       FileExtension = re.FileExtension,
+                                       FileId = re.Id,
+                                       FileName = re.FileName,
+                                       FileUrl = re.FileUrl,
+                                       Status = re.Status,
+                                   }).ToListAsync();
+                if (!files.IsAny())
+                {
+                    files = await (_unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking()
+                   .Where(p => p.IssuesId == r.WorkDispatchId)
+                   .Select(p => new FileModel
+                   {
+                       FileExtension = p.FileExtension,
+                       FileId = p.Id,
+                       FileName = p.FileName,
+                       FileUrl = p.FileUrl,
+                       Status = p.Status,
+                   })).ToListAsync();
+                }
+                work.Files = files;
             }
 
             return ResultModel<WorkDispatchDetailResponse>.Create(work);
