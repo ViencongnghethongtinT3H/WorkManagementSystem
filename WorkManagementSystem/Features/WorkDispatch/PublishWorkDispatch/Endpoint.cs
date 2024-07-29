@@ -37,6 +37,13 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
         });
 
+        // note
+        await new NoteCommand
+        {
+            UserId = r.UserId,
+            WorkFlow = r.workDispatchId,
+            Notes = $"{await new GetUserNameCommand { UserId = r.UserId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId }.ExecuteAsync()}"
+        }.ExecuteAsync();
 
         // Thêm phần lịch sử
         await new HistoryCommand

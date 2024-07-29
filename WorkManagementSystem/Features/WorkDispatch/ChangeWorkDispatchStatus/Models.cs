@@ -6,6 +6,7 @@ public class Request
     public Guid WorkFlowId { get; set; }
     public ActionType ActionType { get; set; }
     public string? Note { get; set; }
+    public Guid UserId { get; set; }
 }
 
 public enum ActionType

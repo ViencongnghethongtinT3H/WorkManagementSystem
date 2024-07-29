@@ -33,11 +33,13 @@ public class Data
             workDispatchRepository.Update(workDispatch);
 
             // update userWorkFlow
-            var userWorkFlow = await userWorkFlowRepo.GetAll().FirstOrDefaultAsync(p => p.WorkflowId == r.workDispatchId && p.UserId == r.UserCompile);
+            var userWorkFlow = await userWorkFlowRepo.GetAll().FirstOrDefaultAsync(p => p.WorkflowId == r.workDispatchId && p.UserCompile == r.UserId);
             if (userWorkFlow is not null)
             {
-                userWorkFlow.Note = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId.Value }.ExecuteAsync()}";
+                userWorkFlow.Note = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId }.ExecuteAsync()}";
                 userWorkFlow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                if(r.UserId != null)
+                userWorkFlow.UserCompile = r.UserId;
                 userWorkFlowRepo.Update(userWorkFlow);
             }
             // lấy ra toàn bộ các user đang theo dõi công văn 
@@ -71,14 +73,14 @@ public class Data
                         var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
                         foreach (var item in files)
                         {
-                            // check file của công văn
-                            var checkFile = files.Where(p => p.IssuesId == workDispatch.Id);
-                            if (checkFile.Any())
+                            if (item is not null && item.RefId == new Guid())
                             {
                                 item.IssuesId = userWork.WorkflowId;
                                 item.Updated = DateTime.Now;
                                 item.RefId = folder.Id;
                                 filesRepo.Update(item);
+                                await _unitOfWork.CommitAsync();
+
                             }
                             else
                             {

@@ -6,6 +6,8 @@
         public List<Guid> UserIds { get; set; }
         public Guid WorkArriveId { get; set; }
         public ActionType ActionType { get; set; }
+        public Guid? UserId { get; set; }
+
     }
     public enum ActionType
     {

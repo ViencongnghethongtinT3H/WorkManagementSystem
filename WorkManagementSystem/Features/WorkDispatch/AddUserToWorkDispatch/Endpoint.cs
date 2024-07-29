@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch;
+﻿using WorkManagementSystem.Entities;
+
+namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch;
 
 // Chức năng chuyển công văn cho người/n-người theo dõi (bật popup lên cho chọn người theo dõi công văn và có thêm phần vai trò:  Người theo dõi, Người phối hợp/ xử lý)
 public class Endpoint : Endpoint<Request, ResultModel<bool>>
@@ -61,6 +63,13 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
                 UserId = r.UserId,
                 IssueId = r.WorkflowId,
                 ActionContent = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {nameFlow} làm {item.UserWorkflowType.GetDescription()}"
+            }.ExecuteAsync();
+
+            await new NoteCommand
+            {
+                UserId = r.UserCompile,
+                WorkFlow = r.WorkflowId,
+                Notes = item.Note
             }.ExecuteAsync();
         }
 

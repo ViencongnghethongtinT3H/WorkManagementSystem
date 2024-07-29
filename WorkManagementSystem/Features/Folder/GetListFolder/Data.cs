@@ -23,7 +23,7 @@ public class Data
         var fileAttach = _unitOfWork.GetRepository<FileAttach>().GetAll();
 
         var folders = await fileManagement
-            .Where(x => x.ParentId == parentId && x.UserId == userId)
+            .Where(x => x.ParentId == parentId && x.UserId == userId).OrderByDescending(p=>p.Created)
             .Select(fm => new FolderModel
             {
                 Id = fm.Id,

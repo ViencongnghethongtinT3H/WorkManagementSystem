@@ -40,20 +40,24 @@ public class Data
                     if (r.ActionType == ActionType.Submited || r.ActionType == ActionType.Signatured)
                     {
                         userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                        userWorkflow.UserCompile = r.UserId;
                         workDispatch.WorkflowStatus = WorkflowStatusEnum.Proccesing;
                     }
                     else if (r.ActionType == ActionType.Canceled)
                     {
+                        userWorkflow.UserCompile = r.UserId;
                         userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Cancel;
                         workDispatch.WorkflowStatus = WorkflowStatusEnum.Cancel;   // huỷ văn bản
                     }
                     else if (r.ActionType == ActionType.Return)
                     {
+                        userWorkflow.UserCompile = r.UserId;
                         userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.ReceiveProccess;
                         workDispatch.WorkflowStatus = WorkflowStatusEnum.ReceiveProccess;  // trả lại văn bản
                     }
                     else if (r.ActionType == ActionType.Proccessing)
                     {
+                        userWorkflow.UserCompile = r.UserId;
                         userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
                         workDispatch.WorkflowStatus = WorkflowStatusEnum.Proccesing;
                     }

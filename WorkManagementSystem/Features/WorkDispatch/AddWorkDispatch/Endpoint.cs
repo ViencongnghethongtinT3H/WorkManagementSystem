@@ -21,10 +21,6 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         // Xử lý notification
         var lstcmd = new List<NotificationCommandbase>();
         var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
-        var receiveName = await new GetUserNameCommand
-        {
-            UserId = r.LeadershipDirectId
-        }.ExecuteAsync();
         var notationWorkDispatch = await new GetNotationWorkDispatchCommand
         {
             WorkDispatchId = new Guid(workItemId),
@@ -53,7 +49,18 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             ActionContent = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch}"
         }.ExecuteAsync();
 
-
+        await new NoteCommand
+        {
+            UserId = r.UserCompile,
+            WorkFlow = new Guid(workItemId),
+            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} được gán là người theo dõi công văn "
+        }.ExecuteAsync();
+        await new NoteCommand
+        {
+            UserId = r.UserCompile,
+            WorkFlow = new Guid(workItemId),
+            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} được gán là người theo dõi công văn "
+        }.ExecuteAsync();
         var result = ResultModel<Response>.Create(new Response
         {
             WorkItemId = workItemId

@@ -27,7 +27,7 @@
                         join s in settingRepo.GetAll().AsNoTracking() on w.Notation equals s.Key
                         join de in depaRepo.GetAll().AsNoTracking() on w.DepartmentId equals de.Id
                         join u in userRepo.GetAll().AsNoTracking() on w.LeadershipDirectId equals u.Id
-                        where w.WorkflowStatus == WorkflowStatusEnum.WaittingWorkArrived && dispatchIds.Contains(w.Id)
+                        where /*w.WorkflowStatus == WorkflowStatusEnum.WaittingWorkArrived &&*/ dispatchIds.Contains(w.Id)
                         orderby w.Created descending
                         select new WorkArriveResponse
                         {
