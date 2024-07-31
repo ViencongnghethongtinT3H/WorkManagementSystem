@@ -53,8 +53,9 @@ public class Data
                 if (parnetFolder is not null)
                 {
                     // kiem tra xem co folder dc tao ra tu WorkItemNumber hay chua
-
-                       var folder = new FileManagement()
+                    if (r.Files.IsAny())
+                    {
+                        var folder = new FileManagement()
                         {
                             Id = Guid.NewGuid(),
                             Created = DateTime.Now,
@@ -66,8 +67,7 @@ public class Data
                         await fileManagerRepo.AddAsync(folder);
                     
 
-                    if (r.Files.IsAny())
-                    {
+                   
                         // lưu file
                         var fileIds = r.Files.Select(p => p.fileId);
                         var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
