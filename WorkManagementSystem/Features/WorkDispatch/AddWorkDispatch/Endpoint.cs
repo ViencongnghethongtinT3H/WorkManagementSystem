@@ -53,13 +53,13 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             WorkFlow = new Guid(workItemId),
-            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} được gán là người theo dõi công văn "
+            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} được gán là người theo dõi công văn {notationWorkDispatch}"
         }.ExecuteAsync();
         await new NoteCommand
         {
             UserId = r.UserCompile,
             WorkFlow = new Guid(workItemId),
-            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} được gán là người theo dõi công văn "
+            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn {notationWorkDispatch}"
         }.ExecuteAsync();
         var result = ResultModel<Response>.Create(new Response
         {

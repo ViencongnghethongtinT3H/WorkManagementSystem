@@ -52,17 +52,30 @@
                             DepartmentName = de.Name,
                             LeadershipDirectName = u.Name,
                             Created = w.Created,
+                            DealineDate = w.Dealine,
 
                         };
-            //var fromDate = request.Filters.GetFilterModel("FromDate");
-            //var toDate = request.Filters.GetFilterModel("ToDate");
-            //if (fromDate is not null && toDate is not null)
-            //{
-            //    var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            //    var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            //    query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
-            //}
+            var fromDate = request.Filters.GetFilterModel("FromDate");
+            var toDate = request.Filters.GetFilterModel("ToDate");
+            if (fromDate is not null && toDate is not null)
+            {
+                var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+                var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+                query = query.Where(x => (x.Created >= fromValue && x.Created <= toValue) || (x.DealineDate >= fromValue && x.DealineDate <= toValue));
+            }
+            var notation = request.Filters.GetFilterModel("Notation");
+            if (notation is not null)
+            {
+                var notationValue = notation.FieldValue;
+                query = query.Where(x => x.Notation.Contains(notationValue));
+            }
 
+            var WorkItemNumber = request.Filters.GetFilterModel("WorkItemNumber");
+            if (WorkItemNumber is not null)
+            {
+                var workItemNumberValue = WorkItemNumber.FieldValue;
+                query = query.Where(x => x.Notation.Contains(workItemNumberValue));
+            }
             var data = new Response
             {
                 Count = await query.CountAsync(),

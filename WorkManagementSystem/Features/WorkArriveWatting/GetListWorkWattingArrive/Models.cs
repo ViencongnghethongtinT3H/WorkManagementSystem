@@ -42,6 +42,7 @@
         #endregion
 
         #region ver 2
+        public DateTime? DealineDate { get; set; }  // Thời hạn xử lý
 
         public string? Dealine { get; set; }  // Thời hạn xử lý
         public string? EvictionTime { get; set; }  // Thời hạn thu hồi

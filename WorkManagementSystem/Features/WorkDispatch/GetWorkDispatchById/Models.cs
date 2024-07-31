@@ -54,11 +54,12 @@
     public class Notes
     { 
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
         public Guid WorkFlow { get; set; }
-        [MaxLength(250)]
         public string Note { get; set; }
         public string Created { get; set; }
+        public string DeparmentName { get; set; }
+        public string UserName { get; set; }
+
     }
     public class ReceiveCompanyModel
     {

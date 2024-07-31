@@ -67,7 +67,7 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
 
             await new NoteCommand
             {
-                UserId = r.UserCompile,
+                UserId = r.UserId,
                 WorkFlow = r.WorkflowId,
                 Notes = item.Note
             }.ExecuteAsync();

@@ -101,8 +101,9 @@
                        Created = p.Created.ToFormatString("dd/MM/yyyy"),
                        Note = p.Notes,
                        WorkFlow = p.WorkFlow,
-                       UserId = p.UserId,
-                       
+                       UserName = users.FirstOrDefault(x => x.Id == p.UserId).Name,
+                       DeparmentName = work.DepartmentName,
+
                    });
                 work.Notes = notes.ToList();
 
