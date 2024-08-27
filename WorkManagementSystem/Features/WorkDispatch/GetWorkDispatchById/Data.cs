@@ -61,22 +61,31 @@
                               }).FirstOrDefaultAsync();
             if (work is not null)
             {
-                var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
-                var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
-                                             join d in dispatchReceiveCompanyRepo.AsNoTracking() on re.Id equals d.AccountReceiveId
-                                             where d.WorkDispatchId == r.WorkDispatchId
-                                             orderby re.Created descending
-                                             select new ReceiveCompanyModel
-                                             {
-                                                 Id = re.Id,
-                                                 AccountReceiveId = re.AccountReceiveId.Value,
-                                                 Name = re.Name,
-                                                 Address = re.Address,
-                                                 Email = re.Email,
-                                                 Fax = re.Fax
-                                             }).ToListAsync();
+                try
+                {
+                    var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
+                    var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
+                                                 join d in dispatchReceiveCompanyRepo.AsNoTracking() on re.Id equals d.AccountReceiveId
+                                                 where d.WorkDispatchId == r.WorkDispatchId
+                                                 orderby re.Created descending
+                                                 select new ReceiveCompanyModel
+                                                 {
+                                                     Id = re.Id,
+                                                     AccountReceiveId = re.AccountReceiveId.GetValueOrDefault(),
+                                                     Name = re.Name,
+                                                     Address = re.Address,
+                                                     Email = re.Email,
+                                                     Fax = re.Fax
+                                                 }).ToListAsync();
 
-                work.ReceiveCompanys = receiveCompanys;
+                    work.ReceiveCompanys = receiveCompanys;
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
+                
 
                 var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
                 var usersRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
