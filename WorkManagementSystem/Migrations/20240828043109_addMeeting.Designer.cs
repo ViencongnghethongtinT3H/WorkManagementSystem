@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagementSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using WorkManagementSystem.Infrastructure.Persistence;
 namespace WorkManagementSystem.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240828043109_addMeeting")]
+    partial class addMeeting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,6 +299,91 @@ namespace WorkManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Implementers");
+                });
+
+            modelBuilder.Entity("WorkManagementSystem.Entities.Meeting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FormatMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("HourEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("HourStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("OrganizerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Meetings");
+                });
+
+            modelBuilder.Entity("WorkManagementSystem.Entities.MeetingUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("MeetingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RoleUserMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusUserMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MeetingUsers");
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Note", b =>

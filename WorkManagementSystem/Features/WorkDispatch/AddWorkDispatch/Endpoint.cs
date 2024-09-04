@@ -17,7 +17,13 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
     {
         var data = new Data(_unitOfWork);   
         string workItemId = await data.CreateWorkDispatch(Map.ToEntity(r), r);
+        var result = ResultModel<Response>.Create(new Response
+        {
+            WorkItemId = workItemId
+        });
 
+        if (string.IsNullOrEmpty(result.Data.WorkItemId))
+            ThrowError("Không thể thêm công văn");
         // Xử lý notification
         var lstcmd = new List<NotificationCommandbase>();
         var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
@@ -61,13 +67,7 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             WorkFlow = new Guid(workItemId),
             Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn {notationWorkDispatch}"
         }.ExecuteAsync();
-        var result = ResultModel<Response>.Create(new Response
-        {
-            WorkItemId = workItemId
-        });
-
-        if (string.IsNullOrEmpty(result.Data.WorkItemId))
-            ThrowError("Không thể thêm công văn");
+        
         await SendAsync(result);
 
     }

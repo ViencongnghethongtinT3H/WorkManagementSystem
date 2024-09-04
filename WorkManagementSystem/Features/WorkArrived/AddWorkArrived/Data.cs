@@ -20,7 +20,6 @@
                 {
                     workItem.Id = r.Id.Value;
                     workArrivedRepository.Update(workItem);
-
                 }
                 else
                 {
