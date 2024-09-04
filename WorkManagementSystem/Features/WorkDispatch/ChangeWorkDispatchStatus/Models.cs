@@ -5,7 +5,7 @@ public class Request
     public List<Guid> UserIds { get; set; }
     public Guid WorkFlowId { get; set; }
     public ActionType ActionType { get; set; }
-    public string? Note { get; set; }
+    public string? Note { get; set; } = string.Empty;
     public Guid UserId { get; set; }
 }
 

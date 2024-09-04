@@ -14,6 +14,7 @@
         public int PageSize { get; init; } = 20;
         public bool IsPagingEnabled { get; init; } = false;
         public Guid UserId { get; set; }
+        public string? Notation { get; set; }
     }
 
     public class Response : QueryListResponse<WorkArriveResponse>

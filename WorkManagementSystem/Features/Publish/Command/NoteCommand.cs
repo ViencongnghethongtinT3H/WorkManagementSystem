@@ -5,6 +5,6 @@
         public Guid UserId { get; set; }
         public Guid WorkFlow { get; set; }
         [MaxLength(250)]
-        public string Notes { get; set; }
+        public string? Notes { get; set; } = string.Empty;
     }
 }

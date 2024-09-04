@@ -63,11 +63,9 @@
                 var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
                 query = query.Where(x => (x.Created >= fromValue && x.Created <= toValue) || (x.DealineDate >= fromValue && x.DealineDate <= toValue));
             }
-            var notation = request.Filters.GetFilterModel("Notation");
-            if (notation is not null)
+            if (!string.IsNullOrEmpty(request.Notation))
             {
-                var notationValue = notation.FieldValue;
-                query = query.Where(x => x.Notation.Contains(notationValue));
+                query = query.Where(x => (x.Notation).Contains(request.Notation));
             }
 
             var WorkItemNumber = request.Filters.GetFilterModel("WorkItemNumber");
