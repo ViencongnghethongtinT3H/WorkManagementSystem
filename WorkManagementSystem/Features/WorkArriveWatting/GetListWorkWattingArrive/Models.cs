@@ -14,6 +14,7 @@
         public int PageSize { get; init; } = 20;
         public bool IsPagingEnabled { get; init; } = false;
         public Guid UserId { get; set; }
+        public string? Notation { get; set; }
     }
 
     public class Response : QueryListResponse<WorkArriveResponse>
@@ -42,6 +43,7 @@
         #endregion
 
         #region ver 2
+        public DateTime? DealineDate { get; set; }  // Thời hạn xử lý
 
         public string? Dealine { get; set; }  // Thời hạn xử lý
         public string? EvictionTime { get; set; }  // Thời hạn thu hồi

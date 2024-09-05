@@ -36,7 +36,7 @@
                     UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
                     UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,    // mặc định chuyển người xử lý thì gán mặc định là 1,
                     Note = item.Note,
-                    UserCompile = r.UserCompile
+                    UserCompile = r.UserId
                 };
                 lst.Add(user);
             }
@@ -49,7 +49,7 @@
                 userComplete.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                 userComplete.UserWorkflowType = UserWorkflowType.Implementer;
                 userComplete.Updated = DateTime.Now;
-                userComplete.UserCompile = r.UserCompile;
+                userComplete.UserCompile = r.UserId;
             }
             userWorkflowRepo.Update(userComplete);
             await _unitOfWork.CommitAsync();

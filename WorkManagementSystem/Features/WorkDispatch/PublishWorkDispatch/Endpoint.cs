@@ -36,7 +36,29 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
             NotificationType = NotificationType.WorkItem,
             NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
         });
-
+        foreach (var item in r.ReceiveCompanys)
+        {
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {receiveName} đã phát hành công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = item.AccountReceiveId.Value,
+                UserSend = r.UserCompile,
+                Url = result.Data.WorkItemId,
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
+            });
+        }
+        await new LstNotificationCommand
+        {
+            NotificationCommands = lstcmd
+        }.ExecuteAsync();
+        // note
+        await new NoteCommand
+        {
+            UserId = r.UserId,
+            WorkFlow = r.workDispatchId,
+            Notes = $"{await new GetUserNameCommand { UserId = r.UserId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId }.ExecuteAsync()}"
+        }.ExecuteAsync();
 
         // Thêm phần lịch sử
         await new HistoryCommand

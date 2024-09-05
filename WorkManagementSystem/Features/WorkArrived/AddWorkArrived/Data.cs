@@ -20,7 +20,6 @@
                 {
                     workItem.Id = r.Id.Value;
                     workArrivedRepository.Update(workItem);
-
                 }
                 else
                 {
@@ -33,9 +32,11 @@
                         var files = await filesRepo.GetAll().Where(x => r.FileAttachIds.Contains(x.Id)).ToListAsync();
                         foreach (var item in files)
                         {
+                            item.Id = Guid.NewGuid();
+                            item.Created = DateTime.Now;
                             item.IssuesId = workItem.Id;
-                            item.Updated = DateTime.Now;
-                            filesRepo.Update(item);
+                            item.RefId = new Guid();
+                            await filesRepo.AddAsync(item);
                         }
                     }
 

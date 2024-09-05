@@ -900,7 +900,7 @@ namespace WorkManagementSystem.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserCompile")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserIdCreated")
@@ -993,7 +993,7 @@ namespace WorkManagementSystem.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserCompile")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserIdCreated")

@@ -11,7 +11,7 @@
         {
             var workArrivedRepo = _unitOfWork.GetRepository<Entities.WorkArriveWatting>();
             var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>();
-            var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany   >();
+            var dispatchReceiveCompanyRepo = _unitOfWork.GetRepository<DispatchReceiveCompany>();
             var settingRepo = _unitOfWork.GetRepository<Entities.Setting>();
             var depaRepo = _unitOfWork.GetRepository<Entities.Department>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
@@ -27,7 +27,7 @@
                         join s in settingRepo.GetAll().AsNoTracking() on w.Notation equals s.Key
                         join de in depaRepo.GetAll().AsNoTracking() on w.DepartmentId equals de.Id
                         join u in userRepo.GetAll().AsNoTracking() on w.LeadershipDirectId equals u.Id
-                        where w.WorkflowStatus == WorkflowStatusEnum.WaittingWorkArrived && dispatchIds.Contains(w.Id)
+                        where dispatchIds.Contains(w.Id)
                         orderby w.Created descending
                         select new WorkArriveResponse
                         {
@@ -52,17 +52,28 @@
                             DepartmentName = de.Name,
                             LeadershipDirectName = u.Name,
                             Created = w.Created,
+                            DealineDate = w.Dealine,
 
                         };
-            //var fromDate = request.Filters.GetFilterModel("FromDate");
-            //var toDate = request.Filters.GetFilterModel("ToDate");
-            //if (fromDate is not null && toDate is not null)
-            //{
-            //    var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            //    var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            //    query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
-            //}
+            var fromDate = request.Filters.GetFilterModel("FromDate");
+            var toDate = request.Filters.GetFilterModel("ToDate");
+            if (fromDate is not null && toDate is not null)
+            {
+                var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+                var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+                query = query.Where(x => (x.Created >= fromValue && x.Created <= toValue) || (x.DealineDate >= fromValue && x.DealineDate <= toValue));
+            }
+            if (!string.IsNullOrEmpty(request.Notation))
+            {
+                query = query.Where(x => (x.Notation).Contains(request.Notation));
+            }
 
+            var WorkItemNumber = request.Filters.GetFilterModel("WorkItemNumber");
+            if (WorkItemNumber is not null)
+            {
+                var workItemNumberValue = WorkItemNumber.FieldValue;
+                query = query.Where(x => x.WorkItemNumber.Contains(workItemNumberValue));
+            }
             var data = new Response
             {
                 Count = await query.CountAsync(),

@@ -11,7 +11,7 @@ namespace WorkManagementSystem.Migrations
         {
 
             migrationBuilder.AddColumn<Guid>(
-                name: "UserCompile",
+                name: "UserId",
                 table: "UserWorkflows",
                 type: "uniqueidentifier",
                 nullable: false,
@@ -41,7 +41,7 @@ namespace WorkManagementSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "UserCompile",
+                name: "UserId",
                 table: "UserWorkflows");
 
             migrationBuilder.AlterColumn<string>(
