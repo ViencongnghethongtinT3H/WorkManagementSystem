@@ -8,6 +8,7 @@
         public TypeMeeting TypeMeeting { get; set; }
         public string? HourStart { get; set; }
         public string? HourEnd { get; set; }
+        public string? DayOfMeeting { get; set; }
         public Guid OrganizerId { get; set; } // id user người tổ chức
         public FormatMeeting FormatMeeting { get; set; }
         public List<MeetingUsers> UserMeetings { get; set; }  = new List<MeetingUsers>();

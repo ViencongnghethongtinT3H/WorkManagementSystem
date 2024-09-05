@@ -72,25 +72,21 @@ public class Data
         {
             query = query.Where(x => x.WorkDispatch.WorkItemNumber.Contains(input.WorkItemNumber));
         }
-        if (!string.IsNullOrEmpty(input.WorkItemNumber))
-        {
-            query = query.Where(x => x.WorkDispatch.WorkItemNumber.Contains(input.WorkItemNumber));
-        }
         if (!string.IsNullOrEmpty(input.DepartmentName))
         {
-            query = query.Where(x => x.Department.Name.Contains(input.DepartmentName));
+            query = query.Where(x => x.Department.Id.ToString() == input.DepartmentName);
         }
         if (!string.IsNullOrEmpty(input.LeadName))
         {
-            query = query.Where(x => x.User.Name.Contains(input.LeadName));
+            query = query.Where(x => x.User.Id.ToString() == input.LeadName);
         }
         if (!string.IsNullOrEmpty(input.UserCompileName))
         {
-            query = query.Where(x => x.User.Name.Contains(input.UserCompileName));
+            query = query.Where(x => x.User.Id.ToString() == input.UserCompileName);
         }
         if (!string.IsNullOrEmpty(input.SettingName))
         {
-            query = query.Where(x => x.Setting.Value.Contains(input.SettingName));
+            query = query.Where(x => x.Setting.Id.ToString() == input.SettingName);
         }
         if (!string.IsNullOrEmpty(input.Subjective))
         {

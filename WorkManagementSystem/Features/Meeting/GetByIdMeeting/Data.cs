@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using WorkManagementSystem.Shared.Extensions;
 
 namespace WorkManagementSystem.Features.Meeting.GetByIdMeeting
 {
@@ -16,13 +17,16 @@ namespace WorkManagementSystem.Features.Meeting.GetByIdMeeting
                                   select new Response
                                   {
                                       Id = b.Id,
-                                      HourStart = b.HourStart.ToFormatString("dd/MM/yyyy HH:mm"),
-                                      HourEnd = b.HourEnd.ToFormatString("dd/MM/yyyy HH:mm"),
+                                      HourStart = b.HourStart.ToString(),
+                                      HourEnd = b.HourEnd.ToString(),
+                                      DayOfMeeting = b.DayOfMeeting.ToddMMyyyy(),
                                       Content = b.Content,
                                       OrganizerId = b.OrganizerId.ToString(),
                                       Title = b.Title,
-                                      TypeMeeting = b.TypeMeeting.GetDescription(),
-                                      FormatMeeting = b.FormatMeeting.GetDescription(),
+                                      TypeMeetingName = b.TypeMeeting.GetDescription(),
+                                      FormatMeetingName = b.FormatMeeting.GetDescription(),
+                                      TypeMeeting = b.TypeMeeting,
+                                      FormatMeeting = b.FormatMeeting,
                                       Link = b.Link,
                                   }).FirstOrDefaultAsync(p => p.OrganizerId == r.UserId && p.Id == r.MeetingId);
             if (response is not null)
@@ -34,7 +38,8 @@ namespace WorkManagementSystem.Features.Meeting.GetByIdMeeting
                     var lstUserMeeting = userMeetings.Select(item => new UserMeeting
                     {
                         MeetingId = item.MeetingId,
-                        StatusUserMeeting = item.StatusUserMeeting.GetDescription(),
+                        StatusUserMeetingName = item.StatusUserMeeting.GetDescription(),
+                        StatusUserMeeting = item.StatusUserMeeting,
                         RoleUserMeetingName = item.RoleUserMeeting.GetDescription(),
                         RoleUserMeeting = item.RoleUserMeeting,
                         UserId = item.UserId,

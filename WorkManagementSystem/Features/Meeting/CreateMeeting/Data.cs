@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using iTextSharp.text.pdf.parser.clipper;
+using System.Globalization;
 
 namespace WorkManagementSystem.Features.Meeting.CreateMeeting
 {
@@ -12,7 +13,10 @@ namespace WorkManagementSystem.Features.Meeting.CreateMeeting
         public async Task<ResultModel<string>> CreateMeeting(Request r)
         {
             var meetingRepo = _unitOfWork.GetRepository<Entities.Meeting>();
+            TimeSpan startTime;
+            TimeSpan endTime;
             var obj = new Entities.Meeting();
+            
             if (string.IsNullOrEmpty(r.Id))
             {
                 obj = new Entities.Meeting()
@@ -22,19 +26,13 @@ namespace WorkManagementSystem.Features.Meeting.CreateMeeting
                     Created = DateTime.Now, // vẫn giữ nguyên giá trị thời điểm hiện tại cho thuộc tính này
                     FormatMeeting = r.FormatMeeting,
 
-                    // Xử lý HourStart
-                    HourStart = !string.IsNullOrEmpty(r.HourStart)
-        ? (DateTime.TryParseExact(r.HourStart, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime hourStart)
-            ? hourStart
-            : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture))
-        : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    // Xử lý DayOfMeeting
+                    DayOfMeeting = !string.IsNullOrEmpty(r.DayOfMeeting) ?
+                        (DateTime.TryParseExact(r.DayOfMeeting, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dayOfMeeting)
+                            ? dayOfMeeting
+                            : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture))
+                        : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
 
-                    // Xử lý HourEnd
-                    HourEnd = !string.IsNullOrEmpty(r.HourEnd)
-        ? (DateTime.TryParseExact(r.HourEnd, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime hourEnd)
-            ? hourEnd
-            : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture).AddMinutes(30))
-        : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
                     OrganizerId = r.OrganizerId,
                     Title = r.Title,
                     TypeMeeting = r.TypeMeeting,
@@ -60,14 +58,24 @@ namespace WorkManagementSystem.Features.Meeting.CreateMeeting
                 obj.Content = r.Content;
                 obj.Created = DateTime.Now;
                 obj.FormatMeeting = r.FormatMeeting;
-                obj.HourEnd = !string.IsNullOrEmpty(r.HourEnd) ? DateTime.ParseExact(r.HourEnd, "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture) : DateTime.Now;
-                obj.HourStart = !string.IsNullOrEmpty(r.HourStart) ? DateTime.ParseExact(r.HourStart, "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture) : DateTime.Now.AddHours(1);
+
+                obj.DayOfMeeting = !string.IsNullOrEmpty(r.DayOfMeeting)
+                ? (DateTime.TryParseExact(r.HourStart, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dayOfMeeting) ? dayOfMeeting
+                : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture))
+                : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 obj.OrganizerId = r.OrganizerId;
                 obj.Title = r.Title;
                 obj.TypeMeeting = r.TypeMeeting;
                 obj.UserIdCreated = r.OrganizerId.ToString();
                 obj.Link = r.Link;
                 meetingRepo.Update(obj);
+            }
+            bool startTimeParsed = TimeSpan.TryParse(r.HourStart, out startTime);
+            bool endTimeParsed = TimeSpan.TryParse(r.HourEnd, out endTime);
+            if (startTimeParsed && endTimeParsed)
+            {
+                obj.HourStart = startTime;
+                obj.HourEnd = endTime;
             }
             // check danh sach nguoi tham gia hop
             var meetingUserRepo = _unitOfWork.GetRepository<MeetingUser>();

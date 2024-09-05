@@ -13,9 +13,9 @@ namespace WorkManagementSystem.Shared.Extensions
         {
             return dt.ToString("dd/MM/yyyy");
         }
-        public static string ToddMMyyyytt(this DateTime? dt)
+        public static string ToHHmm(this DateTime? dt)
         {
-            return dt.HasValue ? dt.Value.ToString("dd/MM/yyyy hh:mm tt") : "";
+            return dt.HasValue ? dt.Value.ToString("HH:mm") : "";
         }
         public static string ToFormatString(this DateTime? dt, string format = "dd/MM/yyyy HH:mm")
         {

@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.Meeting.GetMeetings
+﻿using WorkManagementSystem.Shared.Extensions;
+
+namespace WorkManagementSystem.Features.Meeting.GetMeetings
 {
     public class Data
     {
@@ -29,14 +31,18 @@
                                   RoleUserMeetingName = a.RoleUserMeeting.GetDescription(),
                                   RoleUserMeeting = a.RoleUserMeeting,
                                   UserId = a.UserId.ToString(),
-                                  HourStart = b.HourStart.ToFormatString("dd/MM/yyyy hh:mm"),
-                                  HourEnd = b.HourEnd.ToFormatString("dd/MM/yyyy hh:mm"),
+                                  HourStart = b.HourStart.ToString(),
+                                  HourEnd = b.HourEnd.ToString(),
+                                  DayOfMeeting = b.DayOfMeeting.ToddMMyyyy(),
                                   Content = b.Content,
                                   OrganizerId = b.OrganizerId.ToString(),
                                   Title = b.Title,
-                                  TypeMeeting = b.TypeMeeting.GetDescription(),
-                                  FormatMeeting = b.FormatMeeting.GetDescription(),
-                                  StatusUserMeeting = a.StatusUserMeeting.GetDescription(),
+                                  TypeMeetingName = b.TypeMeeting.GetDescription(),
+                                  FormatMeetingName = b.FormatMeeting.GetDescription(),
+                                  StatusUserMeetingName = a.StatusUserMeeting.GetDescription(),
+                                  TypeMeeting = b.TypeMeeting,
+                                  StatusUserMeeting = a.StatusUserMeeting,
+                                  FormatMeeting = b.FormatMeeting,
                                   Link = b.Link,    
                                
                               }).ToListAsync();

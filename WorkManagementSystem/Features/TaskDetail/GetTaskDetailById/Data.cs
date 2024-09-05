@@ -13,7 +13,7 @@ public class Data
         var taskRepo = _unitOfWork.GetRepository<Entities.TaskDetail>().GetAll();
         var departRepo = _unitOfWork.GetRepository<Entities.Department>().GetAll();
         var userRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
-        var workRepo = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
+        var workRepo = _unitOfWork.GetRepository<Entities.WorkArrived>().GetAll();
         var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
 
         var work = await (from t in taskRepo.AsNoTracking()
