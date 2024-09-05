@@ -52,6 +52,14 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
             IssueId = r.WorkFlowId ,
             ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} {notationWorkDispatch}"
         }.ExecuteAsync();
+
+        await new NoteCommand
+        {
+            UserId = r.UserId,
+            WorkFlow = r.WorkFlowId,
+            Notes = r.Note
+        }.ExecuteAsync();
+
         await SendAsync(result);
     }
 }

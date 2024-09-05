@@ -29,7 +29,7 @@
                 }
                 foreach (var item in r.UserIds)
                 {
-                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId);
+                    var steps = workStepRepo.FindBy(p => p.WorkflowId == r.WorkArriveId && p.UserConfirm == item);
                     var userWorkflow = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(p => p.UserId == item && p.WorkflowId == r.WorkArriveId);
                     if (userWorkflow is not null)
                     {
@@ -39,6 +39,7 @@
                         workArrived.Updated = DateTime.Now;
                         if (r.ActionType == ActionType.Submited)
                         {
+                            userWorkflow.UserCompile = r.UserId.Value;
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Proccesing;
 
@@ -57,21 +58,25 @@
                         }
                         else if (r.ActionType == ActionType.Proccessing)
                         {
+                            userWorkflow.UserCompile = r.UserId.Value;
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Proccesing;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Proccesing;
                         }
                         else if (r.ActionType == ActionType.Canceled)
                         {
+                            userWorkflow.UserCompile = r.UserId.Value;
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Cancel;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Cancel;   // huỷ văn bản
                         }
                         else if (r.ActionType == ActionType.Return)
                         {
+                            userWorkflow.UserCompile = r.UserId.Value;
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.ReceiveProccess;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.ReceiveProccess;  // trả lại văn bản
                         }
                         else if (r.ActionType == ActionType.Swap)
                         {
+                            userWorkflow.UserCompile = r.UserId.Value;
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Waitting;
 
@@ -88,6 +93,7 @@
                         }
                         else if (r.ActionType == ActionType.Save)
                         {
+                            userWorkflow.UserCompile = r.UserId.Value;
                             userWorkflow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
                             workArrived.WorkArrivedStatus = WorkArrivedStatus.Complete;   // cong van duoc hoan thanh
                             if (steps.IsAny())

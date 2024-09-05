@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
 using WorkManagementSystem.Entities;
+using static iTextSharp.text.pdf.AcroFields;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
@@ -32,7 +33,7 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
                 foreach (var userWork in userWorks)
                 {
                     // tìm folder "công văn"
-                    var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn");
+                    var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn đến");
                     // kiem tra xem co folder dc tao ra tu WorkItemNumber hay chua
                     var folder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Name == workItem.WorkItemNumber);
                     if (folder is null)
@@ -48,15 +49,27 @@ namespace WorkManagementSystem.Features.WorkArrived.SaveWorkArrived
                         };
                         await fileManagerRepo.AddAsync(folder);
                     }
-                    var file = await fileRepo.FindBy(p => p.IssuesId == userWork.WorkflowId).FirstOrDefaultAsync();
+                    var file = await fileRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.IssuesId == userWork.WorkflowId);
                     if (file is not null)
                     {
-                        // lưu file
-                        file.IssuesId = workItem.Id;
-                        file.RefId = folder.Id;
-                        file.Updated = DateTime.Now;
-                        fileRepo.Update(file);
+                        if (file.RefId == new Guid())
+                        {
+                            file.IssuesId = userWork.WorkflowId;
+                            file.Updated = DateTime.Now;
+                            file.RefId = folder.Id;
+                            fileRepo.Update(file);
+                            await _unitOfWork.CommitAsync();
+                        }
+                        else
+                        {
+                            file = new FileAttach()
+                            { RefId = folder.Id, Created = DateTime.Now, IssuesId = userWork.WorkflowId, FileExtension = file.FileExtension, FileName = file.FileName, FileUrl = file.FileUrl };
+                            await fileRepo.AddAsync(file);
+                        }
+
                     }
+
+
                 }
                 await _unitOfWork.CommitAsync();
                 return new ResultModel<bool>(true)

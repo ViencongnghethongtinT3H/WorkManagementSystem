@@ -299,6 +299,43 @@ namespace WorkManagementSystem.Migrations
                     b.ToTable("Implementers");
                 });
 
+            modelBuilder.Entity("WorkManagementSystem.Entities.Note", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("WorkFlow")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notes");
+                });
+
             modelBuilder.Entity("WorkManagementSystem.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")

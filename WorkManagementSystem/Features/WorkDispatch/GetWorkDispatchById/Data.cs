@@ -61,22 +61,31 @@
                               }).FirstOrDefaultAsync();
             if (work is not null)
             {
-                var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
-                var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
-                                             join d in dispatchReceiveCompanyRepo.AsNoTracking() on re.Id equals d.AccountReceiveId
-                                             where d.WorkDispatchId == r.WorkDispatchId
-                                             orderby re.Created descending
-                                             select new ReceiveCompanyModel
-                                             {
-                                                 Id = re.Id,
-                                                 AccountReceiveId = re.AccountReceiveId.Value,
-                                                 Name = re.Name,
-                                                 Address = re.Address,
-                                                 Email = re.Email,
-                                                 Fax = re.Fax
-                                             }).ToListAsync();
+                try
+                {
+                    var receiveCompanyRepo = _unitOfWork.GetRepository<Entities.ReceiveCompany>().GetAll();
+                    var receiveCompanys = await (from re in receiveCompanyRepo.AsNoTracking()
+                                                 join d in dispatchReceiveCompanyRepo.AsNoTracking() on re.Id equals d.AccountReceiveId
+                                                 where d.WorkDispatchId == r.WorkDispatchId
+                                                 orderby re.Created descending
+                                                 select new ReceiveCompanyModel
+                                                 {
+                                                     Id = re.Id,
+                                                     AccountReceiveId = re.AccountReceiveId.GetValueOrDefault(),
+                                                     Name = re.Name,
+                                                     Address = re.Address,
+                                                     Email = re.Email,
+                                                     Fax = re.Fax
+                                                 }).ToListAsync();
 
-                work.ReceiveCompanys = receiveCompanys;
+                    work.ReceiveCompanys = receiveCompanys;
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
+                
 
                 var historyRepo = _unitOfWork.GetRepository<Entities.History>().GetAll();
                 var usersRepo = _unitOfWork.GetRepository<Entities.User>().GetAll();
@@ -88,33 +97,24 @@
                                        select new HistoryListModel
                                        {
                                            ActionContent = h.actionContent,
-                                           ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy HH:mm"),
+                                           ActionTime = h.ActionTime.ToFormatString("dd/MM/yyyy"),
                                            UserUpdated = u.Name
                                        }).ToListAsync();
 
                 work.Histories = histories;
 
-                var nameUser = await GetUserName(work.UserCompile.Value);
-                var notesQuery = _unitOfWork.GetRepository<UserWorkflow>().GetAll().AsNoTracking()
-                    .Where(p => p.WorkflowId == r.WorkDispatchId)
-                    .OrderByDescending(p => p.Updated);
+                var notes = _unitOfWork.GetRepository<Note>().GetAll().AsNoTracking()
+                   .Where(p => p.WorkFlow == r.WorkDispatchId).OrderByDescending(p => p.Created).ThenByDescending(p => p.Updated).Select(p => new Notes
+                   {
+                       Id = p.Id,  
+                       Created = p.Created.ToFormatString("dd/MM/yyyy"),
+                       Note = p.Notes,
+                       WorkFlow = p.WorkFlow,
+                       UserName = users.FirstOrDefault(x => x.Id == p.UserId).Name,
+                       DeparmentName = work.DepartmentName,
 
-                var notesList = await notesQuery.ToListAsync();
-
-                var notes = new List<Notes>();
-
-                foreach (var p in notesList)
-                {
-                    var note = new Notes
-                    {
-                        DateNote = p.Created.ToFormatString("dd/MM/yyyy HH:mm"),
-                        UserName = await GetUserName(p.UserCompile),
-                        DeparmentName = work.DepartmentName,
-                        Note = p.Note
-                    };
-                    notes.Add(note);
-                }
-                work.Notes = notes;
+                   });
+                work.Notes = notes.ToList();
 
                 var files = await (from re in _unitOfWork.GetRepository<FileAttach>().GetAll().AsNoTracking().Where(p => p.IssuesId == r.WorkDispatchId)
                                    join f in folders.AsNoTracking() on re.RefId equals f.Id 
@@ -146,16 +146,6 @@
             }
 
             return ResultModel<WorkDispatchDetailResponse>.Create(work);
-        }
-        public async Task<string> GetUserName(Guid id)
-        {
-            var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(id);
-            if (user is not null)
-            {
-                return user.Name;
-            }
-            return string.Empty;
-
         }
     }
 }

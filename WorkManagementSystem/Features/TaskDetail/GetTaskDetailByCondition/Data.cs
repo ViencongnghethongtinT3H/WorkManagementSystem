@@ -10,7 +10,7 @@ public class Data
     public async Task<ListResultModel<TaskDetailResponse>> GetTaskByCondition(InputRequest input)
     {
         var taskRepo = _unitOfWork.GetRepository<Entities.TaskDetail>().GetAll();
-        var workRepo = _unitOfWork.GetRepository<Entities.WorkItem>().GetAll();
+        var workRepo = _unitOfWork.GetRepository<Entities.WorkArrived>().GetAll();
         var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();       
         var query = from t in taskRepo.AsNoTracking()
                     join w in workRepo.AsNoTracking() on t.WorkItemId equals w.Id

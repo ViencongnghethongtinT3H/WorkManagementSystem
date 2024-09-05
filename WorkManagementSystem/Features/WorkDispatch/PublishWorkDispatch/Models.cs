@@ -31,8 +31,8 @@
         public bool IsPublish { get; set; }
         public List<Files>? Files { get; set; }
         public List<ReceiveCompanyInput>? ReceiveCompanys { get; set; }
-        public Guid? workDispatchId { get; set; }
-
+        public Guid workDispatchId { get; set; }
+        public Guid UserId { get; set; }   
 
     }
     public class Files

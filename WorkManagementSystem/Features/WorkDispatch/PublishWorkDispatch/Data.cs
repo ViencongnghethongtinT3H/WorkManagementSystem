@@ -33,11 +33,13 @@ public class Data
             workDispatchRepository.Update(workDispatch);
 
             // update userWorkFlow
-            var userWorkFlow = await userWorkFlowRepo.GetAll().FirstOrDefaultAsync(p => p.WorkflowId == r.workDispatchId && p.UserId == r.UserCompile);
+            var userWorkFlow = await userWorkFlowRepo.GetAll().FirstOrDefaultAsync(p => p.WorkflowId == r.workDispatchId && p.UserCompile == r.UserId);
             if (userWorkFlow is not null)
             {
-                userWorkFlow.Note = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId.Value }.ExecuteAsync()}";
+                userWorkFlow.Note = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId }.ExecuteAsync()}";
                 userWorkFlow.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                if(r.UserId != null)
+                userWorkFlow.UserCompile = r.UserId;
                 userWorkFlowRepo.Update(userWorkFlow);
             }
             // lấy ra toàn bộ các user đang theo dõi công văn 
@@ -46,15 +48,14 @@ public class Data
             foreach (var userWork in userWorks)
             {
                 // tìm folder "công văn"
-                var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn Đến");
+                var parnetFolder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userWork.UserId && p.Name == "Công văn đi");
 
                 if (parnetFolder is not null)
                 {
                     // kiem tra xem co folder dc tao ra tu WorkItemNumber hay chua
-                    var folder = await fileManagerRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Name == workDispatch.WorkItemNumber);
-                    if (folder is null)
+                    if (r.Files.IsAny())
                     {
-                        folder = new FileManagement()
+                        var folder = new FileManagement()
                         {
                             Id = Guid.NewGuid(),
                             Created = DateTime.Now,
@@ -64,23 +65,22 @@ public class Data
                             ParentId = parnetFolder is not null ? parnetFolder.Id : null,
                         };
                         await fileManagerRepo.AddAsync(folder);
-                    }
+                    
 
-                    if (r.Files.IsAny())
-                    {
+                   
                         // lưu file
                         var fileIds = r.Files.Select(p => p.fileId);
                         var files = await filesRepo.GetAll().Where(x => fileIds.Contains(x.Id)).ToListAsync();
                         foreach (var item in files)
                         {
-                            // check file trong folder
-                            var checkFile = files.Where(p => p.RefId == folder.Id);
-                            if (checkFile.Any())
+                            if (item is not null && item.RefId == new Guid())
                             {
                                 item.IssuesId = userWork.WorkflowId;
                                 item.Updated = DateTime.Now;
                                 item.RefId = folder.Id;
                                 filesRepo.Update(item);
+                                await _unitOfWork.CommitAsync();
+
                             }
                             else
                             {
