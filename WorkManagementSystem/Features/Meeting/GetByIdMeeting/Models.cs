@@ -17,6 +17,7 @@
         public string? Title { get; set; }
         public string? Content { get; set; }
         public List<UserMeeting> UserMeetings { get; set; } = new List<UserMeeting>();
+        public string? Link {  get; set; }
     }
     public class UserMeeting 
     {
@@ -24,7 +25,6 @@
         public Guid UserId { get; set; } // người dùng
         public string? RoleUserMeetingName { get; set; }
         public RoleUserMeeting? RoleUserMeeting { get; set; }
-
         public string? StatusUserMeeting { get; set; }
     }
 

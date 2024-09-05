@@ -11,6 +11,7 @@
         public Guid OrganizerId { get; set; } // id user người tổ chức
         public FormatMeeting FormatMeeting { get; set; }
         public List<MeetingUsers> UserMeetings { get; set; }  = new List<MeetingUsers>();
+        public string? Link { get; set; }
     }
     public class MeetingUsers
     {

@@ -17,7 +17,6 @@
         {
             var data = new Data(_unitOfWork);
             var a = await data.CreateMeeting(r);
-
             var result = ResultModel<Response>.Create(new Response
             {
                 Id = a.Data
@@ -27,7 +26,6 @@
             // Xử lý notification
             var lstcmd = new List<NotificationCommandbase>();
             var name = await new GetUserNameCommand { UserId = r.OrganizerId }.ExecuteAsync();
-
             lstcmd.Add(new NotificationCommandbase
             {
                 Content = $"Tài khoản {name} đã tạo cuộc họp vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
@@ -37,12 +35,10 @@
                 NotificationType = NotificationType.WorkItem,
                 NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
             });
-
             await new LstNotificationCommand
             {
                 NotificationCommands = lstcmd
             }.ExecuteAsync();
-
             // Xử lý lưu lịch sử
             await new HistoryCommand
             {
@@ -50,9 +46,6 @@
                 IssueId = new Guid(result.Data.Id),
                 ActionContent = $"Tài khoản {name} đã tạo cuộc họp"
             }.ExecuteAsync();
-
-
-
             await SendAsync(result);
 
         }

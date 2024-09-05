@@ -37,6 +37,7 @@
                                   TypeMeeting = b.TypeMeeting.GetDescription(),
                                   FormatMeeting = b.FormatMeeting.GetDescription(),
                                   StatusUserMeeting = a.StatusUserMeeting.GetDescription(),
+                                  Link = b.Link,    
                                
                               }).ToListAsync();
             if (r.RoleUserMeeting != null)

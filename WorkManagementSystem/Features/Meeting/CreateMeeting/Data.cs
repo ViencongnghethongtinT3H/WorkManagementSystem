@@ -19,14 +19,27 @@ namespace WorkManagementSystem.Features.Meeting.CreateMeeting
                 {
                     Id = Guid.NewGuid(),
                     Content = r.Content,
-                    Created = DateTime.Now,
+                    Created = DateTime.Now, // vẫn giữ nguyên giá trị thời điểm hiện tại cho thuộc tính này
                     FormatMeeting = r.FormatMeeting,
-                    HourEnd = !string.IsNullOrEmpty(r.HourEnd) ? DateTime.ParseExact(r.HourEnd, "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture) : DateTime.Now,
-                    HourStart = !string.IsNullOrEmpty(r.HourStart) ? DateTime.ParseExact(r.HourStart, "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture) : DateTime.Now.AddHours(1),
+
+                    // Xử lý HourStart
+                    HourStart = !string.IsNullOrEmpty(r.HourStart)
+        ? (DateTime.TryParseExact(r.HourStart, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime hourStart)
+            ? hourStart
+            : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture))
+        : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+
+                    // Xử lý HourEnd
+                    HourEnd = !string.IsNullOrEmpty(r.HourEnd)
+        ? (DateTime.TryParseExact(r.HourEnd, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime hourEnd)
+            ? hourEnd
+            : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture).AddMinutes(30))
+        : DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
                     OrganizerId = r.OrganizerId,
                     Title = r.Title,
                     TypeMeeting = r.TypeMeeting,
-                    UserIdCreated = r.OrganizerId.ToString()
+                    UserIdCreated = r.OrganizerId.ToString(),
+                    Link = r.Link,
                 };
                 meetingRepo.Add(obj);
             }
@@ -47,17 +60,18 @@ namespace WorkManagementSystem.Features.Meeting.CreateMeeting
                 obj.Content = r.Content;
                 obj.Created = DateTime.Now;
                 obj.FormatMeeting = r.FormatMeeting;
-                obj.HourEnd = !string.IsNullOrEmpty(r.HourEnd) ? DateTime.ParseExact(r.HourEnd, "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture) : DateTime.Now;
-                obj.HourStart = !string.IsNullOrEmpty(r.HourStart) ? DateTime.ParseExact(r.HourStart, "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture) : DateTime.Now.AddHours(1);
+                obj.HourEnd = !string.IsNullOrEmpty(r.HourEnd) ? DateTime.ParseExact(r.HourEnd, "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture) : DateTime.Now;
+                obj.HourStart = !string.IsNullOrEmpty(r.HourStart) ? DateTime.ParseExact(r.HourStart, "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture) : DateTime.Now.AddHours(1);
                 obj.OrganizerId = r.OrganizerId;
                 obj.Title = r.Title;
                 obj.TypeMeeting = r.TypeMeeting;
                 obj.UserIdCreated = r.OrganizerId.ToString();
+                obj.Link = r.Link;
                 meetingRepo.Update(obj);
             }
             // check danh sach nguoi tham gia hop
             var meetingUserRepo = _unitOfWork.GetRepository<MeetingUser>();
-            var meetingUsers = meetingUserRepo.GetAll().Where(p=>  p.MeetingId == obj.Id);
+            var meetingUsers = meetingUserRepo.GetAll().Where(p => p.MeetingId == obj.Id);
             if (meetingUsers.IsAny())
             {
                 meetingUserRepo.HardDeletes(meetingUsers.ToList());
