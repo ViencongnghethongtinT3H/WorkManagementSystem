@@ -106,6 +106,7 @@ public class Data
             Dealine = x.WorkDispatch.Dealine.ToFormatString("dd/MM/yyyy"),
             UserWorkflowStatus = x.UserWorkflow.UserWorkflowStatus,
             UserWorkflowType = x.UserWorkflow.UserWorkflowType,
+            UserId = x.User.Id,
             Created = x.UserWorkflow.Created,
         }).Skip((input.Page - 1) * input.PageSize).Take(input.PageSize);
         return ListResultModel<WorkDispatchResponse>.Create(await response.ToListAsync(), response.Count(), input.Page, input.PageSize);

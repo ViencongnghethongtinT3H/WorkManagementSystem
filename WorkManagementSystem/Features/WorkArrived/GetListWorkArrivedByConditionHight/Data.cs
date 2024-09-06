@@ -97,7 +97,8 @@ public class Data
             Dealine = x.WorkArrived.Dealine.ToFormatString("dd/MM/yyyy"),
             UserWorkflowStatus = x.UserWorkflow.UserWorkflowStatus,
             UserWorkflowType = x.UserWorkflow.UserWorkflowType,
-            Created = x.UserWorkflow.Created
+            Created = x.UserWorkflow.Created,
+            
         }).Skip((input.Page - 1) * input.PageSize).Take(input.PageSize);
         return ListResultModel<WorkArriveResponse>.Create(await response.ToListAsync(), response.Count(), input.Page, input.PageSize);
 

@@ -10,7 +10,6 @@
     {
         public Guid? Id { get; set; }
         public FormatMeeting? FormatMeeting{ get; set; }
-
         public TypeMeeting? TypeMeeting { get; set; }
         public string? FormatMeetingName { get; set; }
         public string? TypeMeetingName { get; set; }

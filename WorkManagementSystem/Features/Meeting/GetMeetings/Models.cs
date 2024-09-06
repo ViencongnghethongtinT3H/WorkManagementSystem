@@ -1,4 +1,6 @@
-﻿namespace WorkManagementSystem.Features.Meeting.GetMeetings
+﻿using WorkManagementSystem.Features.Meeting.GetByIdMeeting;
+
+namespace WorkManagementSystem.Features.Meeting.GetMeetings
 {
     public class Request
     {
@@ -9,6 +11,7 @@
     }
     public class Response 
     {
+        public Guid Id { get; set; }
         public string? UserId { get; set; }
         public string? RoleUserMeetingName { get; set; }
         public RoleUserMeeting? RoleUserMeeting { get; set; }
@@ -25,7 +28,16 @@
         public string? Title { get; set; }
         public string? Content { get; set; }
         public string? Link {  get; set; }
+        public List<UserMeeting> UserMeetings { get; set; } = new List<UserMeeting>();
+    }
+    public class UserMeeting
+    {
+        public Guid? MeetingId { get; set; }
+        public Guid UserId { get; set; } // người dùng
+        public string? RoleUserMeetingName { get; set; }
+        public RoleUserMeeting? RoleUserMeeting { get; set; }
+        public string? StatusUserMeetingName { get; set; }
+        public StatusUserMeeting? StatusUserMeeting { get; set; }
 
     }
-
 }

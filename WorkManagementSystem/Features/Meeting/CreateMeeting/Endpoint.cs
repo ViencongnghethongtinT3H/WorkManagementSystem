@@ -56,7 +56,7 @@
             {
                 UserId = r.OrganizerId,
                 IssueId = new Guid(result.Data.Id),
-                ActionContent = $"Tài khoản {name} đã tạo cuộc họp"
+                ActionContent = $"Tài khoản {name} đã tạo ${r.TypeMeeting.GetDescription()}"
             }.ExecuteAsync();
             await SendAsync(result);
 

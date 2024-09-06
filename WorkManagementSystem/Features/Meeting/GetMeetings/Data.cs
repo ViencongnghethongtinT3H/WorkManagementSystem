@@ -1,4 +1,5 @@
-﻿using WorkManagementSystem.Shared.Extensions;
+﻿using WorkManagementSystem.Features.Meeting.GetByIdMeeting;
+using WorkManagementSystem.Shared.Extensions;
 
 namespace WorkManagementSystem.Features.Meeting.GetMeetings
 {
@@ -28,6 +29,7 @@ namespace WorkManagementSystem.Features.Meeting.GetMeetings
                               join b in meetings on a.MeetingId equals b.Id
                               select new Response
                               {
+                                  Id = b.Id,
                                   RoleUserMeetingName = a.RoleUserMeeting.GetDescription(),
                                   RoleUserMeeting = a.RoleUserMeeting,
                                   UserId = a.UserId.ToString(),
@@ -49,6 +51,24 @@ namespace WorkManagementSystem.Features.Meeting.GetMeetings
             if (r.RoleUserMeeting != null)
             {
                 response = response.Where(p => p.RoleUserMeeting == r.RoleUserMeeting).ToList();
+            }
+            foreach (var item in response)
+            {
+                var userMeetings = await meetingUserRepo.GetAll().AsNoTracking().Where(p => p.MeetingId == item.Id).ToListAsync();
+                if (userMeetings.IsAny())
+                {
+                    var lstUserMeeting = userMeetings.Select(item => new UserMeeting
+                    {
+                        MeetingId = item.MeetingId,
+                        StatusUserMeetingName = item.StatusUserMeeting.GetDescription(),
+                        StatusUserMeeting = item.StatusUserMeeting,
+                        RoleUserMeetingName = item.RoleUserMeeting.GetDescription(),
+                        RoleUserMeeting = item.RoleUserMeeting,
+                        UserId = item.UserId,
+                    }).ToList();
+                    item.UserMeetings = lstUserMeeting;
+                }
+                
             }
             return ListResultModel<Response>.Create(response, response.Count, r.Page.GetValueOrDefault(), r.PageSize.GetValueOrDefault());
         }
