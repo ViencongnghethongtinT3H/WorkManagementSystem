@@ -38,17 +38,17 @@ namespace WorkManagementSystem.Features.Publish.CommandHandler
                     }
                     try
                     {
-                        var filePath = dirUpload + "\\" + item;
-                        if (System.IO.File.Exists(filePath))
-                        {
-
-                            Attachment attachment = new Attachment(filePath);
-                            mail.Attachments.Add(attachment);
-                        }
-                        else
-                        {
-                            throw new Exception("File không tồn tại: " + filePath);
-                        }
+                       // var filePath = dirUpload + "\\" + item;
+                        //if (System.IO.File.Exists(filePath))
+                        //{
+                        var filePath = "C:\\Project\\FileManagerService\\Output\\2023\\file\\Chi_tiết_nhiệm_vụ.pdf";
+                        Attachment attachment = new Attachment(filePath);
+                        mail.Attachments.Add(attachment);
+                        //}
+                        //else
+                        //{
+                        //    throw new Exception("File không tồn tại: " + filePath);
+                        //}
                     }
                     catch (Exception ex)
                     {
