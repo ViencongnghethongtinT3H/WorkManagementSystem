@@ -5,7 +5,7 @@ namespace WorkManagementSystem.Features.Meeting.GetMeetings
     public class Request
     {
         public string UserId { get; set; } = string.Empty;
-        public RoleUserMeeting? RoleUserMeeting { get; set; }
+        public RoleUserMeeting RoleUserMeeting { get; set; }
         public int? Page { get; init; } = 1;
         public int? PageSize { get; init; } = 20;
     }

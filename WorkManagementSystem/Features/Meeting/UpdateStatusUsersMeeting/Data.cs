@@ -24,7 +24,7 @@ namespace WorkManagementSystem.Features.Meeting.UpdateStatusUsersMeeting
                 };
             }
             var userMeetingRepo = _unitOfWork.GetRepository<MeetingUser>();
-            var userMeeting = await userMeetingRepo.GetAll().FirstOrDefaultAsync(p=>p.MeetingId == r.MeetingId);
+            var userMeeting = await userMeetingRepo.GetAll().FirstOrDefaultAsync(p=>p.UserId == r.UserId && p.MeetingId == r.MeetingId);
             if (userMeeting is null)
             {
                 return new ResultModel<string>(string.Empty)
