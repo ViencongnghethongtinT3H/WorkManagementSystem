@@ -1,4 +1,7 @@
-﻿namespace WorkManagementSystem.Features.Meeting.GetMeetings
+﻿using WorkManagementSystem.Features.Meeting.GetByIdMeeting;
+using WorkManagementSystem.Shared.Extensions;
+
+namespace WorkManagementSystem.Features.Meeting.GetMeetings
 {
     public class Data
     {
@@ -26,22 +29,46 @@
                               join b in meetings on a.MeetingId equals b.Id
                               select new Response
                               {
+                                  Id = b.Id,
                                   RoleUserMeetingName = a.RoleUserMeeting.GetDescription(),
                                   RoleUserMeeting = a.RoleUserMeeting,
                                   UserId = a.UserId.ToString(),
-                                  HourStart = b.HourStart.ToFormatString("dd/MM/yyyy hh:mm"),
-                                  HourEnd = b.HourEnd.ToFormatString("dd/MM/yyyy hh:mm"),
+                                  HourStart = b.HourStart.ToString(),
+                                  HourEnd = b.HourEnd.ToString(),
+                                  DayOfMeeting = b.DayOfMeeting.ToddMMyyyy(),
                                   Content = b.Content,
                                   OrganizerId = b.OrganizerId.ToString(),
                                   Title = b.Title,
-                                  TypeMeeting = b.TypeMeeting.GetDescription(),
-                                  FormatMeeting = b.FormatMeeting.GetDescription(),
-                                  StatusUserMeeting = a.StatusUserMeeting.GetDescription(),
+                                  TypeMeetingName = b.TypeMeeting.GetDescription(),
+                                  FormatMeetingName = b.FormatMeeting.GetDescription(),
+                                  StatusUserMeetingName = a.StatusUserMeeting.GetDescription(),
+                                  TypeMeeting = b.TypeMeeting,
+                                  StatusUserMeeting = a.StatusUserMeeting,
+                                  FormatMeeting = b.FormatMeeting,
+                                  Link = b.Link,    
                                
                               }).ToListAsync();
             if (r.RoleUserMeeting != null)
             {
                 response = response.Where(p => p.RoleUserMeeting == r.RoleUserMeeting).ToList();
+            }
+            foreach (var item in response)
+            {
+                var userMeetings = await meetingUserRepo.GetAll().AsNoTracking().Where(p => p.MeetingId == item.Id).ToListAsync();
+                if (userMeetings.IsAny())
+                {
+                    var lstUserMeeting = userMeetings.Select(item => new UserMeeting
+                    {
+                        MeetingId = item.MeetingId,
+                        StatusUserMeetingName = item.StatusUserMeeting.GetDescription(),
+                        StatusUserMeeting = item.StatusUserMeeting,
+                        RoleUserMeetingName = item.RoleUserMeeting.GetDescription(),
+                        RoleUserMeeting = item.RoleUserMeeting,
+                        UserId = item.UserId,
+                    }).ToList();
+                    item.UserMeetings = lstUserMeeting;
+                }
+                
             }
             return ListResultModel<Response>.Create(response, response.Count, r.Page.GetValueOrDefault(), r.PageSize.GetValueOrDefault());
         }
