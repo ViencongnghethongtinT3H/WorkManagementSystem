@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagementSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using WorkManagementSystem.Infrastructure.Persistence;
 namespace WorkManagementSystem.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240905070432_addDayOfMeetForMeeting")]
+    partial class addDayOfMeetForMeeting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,11 +319,11 @@ namespace WorkManagementSystem.Migrations
                     b.Property<int>("FormatMeeting")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan?>("HourEnd")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("HourEnd")
+                        .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan?>("HourStart")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("HourStart")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");

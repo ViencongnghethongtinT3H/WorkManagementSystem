@@ -13,7 +13,10 @@ namespace WorkManagementSystem.Shared.Extensions
         {
             return dt.ToString("dd/MM/yyyy");
         }
-
+        public static string ToHHmm(this DateTime? dt)
+        {
+            return dt.HasValue ? dt.Value.ToString("HH:mm") : "";
+        }
         public static string ToFormatString(this DateTime? dt, string format = "dd/MM/yyyy HH:mm")
         {
             return dt.HasValue ? dt.Value.ToString(format) : "";
@@ -23,7 +26,6 @@ namespace WorkManagementSystem.Shared.Extensions
         {
             return dt.ToString(format);
         }
-
         public static string ToFormatStringWithGMT7(this DateTime dt, string format = "dd/MM/yyyy HH:mm")
         {
             dt = dt.AddHours(7);
