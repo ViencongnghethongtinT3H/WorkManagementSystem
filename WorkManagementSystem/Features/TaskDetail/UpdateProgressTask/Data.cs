@@ -25,21 +25,7 @@ public class Data
             if (task.WorkItemId.HasValue)
             {
                 var content = string.Empty;
-                if (task.ProcessingStatus == ProcessingStatusEnum.None)
-                {
-                    task.ProcessingStatus = ProcessingStatusEnum.Processing;
-                    content = $"Tài khoản {name} đã bắt đầu xử lý công văn này";
-                }
-
-                else if (r.ProgressValue == 100)
-                {
-                    task.ProcessingStatus = ProcessingStatusEnum.Completed;
-                    content = $"Tài khoản {name} đã hoàn thành nhiệm vụ này";
-                }
-                else
-                {
-                    content = $"Tài khoản {name} cập nhật tiến độ công việc {r.ProgressValue}%";
-                }
+                task.Status = r.Status;
                 task.Updated = DateTime.Now;
                 taskRepository.Update(task);
 
@@ -56,11 +42,11 @@ public class Data
                 && x.UserReceiveId == r.UserId);
             if (imple is not null)
             {
-                imple.ProgressValue = r.ProgressValue;
+                imple.Status = r.Status;
                 imple.Note = r.Note;
                 imple.Updated = DateTime.Now;
+                implemenRepo.Update(imple);
             }
-            implemenRepo.Update(imple);
             await _unitOfWork.CommitAsync();
 
 
@@ -68,7 +54,7 @@ public class Data
 
             lstcmd.Add(new NotificationCommandbase
             {
-                Content = $"Tài khoản {name} cập nhật tiến độ công việc {r.ProgressValue}%",
+                Content = $"Tài khoản {name} cập nhật công việc {r.Status}",
                 UserReceive = task.UserCreateTaskId,
                 UserSend = r.UserId,
                 Url = task.Id.ToString(),

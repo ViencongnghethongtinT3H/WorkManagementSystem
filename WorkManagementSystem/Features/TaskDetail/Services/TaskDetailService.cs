@@ -80,7 +80,7 @@ public class TaskDetailService : ITaskDetailService
         IsPeriodical = r.IsPeriodical,
         LeadershipDirectId = r.LeadershipDirectId,
         UserCreateTaskId = r.UserCreateTaskId,
-        ProcessingStatus = ProcessingStatusEnum.None,
+       // ProcessingStatus = ProcessingStatusEnum.None,
         Dealine = r.Dealine,
         Status = StatusEnum.Active,
         UserIdCreated = r.UserCreateTaskId.ToString(),

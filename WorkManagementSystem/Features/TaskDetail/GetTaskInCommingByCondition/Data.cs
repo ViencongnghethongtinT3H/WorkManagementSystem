@@ -14,7 +14,7 @@ public class Data
         var settingRepo = _unitOfWork.GetRepository<Entities.Setting>().GetAll();
         var ImplemenRepo = _unitOfWork.GetRepository<Implementer>().GetAll();
 
-        var query = from t in taskRepo.AsNoTracking()
+        var query = (from t in taskRepo.AsNoTracking()
                     join w in workRepo.AsNoTracking() on t.WorkItemId equals w.Id
                     join s3 in settingRepo.AsNoTracking() on w.Notation equals s3.Key into sd3
                     from b1 in sd3.DefaultIfEmpty()
@@ -32,34 +32,35 @@ public class Data
                         DepartmentReceiveId = t.DepartmentReceiveId,
                         Dealine = t.Dealine.ToFormatString("dd/MM/yyyy"),
                         UserReceiveId = u.UserReceiveId,
-                        Created = t.Created
-                    };
+                        Created = t.Created,
+                        StatusEnum = t.Status
+                    });
 
         var userId = input.Filters.GetFilterModel("UserId");
         if (userId is not null)
         {
             query = query.Where(x => x.UserReceiveId == new Guid(userId.FieldValue));
         }
-        var workId = input.Filters.GetFilterModel("Id");
-        if (workId is not null)
-        {
-            query = query.Where(x => x.Id == new Guid(workId.FieldValue));
-        }
+        //var workId = input.Filters.GetFilterModel("Id");
+        //if (workId is not null)
+        //{
+        //    query = query.Where(x => x.Id == new Guid(workId.FieldValue));
+        //}
 
-        var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");
-        if (processingStatus is not null)
-        {
-            query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
-        }
+        //var processingStatus = input.Filters.GetFilterModel("ProcessingStatus");
+        //if (processingStatus is not null)
+        //{
+        //    query = query.Where(x => (int)x.ProcessingStatus == Convert.ToInt16(processingStatus.FieldValue));
+        //}
 
-        var fromDate = input.Filters.GetFilterModel("FromDate");
-        var toDate = input.Filters.GetFilterModel("ToDate");
-        if (fromDate is not null && toDate is not null)
-        {
-            var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
-            query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
-        }
+        //var fromDate = input.Filters.GetFilterModel("FromDate");
+        //var toDate = input.Filters.GetFilterModel("ToDate");
+        //if (fromDate is not null && toDate is not null)
+        //{
+        //    var fromValue = fromDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+        //    var toValue = toDate.FieldValue.ParseDateTimeNotNull(false, "dd/MM/yyyy");
+        //    query = query.Where(x => x.Created > fromValue && x.Created <= toValue);
+        //}
 
         var data = new Response
         {
