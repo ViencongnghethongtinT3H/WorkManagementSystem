@@ -21,11 +21,11 @@ public class Data
             DepartmentReceiveId = r.DepartmentReceiveId
         };
         await implemenRepo.AddAsync(imple);
-        if (workItem.ProcessingStatus == ProcessingStatusEnum.ReceiveProccess)
-        {
-            workItem.ProcessingStatus = ProcessingStatusEnum.Processing;
-            workItem.Updated = DateTime.Now;
-        }
+        //if (workItem.ProcessingStatus == ProcessingStatusEnum.ReceiveProccess)
+        //{
+        //    workItem.ProcessingStatus = ProcessingStatusEnum.Processing;
+        //    workItem.Updated = DateTime.Now;
+        //}
         workItemRepository.Update(workItem);
 
         if (r.FileAttachIds.IsAny())

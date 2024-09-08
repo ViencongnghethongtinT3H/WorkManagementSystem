@@ -24,7 +24,12 @@ namespace WorkManagementSystem.Features.Meeting.GetMeetings
             {
                 return ListResultModel<Response>.Create(response);
             }
-            var meetings = meetingRepo.GetAll();
+            var meetings = meetingRepo.GetAll().AsQueryable().AsNoTracking();
+            if (r.RoleUserMeeting == RoleUserMeeting.Organizer)
+            {
+                meetUsers = meetingUserRepo.GetAll().AsQueryable().AsNoTracking();
+                meetings = meetings.Where(p => p.OrganizerId == Guid.Parse(r.UserId));
+            }           
             response = await (from a in meetUsers
                               join b in meetings on a.MeetingId equals b.Id
                               select new Response
@@ -45,13 +50,8 @@ namespace WorkManagementSystem.Features.Meeting.GetMeetings
                                   TypeMeeting = b.TypeMeeting,
                                   StatusUserMeeting = a.StatusUserMeeting,
                                   FormatMeeting = b.FormatMeeting,
-                                  Link = b.Link,    
-                               
+                                  Link = b.Link,         
                               }).ToListAsync();
-            if (r.RoleUserMeeting != null)
-            {
-                response = response.Where(p => p.RoleUserMeeting == r.RoleUserMeeting).ToList();
-            }
             foreach (var item in response)
             {
                 var userMeetings = await meetingUserRepo.GetAll().AsNoTracking().Where(p => p.MeetingId == item.Id).ToListAsync();

@@ -34,6 +34,6 @@ public class WorkItem : EntityBase
 
     #endregion
 
-    public ProcessingStatusEnum ProcessingStatus { get; set; } = ProcessingStatusEnum.None;  // trạng thái của công văn
+    public ProcessingStatusEnum ProcessingStatus { get; set; } /*= ProcessingStatusEnum.None; */ // trạng thái của công văn
     
 }
