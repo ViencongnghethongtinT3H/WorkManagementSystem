@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Infrastructure.DataSeeder;
+﻿﻿namespace WorkManagementSystem.Infrastructure.DataSeeder;
 
 public class DataSeeder
 {

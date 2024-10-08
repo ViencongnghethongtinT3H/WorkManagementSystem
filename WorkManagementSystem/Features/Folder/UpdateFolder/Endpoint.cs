@@ -1,6 +1,6 @@
 namespace WorkManagementSystem.Features.Folder.UpdateFolder
 {
-    public class Endpoint : Endpoint<Request, ResultModel<bool>>
+    public class Endpoint : Endpoint<Request, ResultModel<System.Guid>>
     {
         private readonly IUnitOfWork _unitOfWork;
 

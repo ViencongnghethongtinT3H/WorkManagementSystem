@@ -1,6 +1,6 @@
 namespace WorkManagementSystem.Features.Folder.ShareFile
 {
-    public class Endpoint :  Endpoint<Request, ResultModel<bool>>
+    public class Endpoint :  Endpoint<Request, ResultModel<FileManagement>>
     {
         private readonly IUnitOfWork _unitOfWork;
 

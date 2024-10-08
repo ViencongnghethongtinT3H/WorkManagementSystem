@@ -10,7 +10,7 @@ public class Data
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ResultModel<bool>> ShareFile(Request r)
+    public async Task<ResultModel<FileManagement>> ShareFile(Request r)
     {
 
         try
@@ -32,9 +32,9 @@ public class Data
             fileAttachRepo.Add(newFileAttach);
             await _unitOfWork.CommitAsync();
 
-            return new ResultModel<bool>(true)
+            return new ResultModel<FileManagement>(fileManagement)
             {
-                Data = true,
+                Data = fileManagement,
                 Status = 200,
                 ErrorMessage = "Chia sẻ file thành công",
                 IsError = false,
