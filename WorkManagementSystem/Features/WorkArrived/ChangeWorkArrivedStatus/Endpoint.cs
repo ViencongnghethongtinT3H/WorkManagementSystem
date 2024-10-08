@@ -17,6 +17,39 @@
         {
             var data = new Data(_unitOfWork);
             var result = await data.ChangeWorkArrivedStatus(r);
+            var name = await new GetUserNameCommand
+            {
+                UserId = r.UserIds.FirstOrDefault()
+            }.ExecuteAsync();
+            // láy ra subject cua cong van
+            var notationWorkDispatch = await new GetNotationWorkDispatchCommand
+            {
+                WorkDispatchId = r.WorkArriveId
+            }.ExecuteAsync();
+            var lstcmd = new List<NotificationCommandbase>();
+            // notifine
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {name} {r.ActionType.GetDescription()} của công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = r.UserIds.FirstOrDefault(),
+                UserSend = r.UserIds.FirstOrDefault(),
+                Url = r.UserIds.FirstOrDefault().ToString(),
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.UpdateProgressTask
+            });
+
+            await new LstNotificationCommand
+            {
+                NotificationCommands = lstcmd
+            }.ExecuteAsync();
+
+            // history
+            await new HistoryCommand
+            {
+                UserId = r.UserIds.FirstOrDefault(),
+                IssueId = r.WorkArriveId,
+                ActionContent = $"Tài khoản {name} {r.ActionType.GetDescription()} {notationWorkDispatch} "
+            }.ExecuteAsync();
             await SendAsync(result);
         }
     }

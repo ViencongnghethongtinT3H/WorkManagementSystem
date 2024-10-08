@@ -9,7 +9,12 @@
   <ItemGroup>
     <Folder Include="Logging\" />
     <Folder Include="Cache\" />
-    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Flurl" Version="4.0.0" />
+    <PackageReference Include="Flurl.Http" Version="4.0.2" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
   </ItemGroup>
 
 </Project>

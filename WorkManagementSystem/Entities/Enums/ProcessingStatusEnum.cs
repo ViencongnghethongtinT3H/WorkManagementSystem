@@ -2,12 +2,12 @@
 
 public enum ProcessingStatusEnum
 {
+    [Description("Chưa thực hiện")]
+    Todo = 1,  
     [Description("Đang thực hiện")]
-    Processing = 1,  
-    [Description("Đã hoàn thành ")]
-    Completed = 2,  
-    [Description("Chưa vào sổ")]
-    None = 3,
-    [Description("Đã chuyển xử lý")]
-    ReceiveProccess = 4,
+    Processing = 2,  
+    [Description("Kiểm thử")]
+    Test = 3,
+    [Description("Đã hoàn thành")]
+    Done = 4,
 }

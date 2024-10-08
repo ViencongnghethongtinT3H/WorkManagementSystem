@@ -1,4 +1,4 @@
-﻿using WorkManagementSystem.Features.ToImplementer;
+﻿using WorkManagementSystem.Entities;
 
 namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch;
 
@@ -6,11 +6,9 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch;
 public class Endpoint : Endpoint<Request, ResultModel<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IEventImplement _eventImplement;
-    public Endpoint(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+    public Endpoint(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _eventImplement = eventImplement;
     }
     public override void Configure()
     {
@@ -20,11 +18,61 @@ public class Endpoint : Endpoint<Request, ResultModel<bool>>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var data = new Data(_unitOfWork, _eventImplement);
-        var result = await data.AddUserToWorkDispatch(r);
-        // Thêm phần lịch sử
+        var data = new Data(_unitOfWork);
+        ResultModel<bool>? result = await data.AddUserToWorkDispatch(r);
+        var lstcmd = new List<NotificationCommandbase>();
+        var name = await new GetUserNameCommand
+        {
+            UserId = r.UserId
+        }.ExecuteAsync(); // người thêm các người theo dõi vào công văn
 
-        // Thêm phần notification
+        // lấy ra subject của công văn
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand { WorkDispatchId = r.WorkflowId }.ExecuteAsync();
+        foreach (var item in r.UserProccess)
+        {
+            var nameFlow = await new GetUserNameCommand
+            {
+                UserId = item.UserIds
+            }.ExecuteAsync();
+
+            // Thêm phần notification
+            lstcmd.Add(new NotificationCommandbase
+            {
+                UserSend = r.UserId,
+                Content = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {name} để {item.UserWorkflowType.GetDescription()} bời {nameFlow} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = item.UserIds,
+                Url = r.WorkflowId.ToString(),
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.SendTask
+            });
+
+            await new LstNotificationCommand
+            {
+                NotificationCommands = lstcmd
+            }.ExecuteAsync();
+
+            await new LstNotificationCommand
+            {
+                NotificationCommands = lstcmd
+            }.ExecuteAsync();
+
+            // thêm lịch sử
+            // Thêm phần lịch sử
+            await new HistoryCommand
+            {
+                UserId = r.UserId,
+                IssueId = r.WorkflowId,
+                ActionContent = $"Công văn {notationWorkDispatch} đã chuyển người xử lý {nameFlow} làm {item.UserWorkflowType.GetDescription()}"
+            }.ExecuteAsync();
+
+            await new NoteCommand
+            {
+                UserId = r.UserId,
+                WorkFlow = r.WorkflowId,
+                Notes = item.Note
+            }.ExecuteAsync();
+        }
+
 
         await SendAsync(result);
     }

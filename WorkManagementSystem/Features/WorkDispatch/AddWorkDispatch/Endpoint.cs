@@ -10,27 +10,31 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
     public override void Configure()
     {
         AllowAnonymous();
-        Post("/WorkDispatch/create");
+        Post("/WorkDispatch/create-or-update");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var userNotifications = new List<Guid>();
-        var data = new Data(_unitOfWork);
+        var data = new Data(_unitOfWork);   
         string workItemId = await data.CreateWorkDispatch(Map.ToEntity(r), r);
+        var result = ResultModel<Response>.Create(new Response
+        {
+            WorkItemId = workItemId
+        });
 
+        if (string.IsNullOrEmpty(result.Data.WorkItemId))
+            ThrowError("Không thể thêm công văn");
         // Xử lý notification
         var lstcmd = new List<NotificationCommandbase>();
-        var name = await data.GetUserName(r.UserCompile);
-        var receiveName = await new GetUserNameCommand
+        var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand
         {
-            UserId = r.LeadershipDirectId
+            WorkDispatchId = new Guid(workItemId),
         }.ExecuteAsync();
-
 
         lstcmd.Add(new NotificationCommandbase
         {
-            Content = $"Tài khoản {name} đã tạo một công văn do {receiveName} chỉ đạo. Bạn vui lòng kiểm tra",
+            Content = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
             UserReceive = r.LeadershipDirectId,
             UserSend = r.UserCompile,
             Url = workItemId,
@@ -48,17 +52,22 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
         {
             UserId = r.UserCompile,
             IssueId = new Guid(workItemId),
-            ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+            ActionContent = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch}"
         }.ExecuteAsync();
 
-
-        var result = ResultModel<Response>.Create(new Response
+        await new NoteCommand
         {
-            WorkItemId = workItemId
-        });
-
-        if (string.IsNullOrEmpty(result.Data.WorkItemId))
-            ThrowError("Không thể thêm công văn");
+            UserId = r.UserCompile,
+            WorkFlow = new Guid(workItemId),
+            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.LeadershipDirectId }.ExecuteAsync()} được gán là người theo dõi công văn {notationWorkDispatch}"
+        }.ExecuteAsync();
+        await new NoteCommand
+        {
+            UserId = r.UserCompile,
+            WorkFlow = new Guid(workItemId),
+            Notes = $"Tài khoản {await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync()} đã khởi tạo công văn {notationWorkDispatch}"
+        }.ExecuteAsync();
+        
         await SendAsync(result);
 
     }

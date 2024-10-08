@@ -5,7 +5,7 @@
         public string? ItemId { get; set; }  // số
         [MaxLength(100)]
         public string? Notation { get; set; }  // ký hiệu link tới bảng setting
-        public DateTime? DateIssued { get; set; }  // ngày ban hành
+        public string? DateIssued { get; set; }  // ngày ban hành
         public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
         public Guid? DepartmentId { get; set; }  //  cơ quan ban hành
 
@@ -19,9 +19,9 @@
         public Guid LeadershipDirectId { get; set; }   // Lãnh đạo chỉ đạo
         public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
 
-        public DateTime? Dealine { get; set; }  // Thời hạn xử lý
-        public DateTime? EvictionTime { get; set; }  // Thời hạn thu hồi
-        public DateTime? SignDay { get; set; }  // Ngày ký
+        public string? Dealine { get; set; }  // Thời hạn xử lý
+        public string? EvictionTime { get; set; }  // Thời hạn thu hồi
+        public string? SignDay { get; set; }  // Ngày ký
         public Guid? UserSign { get; set; }    // Người ký 
         public Guid UserCompile { get; set; }    // Người biên soạn
         public Guid? DepartmentCompile { get; set; }  //  đơn vị soạn thảo
@@ -29,10 +29,17 @@
         public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
         public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
         public bool IsPublish { get; set; }
-        public List<Guid>? FileAttachIds { get; set; }
-        public List<Guid>? ReceiveCompanyIds { get; set; }
+        public List<Files>? Files { get; set; }
+        public List<ReceiveCompanyInput>? ReceiveCompanys { get; set; }
+        public Guid workDispatchId { get; set; }
+        public Guid UserId { get; set; }   
 
     }
+    public class Files
+    {
+        public Guid fileId { get; set; }
+    }
+
     public class Validator : Validator<Request>
     {
         public Validator()
@@ -47,4 +54,15 @@
         public string Message => "Work Item saved!";
         public string WorkItemId { get; set; }
     }
+
+    public class ReceiveCompanyInput
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string? Fax { get; set; }
+        public string? Address { get; set; }
+        public Guid? AccountReceiveId { get; set; }   // Id của văn thư đơn vị nhận
+    }
+
 }

@@ -143,13 +143,13 @@ namespace WorkManagementSystem.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<Guid?>("IssuesId")
                         .HasColumnType("uniqueidentifier");
@@ -297,6 +297,134 @@ namespace WorkManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Implementers");
+                });
+
+            modelBuilder.Entity("WorkManagementSystem.Entities.Meeting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DayOfMeeting")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FormatMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan?>("HourEnd")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan?>("HourStart")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrganizerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Meetings");
+                });
+
+            modelBuilder.Entity("WorkManagementSystem.Entities.MeetingUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("MeetingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RoleUserMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusUserMeeting")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MeetingUsers");
+                });
+
+            modelBuilder.Entity("WorkManagementSystem.Entities.Note", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("WorkFlow")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.Notification", b =>
@@ -735,6 +863,9 @@ namespace WorkManagementSystem.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserCompile")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -814,6 +945,9 @@ namespace WorkManagementSystem.Migrations
                     b.Property<string>("UserIdUpdated")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("WorkArrivedProcedureStatus")
+                        .HasColumnType("int");
+
                     b.Property<int>("WorkArrivedStatus")
                         .HasColumnType("int");
 
@@ -823,6 +957,99 @@ namespace WorkManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkArrived");
+                });
+
+            modelBuilder.Entity("WorkManagementSystem.Entities.WorkArriveWatting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateIssued")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Dealine")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DepartmentCompile")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DocumentTypeKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EvictionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IndustryId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("KeyWord")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("LeadershipDirectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notation")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SignDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Subjective")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("TransferType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UserCompile")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserIdCreated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdUpdated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserSign")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WorkItemNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WorkflowStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkArriveWattings");
                 });
 
             modelBuilder.Entity("WorkManagementSystem.Entities.WorkDispatch", b =>

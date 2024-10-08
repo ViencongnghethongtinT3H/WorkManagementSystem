@@ -2,7 +2,8 @@
 {
     public class Request
     {
-        public string? WorkItemNumber { get; set; }
+        public Guid IdworkArriveWatting { get; set; }
+        public Guid? Id { get; set; }
         public string? ItemId { get; set; }  // số
         public string? Notation { get; set; }  // ký hiệu link tới bảng setting
         public DateTime? DateIssued { get; set; }  // ngày ban hành  chính là ngày văn bản
@@ -15,6 +16,10 @@
         public Guid UserCompile { get; set; }    // Người biên soạn
         public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
         public WorkArrivedStatus WorkArrivedStatus { get; set; }  // trạng thái của công văn
+        public WorkArrivedProcedureStatus WorkArrivedProcedureStatus { get; set; }
+        public List<Guid>? FileAttachIds { get; set; }
+        public List<ContitionWorkflowEnum>? MenuStatus { get; set; }
+
     }
     public class Validator : Validator<Request>
     {

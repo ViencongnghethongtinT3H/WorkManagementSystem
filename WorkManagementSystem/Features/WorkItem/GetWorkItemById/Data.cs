@@ -31,7 +31,7 @@ public class Data
                               WorkItemId = w.Id,
                               WorkItemNumber = w.WorkItemNumber,
                               Content = w.Content,
-                              Notation = $"{w.ItemId}/{b1.Value}",
+                              Notation = $"{w.ItemId}/{b1.Value}",   // Số văn bản và ký hiệu văn bàn
                               ProcessingStatus = w.ProcessingStatus,
                               DateIssued = w.DateIssued.ToFormatString("dd/MM/yyyy"),
                               Priority = w.Priority,
@@ -41,8 +41,8 @@ public class Data
                               DepartmentId = w.DepartmentId,
                               Dealine = w.Dealine.ToFormatString("dd/MM/yyyy"),
                               EvictionTime = w.EvictionTime.ToFormatString("dd/MM/yyyy"),
-                              IndustryId = b5.Value,
-                              IndustryName = b5.Value,
+                              IndustryId = b5.Value,   // id lĩnh vực
+                              IndustryName = b5.Value,  // tên lĩnh vực
                               LeadershipDirectId = w.LeadershipDirectId,
                               DepartmentName = b2.Name,
                               leadershipDirectName = b3.Name,

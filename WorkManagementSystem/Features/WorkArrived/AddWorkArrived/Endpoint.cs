@@ -10,7 +10,7 @@
         public override void Configure()
         {
             AllowAnonymous();
-            Post("/WorkArrived/create");
+            Post("/workArrived/create-or-update");
         }
 
         public override async Task HandleAsync(Request r, CancellationToken c)
@@ -20,14 +20,37 @@
             {
                 WorkItemId = await data.CreateWorkArrived(Map.ToEntity(r), r)
             });
-            var name = await data.GetUserName(r);
+            // Xử lý notification
+            var lstcmd = new List<NotificationCommandbase>();
+            var name = await new GetUserNameCommand { UserId = r.UserCompile }.ExecuteAsync();
+            var notationWorkDispatch = await new GetNotationWorkDispatchCommand
+            {
+                WorkDispatchId = new Guid(result.Data.WorkItemId),
+            }.ExecuteAsync();
 
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = r.LeadershipDirectId,
+                UserSend = r.UserCompile,
+                Url = result.Data.WorkItemId,
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
+            });
+
+            await new LstNotificationCommand
+            {
+                NotificationCommands = lstcmd
+            }.ExecuteAsync();
+
+            // Xử lý lưu lịch sử
             await new HistoryCommand
             {
                 UserId = r.UserCompile,
                 IssueId = new Guid(result.Data.WorkItemId),
-                ActionContent = $"Tài khoản {name} đã tạo thêm một công văn đến"
+                ActionContent = $"Tài khoản {name} đã tạo công văn {notationWorkDispatch}"
             }.ExecuteAsync();
+
 
             if (string.IsNullOrEmpty(result.Data.WorkItemId))
                 ThrowError("Không thể thêm công văn");

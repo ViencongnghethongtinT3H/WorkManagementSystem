@@ -28,23 +28,33 @@ public class Endpoint : Endpoint<Request, Response>
             var lst = new List<FileInfo>();
 
             var dirUpload = @"C:\Project\FileManagerService\Output\2023\file";
-            foreach (var item in Files)
+            try
             {
-                if (!Directory.Exists(dirUpload))
+                foreach (var item in Files)
                 {
-                    Directory.CreateDirectory(dirUpload);
+                    if (!Directory.Exists(dirUpload))
+                    {
+                        Directory.CreateDirectory(dirUpload);
+                    }
+                    var filePath = dirUpload + "\\" + item.FileName;
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        await item.CopyToAsync(fileStream);
+                    }
+                    lst.Add(new FileInfo
+                    {
+                        FileName = item.FileName,
+                        FileUrl = filePath
+                    });
                 }
-                var filePath = dirUpload + "\\" + item.FileName;
-                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await item.CopyToAsync(fileStream);
-                }
-                lst.Add(new FileInfo
-                {
-                    FileName = item.FileName,
-                    FileUrl = filePath
-                });
+
             }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"Error: Access to the path is denied. Details: {ex.Message}");
+            }
+           
             var data = new Data(_unitOfWork);
            var ids =  await data.AddFileAttachs(lst);
 

@@ -33,4 +33,5 @@ public class TaskDetailResponse
     public Guid UserReceiveId { get; set; }
     public ProcessingStatusEnum ProcessingStatus { get; set; }  // trạng thái của nhiệm vụ
     public DateTime Created { get; set; }
+    public StatusEnum StatusEnum { get; set; }
 }

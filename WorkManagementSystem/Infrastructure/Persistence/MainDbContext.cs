@@ -28,6 +28,12 @@ public class MainDbContext : DbContext, IDatabaseContext
     public DbSet<ReceiveCompany> ReceiveCompanys { get; set; }
     public DbSet<DispatchReceiveCompany> DispatchReceiveCompanies { get; set; }
     public DbSet<FileManagement> FileManagements { get; set; }
+    public DbSet<WorkArriveWatting> WorkArriveWattings { get; set; }
+    public DbSet<Note> Notes { get; set; }
+    public DbSet<Meeting> Meetings { get; set; }
+    public DbSet<MeetingUser> MeetingUsers { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

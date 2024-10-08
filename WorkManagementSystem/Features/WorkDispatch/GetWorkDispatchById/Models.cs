@@ -4,26 +4,26 @@
     {
         public Guid WorkDispatchId { get; set; }
     }
-    public class WorkDispatchDetailResponse 
+    public class WorkDispatchDetailResponse
     {
         #region Step 1
         public string? WorkItemNumber { get; set; }
         public Guid WorkDispatchId { get; set; }
         public string? UserIdCreated { get; set; }
         public string? ItemId { get; set; }  // số
-  
+
         public string? Notation { get; set; }  // ký hiệu link tới bảng setting
         public string? DateIssued { get; set; }  // ngày ban hành
-        public string DocumentTypeKey { get; set; }  //  Loại văn bản link tới bảng chung setting
+        public string DocumentTypeKey { get; set; } = string.Empty;  //  Loại văn bản link tới bảng chung setting
 
         public string? DepartmentName { get; set; }   // Tên Cơ quan ban hành  
         public Guid? DepartmentId { get; set; }  //  cơ quan ban hành
 
-        public string Content { get; set; }   // Trích yếu         
+        public string Content { get; set; } = string.Empty;   // Trích yếu         
         public string? Subjective { get; set; }   // Chuyên đề   
         public string? KeyWord { get; set; }   // từ khoá 
 
-        public string LeadershipDirectName { get; set; }   // Lãnh đạo chỉ đạo
+        public string LeadershipDirectName { get; set; } = string.Empty;  // Lãnh đạo chỉ đạo
         public Guid LeadershipDirectId { get; set; }   // Lãnh đạo chỉ đạo
         public PriorityEnums Priority { get; set; }  // Độ khẩn cấp
         #endregion
@@ -39,43 +39,54 @@
         public string? IndustryId { get; set; }    // Lĩnh vực  link tới bảng chung setting
         public string? IndustryName { get; set; }    // Lĩnh vực  link tới bảng chung setting
 
-        public TransferTypeEnum TransferType { get; set; }  // hình thức vận chuyển
+        public string TransferType { get; set; } = string.Empty;  // hình thức vận chuyển
 
         #endregion
 
-        public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công văn
+        public WorkflowStatusEnum WorkflowStatus { get; set; }   // trạng thái của công vă
 
-        //setting
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public SettingEnum Type { get; set; }
 
-        public List<ReceiveCompanyModel> ReceiveCompanys { get; set; }
-        public List <Notes> Notes { get; set; }   // Ý kiến xử lý
-        public List<HistoryListModel> Histories { get; set; }  // lịch sử
+        public List<FileModel> Files { get; set; } = new List<FileModel>();
+        public List<ReceiveCompanyModel> ReceiveCompanys { get; set; } = new List<ReceiveCompanyModel>();
+        public List<Notes> Notes { get; set; } = new List<Notes>();  // Ý kiến xử lý
+        public List<HistoryListModel> Histories { get; set; } = new List<HistoryListModel>();  // lịch sử
+    }
+    public class Notes
+    { 
+        public Guid Id { get; set; }
+        public Guid WorkFlow { get; set; }
+        public string Note { get; set; } = string.Empty;
+        public string Created { get; set; } = string.Empty;
+        public string DeparmentName { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+
     }
     public class ReceiveCompanyModel
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string? Fax { get; set; }
         public string? Address { get; set; }
-        public Guid AccountReceiveId { get; set; }
-    }
-
-    public class Notes
-    {
-        public string DateNote { get; set; }   // ToFormatString("dd/MM/yyyy HH:mm"),
-        public string UserName { get; set; }   // người thực hiện
-        public string Note { get; set; }   // người thực hiện
-        public string DeparmentName { get; set; }   // người thực hiện
+        public Guid? AccountReceiveId { get; set; }
     }
 
     public class HistoryListModel
     {
-        public string ActionTime { get; set; }
-        public string UserUpdated { get; set; }
-        public string ActionContent { get; set; }
+        public string ActionTime { get; set; } = string.Empty;
+        public string UserUpdated { get; set; } = string.Empty;
+        public string ActionContent { get; set; } = string.Empty;
     }
+    public class FileModel 
+    {
+        // files
+        public string FileName { get; set; } = string.Empty; // tên phòng ban
+        public string? FileUrl { get; set; }  // tên phòng ban
+        public string? FileExtension { get; set; }  // tên phòng ban
+        public Guid FileId { get; set; }
+        public StatusEnum Status { get; set; }
+
+    }
+
 
 }

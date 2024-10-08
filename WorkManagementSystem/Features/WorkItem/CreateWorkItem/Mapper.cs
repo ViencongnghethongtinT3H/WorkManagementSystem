@@ -14,7 +14,7 @@ public class Mapper : Mapper<Request, Response, Entities.WorkItem>
         LeadershipDirectId = r.LeadershipDirectId,
         Priority = r.Priority,
         DocumentTypeKey = r.DocumentTypeKey,        
-        ProcessingStatus = ProcessingStatusEnum.None,
+     //   ProcessingStatus = ProcessingStatusEnum.None,
         IndustryId = r.IndustryId,
         UserIdCreated = r.UserCreatedId.ToString(),
     };

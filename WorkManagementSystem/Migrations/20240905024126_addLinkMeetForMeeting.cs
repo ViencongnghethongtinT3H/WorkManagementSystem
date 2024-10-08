@@ -1,0 +1,25 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace WorkManagementSystem.Migrations
+{
+    public partial class addLinkMeetForMeeting : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "Link",
+                table: "Meetings",
+                type: "nvarchar(max)",
+                nullable: true);
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "Link",
+                table: "Meetings");
+        }
+    }
+}

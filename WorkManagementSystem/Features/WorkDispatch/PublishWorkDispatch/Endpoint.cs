@@ -1,15 +1,11 @@
-﻿using WorkManagementSystem.Features.ToImplementer;
-
-namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
+﻿namespace WorkManagementSystem.Features.WorkDispatch.PublishWorkDispatch;
 
 public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IEventImplement _eventImplement;
-    public Endpoint(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+    public Endpoint(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _eventImplement = eventImplement;
     }
     public override void Configure()
     {
@@ -19,23 +15,61 @@ public class Endpoint : Endpoint<Request, ResultModel<Response>, Mapper>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var data = new Data(_unitOfWork, _eventImplement);
+        var lstcmd = new List<NotificationCommandbase>();
+        var data = new Data(_unitOfWork);
         var result = ResultModel<Response>.Create(new Response
         {
             WorkItemId = await data.CreateWorkDispatch(Map.ToEntity(r), r)
         });
-        var name = await data.GetUserName(r);
+        // Xử lý notification
+        var receiveName = await new GetUserNameCommand{UserId = r.LeadershipDirectId}.ExecuteAsync();
+
+        // láy ra subject cua cong van
+        var notationWorkDispatch = await new GetNotationWorkDispatchCommand{WorkDispatchId = new Guid(result.Data.WorkItemId)}.ExecuteAsync();
+
+        lstcmd.Add(new NotificationCommandbase
+        {
+            Content = $"Tài khoản {receiveName} đã phát hành công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+            UserReceive = r.LeadershipDirectId,
+            UserSend = r.UserCompile,
+            Url = result.Data.WorkItemId,
+            NotificationType = NotificationType.WorkItem,
+            NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
+        });
+        foreach (var item in r.ReceiveCompanys)
+        {
+            lstcmd.Add(new NotificationCommandbase
+            {
+                Content = $"Tài khoản {receiveName} đã phát hành công văn {notationWorkDispatch} vào {DateTime.Now.ToFormatString("dd/MM/yyyy hh:mm")}",
+                UserReceive = item.AccountReceiveId.Value,
+                UserSend = r.UserCompile,
+                Url = result.Data.WorkItemId,
+                NotificationType = NotificationType.WorkItem,
+                NotificationWorkItemType = NotificationWorkItemType.SendWorkItem
+            });
+        }
+        await new LstNotificationCommand
+        {
+            NotificationCommands = lstcmd
+        }.ExecuteAsync();
+        // note
+        await new NoteCommand
+        {
+            UserId = r.UserId,
+            WorkFlow = r.workDispatchId,
+            Notes = $"{await new GetUserNameCommand { UserId = r.UserId }.ExecuteAsync()} đã phát hành công văn {await new GetNotationWorkDispatchCommand { WorkDispatchId = r.workDispatchId }.ExecuteAsync()}"
+        }.ExecuteAsync();
 
         // Thêm phần lịch sử
         await new HistoryCommand
         {
             UserId = r.UserCompile,
             IssueId = new Guid(result.Data.WorkItemId),
-            ActionContent = $"Tài khoản {name} đã tạo thêm một công văn"
+            ActionContent = $"Tài khoản {receiveName} đã phát hành công văn {notationWorkDispatch}"
         }.ExecuteAsync();
 
         if (string.IsNullOrEmpty(result.Data.WorkItemId))
-            ThrowError("Không thể thêm công văn");
+            ThrowError("Không thể phát hành công văn");
         await SendAsync(result);
 
     }

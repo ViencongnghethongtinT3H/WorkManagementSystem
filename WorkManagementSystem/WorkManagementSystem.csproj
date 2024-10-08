@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Features\SendEmail\" />
-    <Folder Include="Features\Publish\SignatureWorkflow\" />
   </ItemGroup>
 
 </Project>

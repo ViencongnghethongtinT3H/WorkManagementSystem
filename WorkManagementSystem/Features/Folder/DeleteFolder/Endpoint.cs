@@ -1,6 +1,6 @@
 namespace WorkManagementSystem.Features.Folder.DeleteFolder
 {
-    public class Endpoint : Endpoint<Request, ResultModel<bool>>
+    public class Endpoint : Endpoint<Request, ResultModel<System.Guid>>
     {
         private readonly IUnitOfWork _unitOfWork;
 

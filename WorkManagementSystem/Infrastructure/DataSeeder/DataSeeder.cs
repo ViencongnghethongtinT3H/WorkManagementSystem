@@ -1,4 +1,4 @@
-﻿namespace WorkManagementSystem.Infrastructure.DataSeeder;
+﻿﻿namespace WorkManagementSystem.Infrastructure.DataSeeder;
 
 public class DataSeeder
 {
@@ -27,14 +27,14 @@ public class DataSeeder
     }
     private async Task SeedDataFileManagement()
     {
-        // if (await dbContext.FileManagements.AnyAsync())
-        // {
-        //     return;
-        // }
+        if (await dbContext.FileManagements.AnyAsync())
+        {
+            return;
+        }
         var fileManagements = new List<FileManagement>
         {
 
- new FileManagement
+            new FileManagement
             {
                 UserId = Guid.Parse("95ab46e4-0f8c-4f17-8523-08dc78ea81a9"),
                 Name ="Thư mục chia sẻ",
@@ -117,94 +117,80 @@ public class DataSeeder
                 Name ="Nhiệm vụ",
                 ParentId = null,
                 FileManagementType= Entities.Enums.FileManagementType.Document
-            },
-             new FileManagement
-            {
-                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
-                Name ="Số hoá",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Digitization
-            },
-              new FileManagement
-            {
-                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
-                Name ="Công văn",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.WorkItem
-            },
-              new FileManagement
-            {
-                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
-                Name ="Nhiệm vụ",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Document
-            },
-             new FileManagement
-            {
-                UserId = Guid.Parse("8b99a614-ff49-4038-851d-08dc78ea81a9"),
-                Name ="Thư mục chia sẻ",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Share
             },
                new FileManagement
             {
-                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
-                Name ="Số hoá",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Digitization
-            },
-              new FileManagement
-            {
-                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
-                Name ="Công văn",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.WorkItem
-            },
-              new FileManagement
-            {
-                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
+                UserId = Guid.Parse("6CC61A8D-B0E2-44AB-851C-08DC78EA81A9"),
                 Name ="Nhiệm vụ",
                 ParentId = null,
                 FileManagementType= Entities.Enums.FileManagementType.Document
             },
-             new FileManagement
+                new FileManagement
             {
-                UserId = Guid.Parse("6cc61a8d-b0e2-44ab-851c-08dc78ea81a9"),
-                Name ="Thư mục chia sẻ",
+                UserId = Guid.Parse("6CC61A8D-B0E2-44AB-851C-08DC78EA81A9"),
+                Name ="Công văn",
                 ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Share
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+                 new FileManagement
+            {
+                UserId = Guid.Parse("6CC61A8D-B0E2-44AB-851C-08DC78EA81A9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
             },
                   new FileManagement
             {
-                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
-                Name ="Số hoá",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Digitization
-            },
-              new FileManagement
-            {
-                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
-                Name ="Công văn",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.WorkItem
-            },
-              new FileManagement
-            {
-                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
-                Name ="Nhiệm vụ",
-                ParentId = null,
-                FileManagementType= Entities.Enums.FileManagementType.Document
-            },
-             new FileManagement
-            {
-                UserId = Guid.Parse("4110064f-a763-4329-8522-08dc78ea81a9"),
+                UserId = Guid.Parse("6CC61A8D-B0E2-44AB-851C-08DC78EA81A9"),
                 Name ="Thư mục chia sẻ",
                 ParentId = null,
                 FileManagementType= Entities.Enums.FileManagementType.Share
             },
+
+                  new FileManagement
+            {
+                UserId = Guid.Parse("8B99A614-FF49-4038-851D-08DC78EA81A9"),
+                Name ="Nhiệm vụ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Document
+            },
+                new FileManagement
+            {
+                UserId = Guid.Parse("8B99A614-FF49-4038-851D-08DC78EA81A9"),
+                Name ="Công văn",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.WorkItem
+            },
+                 new FileManagement
+            {
+                UserId = Guid.Parse("8B99A614-FF49-4038-851D-08DC78EA81A9"),
+                Name ="Số hoá",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Digitization
+            },
+                  new FileManagement
+            {
+                UserId = Guid.Parse("8B99A614-FF49-4038-851D-08DC78EA81A9"),
+                Name ="Thư mục chia sẻ",
+                ParentId = null,
+                FileManagementType= Entities.Enums.FileManagementType.Share
+            },
+
         };
         await dbContext.AddRangeAsync(fileManagements);
         await dbContext.SaveChangesAsync();
+        foreach (var item in fileManagements)
+        {
+            if (item.Name == "Công văn")
+            {
+                var fileGo = new FileManagement() { UserId = item.UserId, Created = DateTime.Now, Name = "Công văn đến", ParentId = item.Id, FileManagementType = FileManagementType.WorkItem };
+                await dbContext.AddAsync(fileGo);
+                var fileTo = new FileManagement() { UserId = item.UserId, Created = DateTime.Now, Name = "Công văn đi", ParentId = item.Id, FileManagementType = FileManagementType.WorkItem };
+                await dbContext.AddAsync(fileTo);
+            }
+
+            await dbContext.SaveChangesAsync();
+        }
     }
     private async Task SeedDataSetting()
     {

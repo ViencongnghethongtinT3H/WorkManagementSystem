@@ -10,7 +10,7 @@ public class Data
 
     public async Task<List<FileViewModel>> GetFileAttachs(Request r)
     {
-        var fileRepo = await _unitOfWork.GetRepository<FileAttach>().GetAll().Where(x => x.IssuesId == r.IssuesId).Select (x => new FileViewModel
+        var fileRepo = await _unitOfWork.GetRepository<FileAttach>().GetAll().Where(x => x.IssuesId == r.IssuesId).OrderByDescending(p=>p.Created).Select (x => new FileViewModel
         {
             FileName = x.FileName,
             FileUrl = $"https://file-manager.digins.vn/Output/2023/file/{x.FileName}",

@@ -1,15 +1,12 @@
-﻿using WorkManagementSystem.Features.ToImplementer;
-namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
+﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
 {
     // Chuyển người xử lý bước tiếp theo  => thêm phần note
     public class Data
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IEventImplement _eventImplement;
-        public Data(IUnitOfWork unitOfWork, IEventImplement eventImplement)
+        public Data(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _eventImplement = eventImplement;
         }
         public async Task<ResultModel<bool>> AddUserToWorkDispatch(Request r)
         {
@@ -18,7 +15,7 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
             var listUserFlow = new List<UserWorkflow>();
             var userRepo = _unitOfWork.GetRepository<Entities.User>();
 
-            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);         
+            var workDispatch = await workDispatchRepo.GetAll().AsNoTracking().FirstOrDefaultAsync(p => p.Id == r.WorkflowId);
             if (workDispatch is null)
             {
                 return new ResultModel<bool>(false)
@@ -38,11 +35,23 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
                     WorkflowId = r.WorkflowId,
                     UserWorkflowType = item.UserWorkflowType,   // add theo vai trò
                     UserWorkflowStatus = UserWorkflowStatusEnum.Waitting,    // mặc định chuyển người xử lý thì gán mặc định là 1,
-                    Note = item.Note
+                    Note = item.Note,
+                    UserCompile = r.UserId
                 };
                 lst.Add(user);
             }
             await userWorkflowRepo.AddRangeAsync(lst);
+
+            // update lại trạng thái đã hoàn thành cho người chuyển văn bản
+            var userComplete = await userWorkflowRepo.GetAll().FirstOrDefaultAsync(x => x.UserId == r.UserId && x.WorkflowId == r.WorkflowId);
+            if (userComplete is not null)
+            {
+                userComplete.UserWorkflowStatus = UserWorkflowStatusEnum.Done;
+                userComplete.UserWorkflowType = UserWorkflowType.Implementer;
+                userComplete.Updated = DateTime.Now;
+                userComplete.UserCompile = r.UserId;
+            }
+            userWorkflowRepo.Update(userComplete);
             await _unitOfWork.CommitAsync();
             return new ResultModel<bool>(true)
             {
@@ -51,16 +60,6 @@ namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkDispatch
                 ErrorMessage = "Thêm thành công!",
                 IsError = false,
             };
-        }
-        public async Task<string> GetUserName(Guid UserId)
-        {
-            var user = await _unitOfWork.GetRepository<Entities.User>().GetAsync(UserId);
-            if (user is not null)
-            {
-                return user.Name;
-            }
-            return string.Empty;
-
         }
 
     }

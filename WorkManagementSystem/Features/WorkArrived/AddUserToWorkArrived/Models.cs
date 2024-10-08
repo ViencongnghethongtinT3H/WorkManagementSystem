@@ -1,0 +1,17 @@
+﻿namespace WorkManagementSystem.Features.WorkDispatch.AddUserToWorkArrived;
+
+public class Request
+{
+    public Guid UserId { get; set; } // user add người xử lý
+    public Guid WorkflowId { get; set; }
+    public List<UserProccess> UserProccess { get; set; }
+
+
+}
+public class UserProccess
+{
+    public Guid UserIds { get; set; }
+    public UserWorkflowType UserWorkflowType { get; set; }
+    public string? Note { get; set; }
+}
+

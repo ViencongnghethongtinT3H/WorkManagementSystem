@@ -16,6 +16,7 @@ public class Endpoint : Endpoint<Request, ListResultModel<Response>>
     public override async Task HandleAsync(Request query, CancellationToken c)
     {
         var data = new Data(_unitOfWork);
-        await SendAsync(await data.GetWorkDispatchByCondition(query));
+        var data1 = await data.GetWorkDispatchByCondition(query);
+        await SendAsync(data1);
     }
 }
